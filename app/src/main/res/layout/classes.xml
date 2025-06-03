@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swifeRefresh"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/colorSendre"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:paddingBottom="1dp"
+            android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/lmain"
+            android:background="@color/white"
+            android:paddingBottom="1dp"
+            android:layout_height="wrap_content">
+        </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/liste"
+                android:layout_marginTop="0dp"
+                android:layout_width="match_parent"
+                android:background="@color/colorSendre"
+                android:layout_marginHorizontal="0dp"
+                android:layout_height="match_parent"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/liste2"
+                android:layout_marginTop="2dp"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="0dp"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <ProgressBar
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:id="@+id/pb"
+            android:layout_width="50dp"
+            android:layout_height="50dp">
+        </ProgressBar>
+        <TextView
+            android:layout_width="wrap_content"
+            android:fontFamily="sans-serif-condensed-light"
+            android:text="Données vides"
+            android:visibility="gone"
+            android:id="@+id/vide"
+            android:textSize="30dp"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content">
+
+        </TextView>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:src="@drawable/plus_argant"
+            app:backgroundTint="@color/colorAccent"
+            android:visibility="gone"
+            app:tint="@color/white"
+            android:id="@+id/fab"
+            app:fabSize="normal"
+            android:layout_gravity="bottom|right"
+            android:layout_marginHorizontal="@dimen/fab_margin"
+            android:layout_marginBottom="8dp"
+            android:layout_height="wrap_content">
+        </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:background="@color/black_transparant"
+            android:gravity="center"
+            android:visibility="gone"
+            android:id="@+id/nodata"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_width="100dp"
+                android:src="@drawable/baseline_browser_not_supported_24"
+                android:layout_height="100dp">
+
+            </ImageView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="No data found"
+                android:id="@+id/text"
+                android:layout_marginVertical="@dimen/fab_margin"
+                android:layout_height="wrap_content">
+
+            </TextView>
+            <TextView
+                android:layout_marginTop="@dimen/fab_margin"
+                android:layout_width="wrap_content"
+                android:text="Créer de nouvelles sections"
+                android:id="@+id/news"
+                android:visibility="gone"
+                android:layout_height="wrap_content">
+
+            </TextView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:background="@color/white"
+            android:gravity="center"
+            android:visibility="gone"
+            android:id="@+id/waite"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </ProgressBar>
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="Chargement en cours, veuillez patienter"
+                android:layout_height="wrap_content">
+
+            </TextView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_gravity="bottom"
+            android:id="@+id/lbouton"
+            android:visibility="gone"
+            android:layout_height="wrap_content">
+            <include layout="@layout/bouton"></include>
+        </LinearLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

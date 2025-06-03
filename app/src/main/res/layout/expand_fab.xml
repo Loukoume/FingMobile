@@ -1,0 +1,83 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Main FAB -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/colorAccent"
+        app:tint="@color/white"
+        android:src="@drawable/plus_argant"
+        android:contentDescription="Main FAB" />
+
+    <!-- First child FAB with label -->
+    <LinearLayout
+        android:id="@+id/fabChild1Layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/fab_main"
+        android:layout_above="@id/fab_main"
+        android:layout_marginBottom="50dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/fabChild1Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit"
+            android:textSize="14sp"
+            android:paddingEnd="8dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_child1"
+            android:layout_width="wrap_content"
+            app:fabSize="mini"
+            android:layout_height="wrap_content"
+            app:tint="@color/white"
+            android:backgroundTint="@color/colorCaffe"
+            android:src="@drawable/plus_argant"
+            android:contentDescription="Edit" />
+    </LinearLayout>
+
+    <!-- Second child FAB with label -->
+    <LinearLayout
+        android:id="@+id/fabChild2Layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/fab_main"
+        android:layout_above="@id/fabChild1Layout"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/fabChild2Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Share"
+            android:textSize="14sp"
+            android:paddingEnd="8dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_child2"
+            app:fabSize="mini"
+            android:layout_width="wrap_content"
+            android:backgroundTint="@color/arg3"
+            app:tint="@color/white"
+            android:layout_height="wrap_content"
+            android:src="@drawable/plus_argant"
+            android:contentDescription="Share" />
+    </LinearLayout>
+
+</RelativeLayout>

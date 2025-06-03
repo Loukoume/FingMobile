@@ -1,0 +1,333 @@
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.08"
+            android:paddingTop="8dp"
+            android:paddingBottom="@dimen/fab_margin"
+            android:background="@drawable/shap_carre_blanc"
+            android:orientation="vertical"
+            >
+            <include layout="@layout/fing_mobile"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:gravity="bottom"
+            android:layout_height="wrap_content">
+            <View
+                android:layout_width="match_parent"
+                android:alpha="0.5"
+                android:background="@color/colorPrimary"
+                android:layout_height="1dp">
+            </View>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/colorSendre"
+            android:layout_weight="0.86"
+            android:orientation="vertical"
+            >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80sp"
+                        android:src="@drawable/monais"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/limage">
+
+                    </ImageView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="3"
+                        android:id="@+id/main0"
+                        android:background="@color/white"
+                        android:layout_marginHorizontal="8dp"
+                        android:paddingHorizontal="@dimen/fab_margin"
+                        android:paddingVertical="8sp"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:orientation="vertical"
+                            android:layout_height="match_parent">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:text="Total épargne"
+                                android:textAllCaps="true"
+                                android:alpha="0.5"
+                                android:layout_height="wrap_content">
+                            </TextView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:text=""
+                                android:textStyle="bold"
+                                android:textColor="@color/colorOnPromary"
+                                android:id="@+id/solde_epargne"
+                                android:textSize="18sp"
+                                android:layout_height="wrap_content">
+                            </TextView>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_marginTop="8dp"
+                            android:gravity="end|center"
+                            android:layout_height="match_parent">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:src="@drawable/ic_eye_off_24dp2"
+                                app:tint="@color/colorOnPromary"
+                                android:id="@+id/eye_epargne"
+                                android:layout_height="wrap_content">
+                            </ImageView>
+                            <FrameLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:visibility="gone"
+                                android:background="@drawable/circle_border_background"
+                                android:padding="-2dp">
+                                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/add0"
+                                    app:fabSize="mini"
+                                    android:src="@drawable/plus_argant"
+                                    android:backgroundTint="@color/white"
+                                    app:tint="@color/colorPrimary" />
+                            </FrameLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_marginHorizontal="8dp"
+                        android:alpha="0.5"
+                        android:background="@color/colorOnPromary"
+                        android:layout_height="1dp">
+
+                    </View>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="3"
+                        android:id="@+id/main"
+                        android:background="@color/white"
+                        android:layout_marginTop="@dimen/fab_margin"
+                        android:layout_marginHorizontal="8dp"
+                        android:paddingHorizontal="@dimen/fab_margin"
+                        android:paddingVertical="8sp"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:orientation="vertical"
+                            android:layout_height="match_parent">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:text="Prêt total"
+                                android:alpha="0.5"
+                                android:textAllCaps="true"
+                                android:layout_height="wrap_content">
+                            </TextView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:text=""
+                                android:textStyle="bold"
+                                android:id="@+id/solde_pret"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="18sp"
+                                android:layout_height="wrap_content">
+
+                            </TextView>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+
+                            android:layout_marginTop="8dp"
+                            android:gravity="end|center"
+                            android:layout_height="match_parent">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                 android:src="@drawable/ic_eye_off_24dp2"
+                                app:tint="@color/colorOnPromary"
+                                android:id="@+id/eye_pret"
+                                android:layout_height="wrap_content">
+                            </ImageView>
+                            <FrameLayout
+                                android:layout_width="wrap_content"
+                                android:visibility="gone"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/circle_border_background"
+                                android:padding="-2dp">
+                                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/add"
+                                    app:fabSize="mini"
+                                    android:src="@drawable/plus_argant"
+                                    android:backgroundTint="@color/white"
+                                    app:tint="@color/colorPrimary" />
+                            </FrameLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_marginHorizontal="8dp"
+                        android:background="@color/colorOnPromary"
+                        android:alpha="0.5"
+                        android:layout_height="1dp">
+
+                    </View>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginTop="8sp"
+                        android:paddingHorizontal="4dp"
+                        android:background="@color/colorSendre"
+                        android:layout_height="match_parent">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:text="Nos services"
+                            android:layout_marginTop="8sp"
+                            android:visibility="gone"
+                            android:layout_marginStart="5sp"
+                            android:textColor="@color/colorSendre2"
+                            android:layout_height="wrap_content">
+                        </TextView>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_marginStart="5sp"
+                            android:background="@color/colorSendre2"
+                            android:layout_marginBottom="8sp"
+                            android:visibility="gone"
+                            android:alpha="0.5"
+                            android:layout_height="1dp">
+
+                        </View>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:id="@+id/lservice"
+                            android:orientation="vertical"
+                            android:gravity="bottom"
+                            android:layout_height="match_parent">
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:elevation="6dp"
+            android:layout_weight="0.07"
+            android:orientation="vertical">
+            <View
+                android:layout_width="match_parent"
+                android:alpha="0.5"
+                android:background="@color/colorPrimary"
+                android:layout_height="1dp">
+            </View>
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_navigation"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:menu="@menu/bottom_navigation_menu"
+                app:itemIconTint="@drawable/selector"
+                app:itemTextColor="@drawable/selector"
+                android:background="@color/white" />
+
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:background="@color/black_transparant"
+        android:id="@+id/vide"
+        android:visibility="gone"
+        android:layout_height="match_parent">
+
+    </View>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:id="@+id/sheet"
+        android:layout_marginHorizontal="5dp"
+        android:orientation="vertical"
+        android:background="@null"
+        android:layout_height="wrap_content">
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_height="wrap_content">
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:layout_marginVertical="0dp"
+                android:src="@drawable/user"
+
+                android:visibility="visible"
+                app:civ_border_color="@color/colorPrimary"
+                app:civ_border_width="2dp" />
+
+            <View
+                android:id="@+id/star"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="top|left"
+                android:layout_marginLeft="35dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/circle_background_red"
+                android:visibility="gone">
+
+            </View>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:src="@drawable/ic_mort_noir"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="12sp"
+        app:tint="@color/colorPrimary"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_height="wrap_content">
+
+    </ImageView>
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/pb"
+        android:visibility="gone"
+        android:layout_height="wrap_content">
+
+    </ProgressBar>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

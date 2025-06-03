@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.appbar.AppBarLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/appbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    app:elevation="@dimen/fab_margin"
+    android:minHeight="?attr/actionBarSize"
+    android:paddingHorizontal="0dp">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar_personnalise"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="5dp"
+        style="@style/Widget.MaterialComponents.Toolbar.Primary">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:id="@+id/search_layout"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginRight="8dp"
+                android:gravity="center"
+                android:id="@+id/filter_type"
+                android:layout_height="match_parent">
+                <ImageButton
+                    android:id="@+id/filtre"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:tint="@color/white"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/filter"
+                    android:padding="8dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/type"
+                    android:text="T"
+                    android:textColor="@color/white"
+                    android:layout_height="wrap_content">
+
+                </TextView>
+            </LinearLayout>
+            <EditText
+                android:id="@+id/search_bar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/custom_search_bar"
+                android:padding="8dp"
+                android:drawablePadding="4dp"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/darker_gray"
+                android:inputType="text" />
+
+            <ImageButton
+                android:id="@+id/clear_search_icon"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginHorizontal="8dp"
+                app:tint="@color/white"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/clear"
+                android:padding="8dp" />
+
+        </LinearLayout>
+    </com.google.android.material.appbar.MaterialToolbar>
+</com.google.android.material.appbar.AppBarLayout>

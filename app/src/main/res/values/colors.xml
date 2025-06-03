@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#b6963a</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="arg2">#fefadc</color>
+    <color name="arg1">#f0e0a6</color>
+    <color name="arg3">#dcc576</color>
+    <color name="black_transparant">#33000000</color>
+    <color name="transparant">#00000000</color>
+    <color name="colorPrimary">#1565C0</color>
+    <color name="colorPrimaryDark">#003C8F</color>
+    <color name="colorAccent">#C06515 </color>
+    <color name="navigationBarColor">@color/colorPrimaryDark</color>
+    <color name="colorSendre">#E9E9E9</color>
+    <color name="backgrund2">#9BC6F8</color>
+    <color name="jaune2">#FFD740</color>
+    <color name="textColore">#121110</color>
+    <color name="colorSendre2">#8E8E8A</color>
+    <color name="colorSendre3">#F9F9F9</color>
+    <color name="colorBlack">#212121</color>
+    <color name="allredy">#444444</color>
+    <color name="colord5d5b5s">#d5d5b5</color>
+    <color name="color405b67s">#405b67</color>
+    <color name="textColor">#2B2A2A</color>
+    <color name="icon">#423B3A</color>
+    <color name="rouge">#D1180B</color>
+    <color name="green">#0A7742</color>
+    <color name="red">#F44336</color>
+    <color name="argent">#B9A453</color>
+
+    <color name="colorOnPromary">#353434</color>
+    <color name="colordIndex">#C5E6F7</color>
+    <color name="gray">#E9E7E7</color>
+    <color name="colorCaffe">#B2FF59</color>
+    <color name="blue">#448AFF</color>
+    <color name="cardview_light_background">#F5F2F2</color>
+</resources>

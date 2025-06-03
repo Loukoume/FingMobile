@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:elevation="@dimen/fab_margin"
+            android:layout_height="wrap_content">
+            <include layout="@layout/tool_bar"></include>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:id="@+id/content"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+        </LinearLayout>
+        <View
+            android:layout_width="1dp"
+            android:background="@color/rouge"
+            android:id="@+id/marge"
+            android:alpha="0.5"
+            android:visibility="gone"
+            android:layout_marginLeft="17dp"
+            android:layout_height="match_parent">
+        </View>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/exp"
+        android:visibility="gone"
+        android:layout_height="wrap_content">
+        <include layout="@layout/expand_fab"></include>
+    </LinearLayout>
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/pb"
+        android:visibility="gone"
+        android:layout_height="wrap_content">
+
+    </ProgressBar>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@color/colorBlack"
+        android:elevation="40dp"
+        android:alpha="0.5"
+        android:visibility="gone"
+        android:id="@+id/vides"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:paddingHorizontal="8dp"
+        android:layout_marginHorizontal="8dp"
+        android:paddingBottom="@dimen/fab_margin"
+        android:id="@+id/sheet"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:elevation="50dp"
+        android:background="@drawable/shap_tabe_haut"
+        android:layout_height="wrap_content">
+
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

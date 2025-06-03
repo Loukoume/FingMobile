@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/title"
+            android:background="@null"
+            android:fontFamily="@font/poppins_regular"
+            android:textColor="@color/textColore"
+            android:layout_marginStart="8sp"
+            android:layout_marginVertical="8sp"
+            android:layout_height="wrap_content">
+
+        </TextView>
+    </LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:src="@drawable/ic_mort_noir"
+        android:layout_gravity="end"
+        android:id="@+id/mort"
+        android:visibility="invisible"
+        android:layout_height="wrap_content">
+
+    </ImageView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

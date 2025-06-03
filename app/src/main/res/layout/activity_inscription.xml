@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_creation_compte"
+    android:layout_width="match_parent"
+    android:background="@color/colorSendre"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="16dp">
+
+    <!-- Titre de la page -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:id="@+id/limage"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:src="@drawable/fing"
+                android:layout_height="40dp">
+
+            </ImageView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="0.9"
+
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_width="match_parent"
+                android:src="@drawable/mobile"
+                android:layout_height="35dp">
+
+            </ImageView>
+        </LinearLayout>
+    </LinearLayout>
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100sp"
+        android:src="@drawable/monais"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/limage">
+
+    </ImageView>
+
+    <!-- Section inscription par téléphone -->
+    <LinearLayout
+        android:id="@+id/layout_phone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/shap_courone"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/tvPhoneTitle"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Inscription"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:src="@drawable/cadena"
+            android:id="@+id/cadena"
+            android:visibility="gone"
+            android:layout_height="80dp">
+
+        </ImageView>
+
+        <EditText
+            android:id="@+id/etPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_bg"
+            android:hint="Numéro de téléphone"
+            android:inputType="phone"
+            android:padding="10dp"
+            android:layout_marginVertical="@dimen/fab_margin"
+            android:textSize="16sp"/>
+        <EditText
+            android:id="@+id/mot_de_passe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:background="@drawable/edittext_bg"
+            android:layout_marginVertical="@dimen/fab_margin"
+            android:hint="Mot de passe"
+            android:textColorHint="@color/colorSendre2"
+            android:inputType="textPassword"
+            android:padding="10dp"
+            android:textSize="16sp" />
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:orientation="vertical"
+             android:id="@+id/lnouveau"
+             android:visibility="visible"
+
+             android:layout_height="wrap_content">
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_marginVertical="@dimen/fab_margin"
+                 android:layout_height="wrap_content">
+                 <EditText
+                     android:id="@+id/etPassWord"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:background="@drawable/edittext_bg"
+                     android:hint="Mot de passe"
+                     android:inputType="textPassword"
+                     android:padding="10dp"
+                     android:textSize="16sp" />
+             </LinearLayout>
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_marginVertical="@dimen/fab_margin"
+                 android:layout_height="wrap_content">
+                 <EditText
+                     android:id="@+id/confirmeetPassWord"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:background="@drawable/edittext_bg"
+                     android:hint="Confirmez votre mot de passe"
+                     android:inputType="textPassword"
+                     android:padding="10dp"
+                     android:textSize="16sp" />
+             </LinearLayout>
+
+         </LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:text="Ajouter"
+            android:layout_marginHorizontal="2dp"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:backgroundTint="@color/colorPrimary"
+            android:paddingHorizontal="2sp"
+            android:id="@+id/ajouter"
+            app:strokeColor="@color/colorAccent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.button.MaterialButton>
+
+
+    </LinearLayout>
+
+    <!-- Texte séparateur -->
+    <TextView
+        android:id="@+id/tvSeparator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="OU"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_phone" />
+
+    <!-- Bouton inscription via Google Mail -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRegisterGoogle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:cornerRadius="8sp"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:drawableLeft="@drawable/google"
+        android:layout_marginHorizontal="8dp"
+        android:text="S'inscrire avec Google Mail"
+        android:textColor="@color/textColore"
+        android:backgroundTint="@color/white"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSeparator" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/saves"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nouveau"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:textColor="@color/colorAccent"
+        android:layout_marginHorizontal="2dp"
+        android:layout_marginBottom="16dp"
+    android:visibility="visible"
+    style="?attr/materialButtonOutlinedStyle"
+    app:strokeColor="@color/colorAccent"
+
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

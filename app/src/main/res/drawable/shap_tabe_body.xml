@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="@color/colorPrimary"
+                android:centerColor="@color/colorPrimary"
+                android:endColor="@color/colorPrimary"
+                android:angle="0"/>
+        </shape>
+    </item>
+    <item
+        android:top="150dp"
+        android:bottom="0dp"
+        android:left="0dp"
+        android:right="0dp">
+        <shape
+            android:innerRadius="20dp"
+            android:shape="rectangle"
+            android:useLevel="true">
+            <solid android:color="@color/white"/>
+            <corners
+                android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="0dp"
+                android:topLeftRadius="50dp"
+                android:topRightRadius="50dp"/>
+        </shape>
+
+    </item>
+</layer-list>

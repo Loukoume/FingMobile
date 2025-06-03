@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:layout_marginVertical="5sp"
+        android:id="@+id/l_slognan"
+        android:paddingHorizontal="@dimen/fab_margin"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/slogant"
+            android:text="Vente et stock en toute fluidité"
+            android:textColor="@color/white"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content">
+
+        </TextView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:gravity="right"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_gravity="right"
+                android:padding="5dp"
+                app:tint="@color/white"
+                android:id="@+id/up"
+                android:src="@drawable/ic_keyboard_arrow_down_black_24dp"
+                android:layout_height="wrap_content">
+
+            </ImageView>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_gravity="right"
+                android:padding="5dp"
+                android:id="@+id/dw"
+                android:visibility="gone"
+                app:tint="@color/white"
+                android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
+                android:layout_height="wrap_content">
+
+            </ImageView>
+        </LinearLayout>
+    </LinearLayout>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/interligne"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            >
+            <View android:layout_width="wrap_content"
+                android:layout_height="0.01px"
+                android:id="@+id/lin3"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorCaffe"
+                />
+            <View android:layout_width="wrap_content"
+                android:layout_height="0.01px"
+                android:id="@+id/lin2"
+                android:layout_marginVertical="8dp"
+                android:background="@color/colorCaffe"
+                />
+            <View android:layout_width="wrap_content"
+                android:layout_height="0.01px"
+                android:id="@+id/lin1"
+                android:layout_marginBottom="8dp"
+                android:background="@color/colorCaffe"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_gravity="bottom"
+            android:id="@+id/li_tx"
+            android:paddingLeft="20dp"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:fontFamily="@font/courgette"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:textColor="@color/blue">
+            </TextView>
+            <EditText
+                android:id="@+id/edite"
+                android:layout_marginVertical="0dp"
+                android:paddingVertical="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:maxLines="1"
+                android:visibility="gone"
+                android:fontFamily="@font/courgette"
+                android:focusable="true"
+                android:textColor="@color/blue"
+                android:textSize="16sp">
+
+            </EditText>
+
+        </LinearLayout>
+      <View android:layout_width="wrap_content"
+        android:layout_height="1.5px"
+        android:id="@+id/lin"
+        android:layout_gravity="bottom"
+        android:alpha="0.5"
+        android:background="@color/colorSendre3"
+        />
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lv"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

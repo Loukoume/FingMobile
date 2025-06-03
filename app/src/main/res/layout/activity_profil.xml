@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/main"
+        android:orientation="vertical"
+        android:paddingBottom="70dp"
+        android:background="@color/colorSendre"
+        android:layout_height="match_parent">
+        <include layout="@layout/tool_bar">
+        </include>
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="Plages de commissions"
+            android:textSize="17dp"
+            android:id="@+id/plge"
+            android:visibility="gone"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="@dimen/fab_margin"
+            android:layout_height="wrap_content">
+        </TextView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:id="@+id/body"
+            android:elevation="8dp"
+            android:padding="8dp"
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+        </LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_marginRight="8dp"
+            android:text="Ajouter"
+            android:id="@+id/add"
+            android:visibility="gone"
+            android:textAllCaps="false"
+            android:layout_gravity="right"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.button.MaterialButton>
+    </LinearLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:text="Enregistrer"
+        android:layout_margin="@dimen/fab_margin"
+        android:paddingHorizontal="2dp"
+        app:backgroundTint="@color/colorAccent"
+       >
+
+    </com.google.android.material.button.MaterialButton>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@color/colorBlack"
+        android:elevation="40dp"
+        android:alpha="0.3"
+        android:visibility="gone"
+        android:id="@+id/vide"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:paddingHorizontal="8dp"
+        android:paddingBottom="@dimen/fab_margin"
+        android:id="@+id/sheet"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:elevation="50dp"
+        android:background="@color/white"
+        android:layout_height="wrap_content">
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

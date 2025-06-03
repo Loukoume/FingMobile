@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/fab_margin"
+    android:paddingVertical="8dp">
+    <View
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:background="@color/colorSendre"
+        android:layout_height="1sp">
+
+    </View>
+    <!-- Zone texte de l'article (libellé en gras + montant en gris) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColore"
+            android:layout_marginTop="4dp"
+            android:textSize="12sp"
+            android:layout_marginEnd="8sp"
+            android:text="Libellé de l'article" />
+
+        <TextView
+            android:id="@+id/title2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/textColor"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:text="123,45 €" />
+    </LinearLayout>
+
+    <!-- Zone barre de progression (barre verte + pourcentage en orange) -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/layoutProgression"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="2dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/barreProgression"
+            android:layout_width="match_parent"
+            android:layout_height="15dp"
+            android:background="@drawable/progress_bg_arrondi"
+            android:clipToOutline="true">
+            <!-- Drawable `progress_bg_arrondi.xml` : shape avec coins arrondis (rayon 4dp) et couleur gris clair (surface-300) -->
+
+            <View
+                android:id="@+id/barreProgressionInterieure"
+                android:layout_width="200px"
+                android:layout_height="match_parent"
+                android:background="#4CAF50" />
+            <!-- La largeur de cette vue sera ajustée dynamiquement en fonction du pourcentage (ex. 50% de la largeur de la FrameLayout) -->
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/textePourcentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            android:text="50%" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

@@ -32,7 +32,7 @@ public class LoanAccount implements Serializable {
     private Status status;
     private LoanType loanType;
     private Integer loanCycle;
-    private LoanDate Date;
+    private LoanDate timeline;
     private Boolean inArrears;
     private BigDecimal originalLoan;
     private BigDecimal loanBalance;
@@ -128,12 +128,12 @@ public class LoanAccount implements Serializable {
 
 
     public LoanDate getDate() {
-        return this.Date;
+        return this.timeline;
     }
 
 
     public void setDate(LoanDate Date) {
-        this.Date = Date;
+        this.timeline = Date;
     }
 
 

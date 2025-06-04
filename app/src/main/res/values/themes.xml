@@ -7,7 +7,7 @@
         <item name="android:textColor">@color/black</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowNoTitle">true</item>
-        <item name="fontFamily">@font/exo_medium</item>
+        <item name="fontFamily">@font/poppins_regular</item>
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
         <item name="android:navigationBarColor" tools:targetApi="lollipop">
             @color/navigationBarColor
@@ -20,7 +20,7 @@
         <item name="android:textColor">@color/black</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowNoTitle">true</item>
-        <item name="fontFamily">@font/exo_medium</item>
+        <item name="fontFamily">@font/poppins_regular</item>
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
         <item name="android:navigationBarColor" tools:targetApi="lollipop">
             @color/backgrund2
@@ -34,22 +34,24 @@
         <item name="android:textColor">@color/black</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowNoTitle">true</item>
-        <item name="fontFamily">@font/exo_medium</item>
+        <item name="fontFamily">@font/poppins_regular</item>
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
         <item name="android:navigationBarColor" tools:targetApi="lollipop">
             @color/navigationBarColor
         </item>
     </style>
 
-    <style name="ToolBarStyle" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColorSecondary">@android:color/white</item>
-        <item name="actionMenuTextColor">@color/white</item>
+    <style name="ToolBarStyle" parent="ThemeOverlay.MaterialComponents.Toolbar.Surface">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:textColorPrimary">@color/colorPrimary</item>
+        <item name="android:textColorSecondary">@color/colorPrimary</item>
+        <item name="actionMenuTextColor">@color/colorPrimary</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
 
     <style name="DrawerArrowStyle" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="color">@color/white</item>
+        <item name="color">@color/colorPrimary</item>
     </style>
 
     <style name="MenuArrowStyle" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -70,7 +72,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="fontFamily">@font/exo_medium</item>
+        <item name="fontFamily">@font/poppins_regular</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="colorControlNormal">@color/white</item>
         <item name="android:textStyle">normal</item>
@@ -91,5 +93,33 @@
         <item name="colorPrimary">@color/colord5d5b5s</item>
         <item name="colorPrimaryDark">@color/color405b67s</item>
         <item name="android:navigationBarColor">@color/color405b67s</item>
+    </style>
+
+    <!-- ============================================= -->
+    <!--  Style pour le titre “Mes comptes” dans l’AppBar -->
+    <!-- ============================================= -->
+    <style name="ToolbarTitleStyle">
+        <!-- On récupère la couleur définie pour le texte -->
+        <item name="android:textColor">@color/colorOnPrimary</item>
+        <!-- Vous pouvez ajouter d’autres attributs si besoin (taille, fontFamily…) -->
+        <item name="android:textSize">18sp</item>
+        <item name="colorPrimary">@color/white</item>
+        <item name="android:fontFamily">@font/poppins_regular</item>
+    </style>
+
+    <!-- ============================================= -->
+    <!--  Style pour le TabLayout (onglets)            -->
+    <!-- ============================================= -->
+    <style name="MyTabLayoutStyle" parent="Widget.MaterialComponents.TabLayout">
+        <!-- Couleur du texte de chaque onglet : on pointe vers notre selector -->
+        <item name="tabTextColor">@color/tab_text_color</item>
+        <!-- Couleur de l’icône de chaque onglet : on pointe vers notre selector -->
+        <item name="tabIconTint">@color/tab_icon_tint</item>
+        <!-- Couleur de l’indicateur (trait sous l’onglet sélectionné) -->
+        <item name="tabIndicatorColor">@color/tab_indicator</item>
+        <!-- Fond des onglets si vous voulez restreindre la couleur (ici blanc) -->
+        <item name="android:background">@color/white</item>
+        <!-- Distance entre l’indicateur et le bord (optionnel) -->
+        <item name="tabIndicatorFullWidth">false</item>
     </style>
 </resources>

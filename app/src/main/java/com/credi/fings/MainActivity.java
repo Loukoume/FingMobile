@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.credi.fings.activity.PagerActivity;
 import com.credi.fings.binder.CompteBinder;
 import com.credi.fings.entity.Client;
 import com.credi.fings.entity.Compte;
@@ -215,9 +216,11 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     break;
                 case 1:
+                    startActivity(new Intent(context, PagerActivity.class));
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     break;
                 case 2:
-                    CompteBinder compteBinder=new CompteBinder();
+                   /* CompteBinder compteBinder=new CompteBinder();
                     NavigateObject nvgdp=compteBinder.navigateObject();
                     if(loanAccounts!=null&&savingsAccounts!=null){
                         List<Object> lit=new ArrayList<>(loanAccounts);
@@ -281,7 +284,9 @@ public class MainActivity extends AppCompatActivity {
                     });
                     startActivity(new Intent(context, ListActivity.class)
                             .putExtra("id","idCompteBancaire")
-                            .putExtra("navigateObject",nvgdp));
+                            .putExtra("navigateObject",nvgdp));*/
+                    startActivity(new Intent(context, PagerActivity.class)
+                            .putExtra("client",client));
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                      break;
                 case 3:
@@ -397,6 +402,7 @@ public class MainActivity extends AppCompatActivity {
     }
     List<Object> savingsAccounts;
     List<Object> loanAccounts;
+    Client client;
     void getClientAcount(){
         showPb();
         // 1. Spécifiez vos identifiants Basic Auth
@@ -419,12 +425,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Client> call, Response<Client> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Client client = response.body();
+                     client = response.body();
                     loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
                     savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
                     setComptesValues();
                 } else {
-                    Object client=Ut.fromJs(Json.json,Client.class);
+                     client= (Client) Ut.fromJs(Json.json,Client.class);
                     loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
                     savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
                     setComptesValues();
@@ -438,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<Client> call, Throwable t) {
                 // Problème réseau ou exception
                 hidePb();
-                Object client=Ut.fromJs(Json.json,Client.class);
+                 client= (Client) Ut.fromJs(Json.json,Client.class);
                 loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
                 savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
                 setComptesValues();

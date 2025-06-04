@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Icône de l’onglet sélectionné -->
+    <item android:color="@color/tab_icon_active" android:state_selected="true" />
+    <item android:color="@color/tab_icon_active" android:state_pressed="true" />
+    <!-- Icône en état normal -->
+    <item android:color="@color/tab_icon_inactive" />
+</selector>

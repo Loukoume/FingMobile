@@ -16,9 +16,11 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.credi.fings.activity.PagerActivity;
 import com.credi.fings.binder.CompteBinder;
+import com.credi.fings.binder.PretBinder;
 import com.credi.fings.entity.Client;
 import com.credi.fings.entity.Compte;
 import com.credi.fings.entity.LoanAccount;
+import com.credi.fings.publics.AddActivity;
 import com.credi.fings.publics.carousel.CarouselAdapter;
 import com.credi.fings.publics.carousel.CarouselItem;
 import com.credi.fings.publics.composant.RecyclierViewCp;
@@ -29,6 +31,7 @@ import com.credi.fings.publics.service.ClickHandler;
 import com.credi.fings.publics.service.HttpApi;
 import com.credi.fings.publics.service.RetrofitClient;
 import com.credi.fings.publics.service.impl.Anim;
+import com.credi.fings.publics.service.impl.EditeObject;
 import com.credi.fings.publics.service.impl.ListActivity;
 import com.credi.fings.publics.service.impl.Ut;
 import com.credi.fings.publics.service.interfacs.CrudInterface;
@@ -216,7 +219,10 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     break;
                 case 1:
-                    startActivity(new Intent(context, PagerActivity.class));
+                    PretBinder pretBinder=new PretBinder();
+                    EditeObject editeObject=pretBinder.editeObject();
+                    startActivity(new Intent(context, AddActivity.class)
+                            .putExtra("object",editeObject));
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     break;
                 case 2:

@@ -2,7 +2,7 @@ package com.credi.fings.entity;
 
 import com.google.gson.Gson;
 
-import java.time.LocalDate;
+
 import java.util.Date;
 
 import com.google.gson.annotations.Expose;
@@ -28,20 +28,20 @@ public class LoanDate implements Serializable {
     @Expose
     @SerializedName("idLoanDate")
     private String idServeur;
-    private LocalDate submittedOnDate;
+    private List<Integer> submittedOnDate;
     private String submittedByUsername;
     private String submittedByFirstname;
     private String submittedByLastname;
-    private LocalDate approvedOnDate;
+    private List<Integer> approvedOnDate;
     private String approvedByUsername;
     private String approvedByFirstname;
     private String approvedByLastname;
-    private LocalDate expectedDisbursementDate;
-    private LocalDate actualDisbursementDate;
+    private List<Integer> expectedDisbursementDate;
+    private List<Integer> actualDisbursementDate;
     private String disbursedByUsername;
     private String disbursedByFirstname;
     private String disbursedByLastname;
-    private LocalDate expectedMaturityDate;
+    private List<Integer> expectedMaturityDate;
 
     public String getIdLocal() {
         return this.idLocal;
@@ -63,12 +63,12 @@ public class LoanDate implements Serializable {
     }
 
 
-    public LocalDate getSubmittedOnDate() {
+    public List<Integer> getSubmittedOnDate() {
         return this.submittedOnDate;
     }
 
 
-    public void setSubmittedOnDate(LocalDate submittedOnDate) {
+    public void setSubmittedOnDate(List<Integer> submittedOnDate) {
         this.submittedOnDate = submittedOnDate;
     }
 
@@ -103,12 +103,12 @@ public class LoanDate implements Serializable {
     }
 
 
-    public LocalDate getApprovedOnDate() {
+    public List<Integer> getApprovedOnDate() {
         return this.approvedOnDate;
     }
 
 
-    public void setApprovedOnDate(LocalDate approvedOnDate) {
+    public void setApprovedOnDate(List<Integer> approvedOnDate) {
         this.approvedOnDate = approvedOnDate;
     }
 
@@ -143,22 +143,22 @@ public class LoanDate implements Serializable {
     }
 
 
-    public LocalDate getExpectedDisbursementDate() {
+    public List<Integer> getExpectedDisbursementDate() {
         return this.expectedDisbursementDate;
     }
 
 
-    public void setExpectedDisbursementDate(LocalDate expectedDisbursementDate) {
+    public void setExpectedDisbursementDate(List<Integer> expectedDisbursementDate) {
         this.expectedDisbursementDate = expectedDisbursementDate;
     }
 
 
-    public LocalDate getActualDisbursementDate() {
+    public List<Integer> getActualDisbursementDate() {
         return this.actualDisbursementDate;
     }
 
 
-    public void setActualDisbursementDate(LocalDate actualDisbursementDate) {
+    public void setActualDisbursementDate(List<Integer> actualDisbursementDate) {
         this.actualDisbursementDate = actualDisbursementDate;
     }
 
@@ -193,12 +193,12 @@ public class LoanDate implements Serializable {
     }
 
 
-    public LocalDate getExpectedMaturityDate() {
+    public List<Integer> getExpectedMaturityDate() {
         return this.expectedMaturityDate;
     }
 
 
-    public void setExpectedMaturityDate(LocalDate expectedMaturityDate) {
+    public void setExpectedMaturityDate(List<Integer> expectedMaturityDate) {
         this.expectedMaturityDate = expectedMaturityDate;
     }
 

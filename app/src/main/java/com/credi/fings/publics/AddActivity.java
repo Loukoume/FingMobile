@@ -1,5 +1,6 @@
 package com.credi.fings.publics;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -31,6 +32,7 @@ public class AddActivity extends AppCompatActivity {
     public static Object object,nouvellValue;
     SwipeRefreshLayout swifeRefresh;
     ImageView back;
+    Context context;
     EditeService ed;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class AddActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profil);
         linearLayout=findViewById(R.id.main);
         textView=findViewById(R.id.tx_text);
+        context=this;
         editeObject= (EditeObject) getIntent().getSerializableExtra("object");
         if(editeObject==null&&getIntent().hasExtra("objectjs")){
             String jjs=getIntent().getStringExtra("objectjs");
@@ -45,7 +48,7 @@ public class AddActivity extends AppCompatActivity {
             if(jjs!=null&&!jjs.isEmpty()){
                 editeObject= (EditeObject) Ut.fromJs(jjs,EditeObject.class);
             }
-        }else {
+        }else if(editeObject==null){
             editeObject= ListActivity.editeObject;
         }
         swifeRefresh=findViewById(R.id.swifeRefresh);
@@ -73,8 +76,13 @@ public class AddActivity extends AppCompatActivity {
                     if(ok){
                         object=ed.getObject();
                         if(editeObject.getPostUrl()==null){
-                            editeObject=null;
+                            if(editeObject.getNavigateClass()!=null){
+                                startActivity(new Intent(context,editeObject.getNavigateClass()));
+                            }else {
+                                editeObject=null;
+                            }
                             finish();
+                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         }else {
                             saveData(editeObject.getPostUrl(),object);
                         }
@@ -88,6 +96,7 @@ public class AddActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
 
@@ -100,10 +109,17 @@ public class AddActivity extends AppCompatActivity {
                             .putExtra("object",(Serializable)(Ut.getValue(o,editeObject.getId()))));
                 object=null;
                 finish();
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
             return ob;
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override

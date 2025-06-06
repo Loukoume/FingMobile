@@ -15,6 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.credi.fings.publics.utils.Dialogue;
 import com.google.android.material.button.MaterialButton;
 import com.credi.fings.MainActivity;
 import com.credi.fings.R;
@@ -69,7 +70,8 @@ public class Inscription extends AppCompatActivity {
         ajouter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Inscription.this, MainActivity.class));
+
+              //  startActivity(new Intent(Inscription.this, MainActivity.class));
             }
         });
     }
@@ -89,8 +91,11 @@ public class Inscription extends AppCompatActivity {
         ajouter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Inscription.this, MainActivity.class));
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                String mdp=motDePasse.getText().toString();
+                String login=etPhoneNumber.getText().toString();
+                Dialogue.neutreDialog(" mtp = "+mdp,"login = "+login,view.getContext()).show();
+               // startActivity(new Intent(Inscription.this, MainActivity.class));
+               // overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
     }

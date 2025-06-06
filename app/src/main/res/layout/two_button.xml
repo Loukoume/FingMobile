@@ -16,28 +16,28 @@
         <com.google.android.material.button.MaterialButton
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="Nouveau"
-            android:textAllCaps="false"
+            android:text="Modifier"
+            android:textAllCaps="true"
             android:id="@+id/saves"
             android:textStyle="bold"
-            android:textSize="11sp"
-            android:textColor="@color/textColor"
+            android:textSize="13sp"
+            android:textColor="@color/colorAccent"
             android:layout_marginHorizontal="2dp"
             android:visibility="visible"
             style="?attr/materialButtonOutlinedStyle"
-            app:strokeColor="@color/colorPrimary"
+            app:strokeColor="@color/colorAccent"
             android:layout_height="wrap_content">
 
         </com.google.android.material.button.MaterialButton>
         <com.google.android.material.button.MaterialButton
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="Ajouter"
+            android:text="Confirmer"
             android:layout_marginHorizontal="2dp"
-            android:textAllCaps="false"
+            android:textAllCaps="true"
             android:textStyle="bold"
-            android:textSize="11sp"
-            android:backgroundTint="@color/colorAccent"
+            android:textSize="13sp"
+            android:backgroundTint="@color/colorPrimary"
             android:paddingHorizontal="2sp"
             android:id="@+id/ajouter"
             android:layout_height="wrap_content">

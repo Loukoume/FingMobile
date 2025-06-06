@@ -1,5 +1,7 @@
 package com.credi.fings.publics.service;
 
+import android.database.Observable;
+
 import com.credi.fings.entity.Client;
 import com.credi.fings.entity.LoanAccount;
 import com.credi.fings.publics.UploadFileResponse;
@@ -82,6 +84,12 @@ public interface ApiService {
             @Url String url,
             @Part MultipartBody.Part body,
             @PartMap Map<String, RequestBody> designations
+    );
+
+    @POST("fineract-provider/api/v1/self/authentication")
+    Observable<Client> authenticate(
+            @Query("username") String username,
+            @Query("password") String password
     );
 
 }

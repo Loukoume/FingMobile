@@ -1,11 +1,13 @@
 package com.credi.fings.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,10 +23,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.credi.fings.R;
 import com.credi.fings.activity.PagerActivity;
+import com.credi.fings.binder.OperationBinder;
+import com.credi.fings.binder.PretBinder;
+import com.credi.fings.publics.AddActivity;
 import com.credi.fings.publics.adapters.generiqueAdapter.AdapterViewHolder;
 import com.credi.fings.publics.carousel.CarouselItem;
 import com.credi.fings.publics.composant.RecyclierViewCp;
+import com.credi.fings.publics.service.ClickHandler;
+import com.credi.fings.publics.service.impl.EditeObject;
+import com.credi.fings.publics.service.impl.ListActivity;
 import com.credi.fings.publics.service.impl.Ut;
+import com.credi.fings.publics.service.pojo.NavigateObject;
 import com.credi.fings.publics.utils.Dialogue;
 import com.credi.fings.publics.utils.S;
 
@@ -37,7 +47,8 @@ public class PlaceholderFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
     public PlaceholderFragment fragment;
     private PageViewModel pageViewModel;
-   // private FragmentMainBinding binding;
+
+    // private FragmentMainBinding binding;
     //List<Data> datas,data2;
     public static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
@@ -50,7 +61,7 @@ public class PlaceholderFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context=getContext();
+        context = getContext();
         pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
         int index = 1;
         if (getArguments() != null) {
@@ -58,41 +69,44 @@ public class PlaceholderFragment extends Fragment {
         }
         pageViewModel.setIndex(index);
     }
-     RecyclerView recyclerView;static TextView menu;
-     LinearLayout main;
-     Context context;
-     TextView entree,creance,dette,depense,reste;
-    static View  roots;
+
+    RecyclerView recyclerView;
+    static TextView menu;
+    LinearLayout main;
+    Context context;
+    TextView entree, creance, dette, depense, reste;
+    static View roots;
+
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-      View  root= inflater.inflate(R.layout.fragment_main, container, false);
-        roots=root;
-       int index = getArguments().getInt(ARG_SECTION_NUMBER);
-      // recyclerView=root.findViewById(R.id.liste);
-       main=root.findViewById(R.id.main);
-       main.removeAllViews();
+        View root = inflater.inflate(R.layout.fragment_main, container, false);
+        roots = root;
+        int index = getArguments().getInt(ARG_SECTION_NUMBER);
+        // recyclerView=root.findViewById(R.id.liste);
+        main = root.findViewById(R.id.main);
+        main.removeAllViews();
         //Dialogue.neutreDialog(index+" ","",context).show();
-       //recyclerView.setNestedScrollingEnabled(false);
-       switch (index){
-           case 1:
-               RecyclierViewCp recyclierViewCp=new RecyclierViewCp(context,R.layout.row_compte, PagerActivity.savingsAccounts,(h, o, i)->{
-                   setText(o,h,1);
-               }).setNumberItems(1).setBackground(R.color.colorSendre);
-              main.addView(recyclierViewCp.view());
-               break;
-           case 2:
-                recyclierViewCp=new RecyclierViewCp(context,R.layout.row_compte, PagerActivity.loanAccounts,(h, o, i)->{
-                   setText(o,h,0);
-               }).setNumberItems(1).setBackground(R.color.colorSendre);
-               main.addView(recyclierViewCp.view());
-               break;
-           case 3:
-               break;
-       }
+        //recyclerView.setNestedScrollingEnabled(false);
+        switch (index) {
+            case 1:
+                RecyclierViewCp recyclierViewCp = new RecyclierViewCp(context, R.layout.row_compte, PagerActivity.savingsAccounts, (h, o, i) -> {
+                    setText(o, h, 1);
+                }).setNumberItems(1).setBackground(R.color.colorSendre);
+                main.addView(recyclierViewCp.view());
+                break;
+            case 2:
+                recyclierViewCp = new RecyclierViewCp(context, R.layout.row_epargne, PagerActivity.loanAccounts, (h, o, i) -> {
+                    setText(o, h, 0);
+                }).setNumberItems(1).setBackground(R.color.colorSendre);
+                main.addView(recyclierViewCp.view());
+                break;
+            case 3:
+                break;
+        }
 
-       fragment=this;
+        fragment = this;
         return root;
     }
 
@@ -105,68 +119,160 @@ public class PlaceholderFragment extends Fragment {
     }
 
 
-    void setText(Object v, AdapterViewHolder holder,int k){
-        TextView title=holder.title,second=holder.secondre,
-                title2=holder.title2,secondre2=holder.secondre2,date=holder.date,value=holder.textePourcentage;
-        Object productN_ob=Ut.getValue(v,"accountNo");
-        Object productName_ob=Ut.getValue(v,"productName");
-        Object loanBalance_ob= Ut.getValue(v,"accountBalance");
-        Object currency_ob=Ut.getValue(v,"currency");
+    void setText(Object v, AdapterViewHolder holder, int k) {
+        TextView title = holder.title, second = holder.secondre,
+                title2 = holder.title2, secondre2 = holder.secondre2, date = holder.date, value = holder.textePourcentage;
+        Object productN_ob = Ut.getValue(v, "accountNo");
+        Object productName_ob = Ut.getValue(v, "productName");
+        Object loanBalance_ob = Ut.getValue(v, "accountBalance");
+        Object currency_ob = Ut.getValue(v, "currency");
 
-        if(productN_ob!=null){
-            String productName=productN_ob.toString();
+        View view = holder.view;
+        ImageView plus = view.findViewById(R.id.plus),
+                mort = view.findViewById(R.id.menu);
+
+        if (productN_ob != null) {
+            String productName = productN_ob.toString();
             title.setText(productName);
         }
-        if(productName_ob!=null){
+        if (productName_ob != null) {
             second.setText(productName_ob.toString());
         }
         //Object loanBalance_ob=Ut.getValue(v,"loanBalance");
-        if(k==0){
-            loanBalance_ob=Ut.getValue(v,"loanBalance");
-            Object initial=Ut.getValue(v,"originalLoan");
-            if(loanBalance_ob!=null)
-            {
+        if (k == 0) {
+            loanBalance_ob = Ut.getValue(v, "loanBalance");
+            Object initial = Ut.getValue(v, "originalLoan");
+            if (loanBalance_ob != null) {
                 title2.setText(Ut.formatMontant(Double.parseDouble(loanBalance_ob.toString())));
             }
-            if(initial!=null)
-            {
+            if (initial != null) {
                 value.setText(Ut.formatMontant(Double.parseDouble(initial.toString())));
             }
-        }else
+        } else if (loanBalance_ob != null && currency_ob != null) {
+            Object symb = Ut.getValue(currency_ob, "displaySymbol");
+            String sb = symb == null ? "" : symb.toString();
+            title2.setText(sb + " " + Ut.formatMontant(Double.parseDouble(loanBalance_ob.toString())));
 
-
-        if(loanBalance_ob!=null&&currency_ob!=null)
-        {
-            Object symb=Ut.getValue(currency_ob,"displaySymbol");
-            String sb=symb==null?"":symb.toString();
-            title2.setText(sb+" "+Ut.formatMontant(Double.parseDouble(loanBalance_ob.toString())));
-
-            Object displ=Ut.getValue(currency_ob,"displayLabel");
-            String displsb=displ==null?"":displ.toString();
+            Object displ = Ut.getValue(currency_ob, "displayLabel");
+            String displsb = displ == null ? "" : displ.toString();
             secondre2.setText(displsb);
 
-            Object last_ob=Ut.getValue(v,"lastActiveTransactionDate");
-            if(last_ob!=null){
-                List<Object> obs= (List<Object>) last_ob;
-                String sdate=obs.get(2)+" "+ S.en2(Integer.parseInt(obs.get(1).toString()))+" "+obs.get(0);
-                String dat= S.date(sdate,"dd MM yyyy","dd MMM yyyy");
+            Object last_ob = Ut.getValue(v, "lastActiveTransactionDate");
+            if (last_ob != null) {
+                List<Object> obs = (List<Object>) last_ob;
+                String sdate = obs.get(2) + " " + S.en2(Integer.parseInt(obs.get(1).toString())) + " " + obs.get(0);
+                String dat = S.date(sdate, "dd MM yyyy", "dd MMM yyyy");
                 date.setText(dat);
             }
-            Object type=Ut.getValue(v,"depositType");
-            if(type!=null){
-                Object vl=Ut.getValue(type,"value");
-                if(vl!=null){
-                    if(vl.toString().toLowerCase().contains("sav")){
-                        value.setText("Dépôt");value.setTextColor(Ut.getColor(context,R.color.green));
-                    }else {
-                        value.setText("Retrait");value.setTextColor(Ut.getColor(context,R.color.rouge));
+            Object type = Ut.getValue(v, "depositType");
+            if (type != null) {
+                Object vl = Ut.getValue(type, "value");
+                if (vl != null) {
+                    if (vl.toString().toLowerCase().contains("sav")) {
+                        value.setText("Dépôt");
+                        value.setTextColor(Ut.getColor(context, R.color.green));
+                    } else {
+                        value.setText("Retrait");
+                        value.setTextColor(Ut.getColor(context, R.color.rouge));
                     }
                 }
             }
+            plus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    OperationBinder operationBinder = new OperationBinder();
+                    EditeObject editeObject = operationBinder.editeObject();
+                    startActivity(new Intent(context, AddActivity.class)
+                            .putExtra("object", editeObject));
+                    if (getActivity() != null)
+                        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                }
+            });
+            mort.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String[] m = {"Transactions", "Opération"};
+                    PopupMenu popupMenu = S.popupMenu(view, m);
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case 1:
+                                   setOperation();
+                                    break;
+                                case 2:
+                                    break;
+                            }
+                            return false;
+                        }
+                    });
+                }
+            });
         }
     }
 
+    void setOperation() {
+        OperationBinder compteBinder = new OperationBinder();
+        NavigateObject nvgdp = compteBinder.navigateObject();
+       /* if (loanAccounts != null && savingsAccounts != null) {
+            List<Object> lit = new ArrayList<>(loanAccounts);
+            lit.addAll(savingsAccounts);
+            nvgdp.setValues(lit);
+        }*/
+       // nvgdp.setObject(o);
+        //ClickHandler.setCrudInterface(crudInterface("idCompteBancaire", "comptabilite_compte_bancaire", context));
+        ClickHandler.setOnBindViewHolderAction((vo, v, j) -> {
+            TextView title = vo.title, second = vo.secondre,
+                    title2 = vo.title2, secondre2 = vo.secondre2, date = vo.date, value = vo.textePourcentage;
+            Object productN_ob = Ut.getValue(v, "accountNo");
+            Object productName_ob = Ut.getValue(v, "productName");
 
+            if (productN_ob != null) {
+                String productName = productN_ob.toString();
+                title.setText(productName);
+            }
+            if (productName_ob != null) {
+                second.setText(productName_ob.toString());
+            }
+            Object loanBalance_ob = Ut.getValue(v, "accountBalance");
+            Object currency_ob = Ut.getValue(v, "currency");
+            if (loanBalance_ob != null && currency_ob != null) {
+                Object symb = Ut.getValue(currency_ob, "displaySymbol");
+                String sb = symb == null ? "" : symb.toString();
+                title2.setText(sb + " " + Ut.formatMontant(Double.parseDouble(loanBalance_ob.toString())));
+
+                Object displ = Ut.getValue(currency_ob, "displayLabel");
+                String displsb = displ == null ? "" : displ.toString();
+                secondre2.setText(displsb);
+
+                Object last_ob = Ut.getValue(v, "lastActiveTransactionDate");
+                if (last_ob != null) {
+                    List<Object> obs = (List<Object>) last_ob;
+                    String sdate = obs.get(2) + " " + S.en2(Integer.parseInt(obs.get(1).toString())) + " " + obs.get(0);
+                    String dat = S.date(sdate, "dd MM yyyy", "dd MMM yyyy");
+                    date.setText(dat);
+                }
+                Object type = Ut.getValue(v, "depositType");
+                if (type != null) {
+                    Object vl = Ut.getValue(type, "value");
+                    if (vl != null) {
+                        if (vl.toString().toLowerCase().contains("sav")) {
+                            value.setText("Dépôt");
+                            value.setTextColor(Ut.getColor(context, R.color.green));
+                        } else {
+                            value.setText("Retrait");
+                            value.setTextColor(Ut.getColor(context, R.color.rouge));
+                        }
+                    }
+                }
+            }
+
+        });
+        startActivity(new Intent(context, ListActivity.class)
+                .putExtra("id", "idCompteBancaire")
+                .putExtra("navigateObject", nvgdp));
+
+    }
 
     private int dpToPx(int dp) {
         Resources r = getActivity().getResources();

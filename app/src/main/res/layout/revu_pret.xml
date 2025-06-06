@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <include layout="@layout/tool_bar"/>
+    <ScrollView
+        android:id="@+id/scrollViewReviewLoan"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout
+            android:id="@+id/containerReviewLoan"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/fab_margin"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Numéro du compte -->
+            <TextView
+                android:id="@+id/labelAccountNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Numéro du compte"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:paddingTop="8dp"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tvAccountNumberValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="000000012"
+                android:textSize="16sp"
+                android:paddingBottom="12dp" />
+
+            <!-- Produit de crédit -->
+            <TextView
+                android:id="@+id/labelLoanProduct"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Produit de crédit"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:paddingTop="8dp"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tvLoanProductValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Prêt conso"
+                android:textSize="16sp"
+                android:paddingBottom="12dp" />
+
+            <!-- Objet du prêt -->
+            <TextView
+                android:id="@+id/labelLoanPurpose"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Objet du prêt"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:paddingTop="8dp"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tvLoanPurposeValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Travaux"
+                android:textSize="16sp"
+                android:paddingBottom="12dp" />
+
+            <!-- Le montant principal -->
+            <TextView
+                android:id="@+id/labelPrincipalAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Le montant principal"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:paddingTop="8dp"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tvPrincipalAmountValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1 500 000,00"
+                android:textSize="16sp"
+                android:paddingBottom="12dp" />
+
+            <!-- Monnaie -->
+            <TextView
+                android:id="@+id/labelCurrency"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Monnaie"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:paddingTop="8dp"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tvCurrencyValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="XOF"
+                android:textSize="16sp"
+                android:paddingBottom="12dp" />
+
+            <!-- Date limite de soumission -->
+            <TextView
+                android:id="@+id/labelSubmissionDeadline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Date limite de soumission"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:paddingTop="8dp"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tvSubmissionDeadlineValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="15 06 2025"
+                android:textSize="16sp"
+                android:paddingBottom="12dp" />
+
+            <!-- Date de paiement attendue -->
+            <TextView
+                android:id="@+id/labelExpectedPaymentDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Date de paiement attendue"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:paddingTop="8dp"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tvExpectedPaymentDateValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="01 07 2025"
+                android:textSize="16sp"
+                android:paddingBottom="16dp" />
+
+            <!-- Boutons d'action -->
+            <LinearLayout
+                android:id="@+id/buttonContainer"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="24dp"
+                android:paddingBottom="16dp">
+               <include layout="@layout/two_button"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

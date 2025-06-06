@@ -19,21 +19,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.io.Serializable;
 
-public class Pret implements Serializable {
+public class Operation implements Serializable {
     private String idLocal;
     @Expose
-    @SerializedName("idPret")
+    @SerializedName("idOperation")
     private String idServeur;
-    @SerializedName("idLoanType")
-    private String idLoanType;
+    private String type;
+    private String motif;
     private Double montant;
-    @SerializedName("idSavingsAccount")
-    private SavingsAccount idSavingsAccount;
-    @SerializedName("idSavingsTimeline")
-
-    private SavingsDate idSavingsTimeline;
-    private String objet;
-    private String client;
 
     public String getIdLocal() {
         return this.idLocal;
@@ -55,6 +48,15 @@ public class Pret implements Serializable {
     }
 
 
+    public String getType() {
+        return this.type;
+    }
+
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
 
     public Double getMontant() {
         return this.montant;
@@ -66,41 +68,12 @@ public class Pret implements Serializable {
     }
 
 
-    public SavingsAccount getIdSavingsAccount() {
-        return this.idSavingsAccount;
-    }
-
-
-    public void setIdSavingsAccount(SavingsAccount idSavingsAccount) {
-        this.idSavingsAccount = idSavingsAccount;
-    }
-
-    public String getObjet() {
-        return this.objet;
-    }
-
-
-    public void setObjet(String objet) {
-        this.objet = objet;
-    }
-
-
-    public String getClient() {
-        return this.client;
-    }
-
-
-    public void setClient(String client) {
-        this.client = client;
-    }
-
-
     public String js() {
         return new Gson().toJson(this);
     }
 
-    public Pret fromJs(String js) {
-        return new Gson().fromJson(js, Pret.class);
+    public Operation fromJs(String js) {
+        return new Gson().fromJson(js, Operation.class);
     }
 }
 

@@ -14,14 +14,29 @@
         android:theme="@style/ToolbarTitleStyle">
 
         <!-- Titre “Mes comptes” -->
-        <TextView
-            android:id="@+id/title"
-            style="@style/ToolbarTitleStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Mes comptes"
-            android:layout_margin="@dimen/fab_margin" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                app:tint="@color/white"
+                android:layout_marginStart="8dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/baseline_dehaze_24"
+                android:layout_height="wrap_content">
+
+            </ImageView>
+            <TextView
+                android:id="@+id/title"
+                style="@style/ToolbarTitleStyle"
+                android:layout_width="wrap_content"
+                android:textStyle="bold"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Mes comptes"
+                android:layout_margin="@dimen/fab_margin" />
+        </LinearLayout>
 
         <!-- Onglets (TabLayout) avec notre style personnalisé -->
         <com.google.android.material.tabs.TabLayout
@@ -45,7 +60,7 @@
         android:layout_gravity="top|end"
         android:layout_marginTop="8dp"
         android:elevation="8dp"
-        app:tint="@color/colorPrimary"
+        app:tint="@color/white"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_mort_noir">
 

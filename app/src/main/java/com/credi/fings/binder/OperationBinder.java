@@ -1,8 +1,7 @@
 package com.credi.fings.binder;
 
 import com.credi.fings.R;
-import com.credi.fings.activity.RevuPretActivity;
-import com.credi.fings.entity.Pret;
+import com.credi.fings.entity.Operation;
 import com.credi.fings.publics.AddActivity;
 import com.credi.fings.publics.adapters.generiqueAdapter.ActionMenu;
 import com.credi.fings.publics.adapters.generiqueAdapter.Binder;
@@ -14,13 +13,12 @@ import com.credi.fings.publics.service.impl.Attribut;
 import com.credi.fings.publics.service.impl.EditeObject;
 import com.credi.fings.publics.service.impl.Request;
 import com.credi.fings.publics.service.pojo.NavigateObject;
-import com.credi.fings.publics.service.pojo.NavigateObject;
 
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
-public class PretBinder implements Serializable, BinderInterface {
+public class OperationBinder implements Serializable, BinderInterface {
     @Override
     public Binder binder() {
         Binder binder = new Binder("null", "")
@@ -42,19 +40,10 @@ public class PretBinder implements Serializable, BinderInterface {
     @Override
     public List<Attribut> setAttribut() {
         List<Attribut> attributs = Arrays.asList(
-                new Attribut("Numéro du compte", "idServeur","object", true)
-                        .setValues("000000002","000000001"),
-                new Attribut("Produit de crédit", "idLoanType","object", true)
-                        .setValues("Prêt conso","Prêt immobilier")
-                        .setDefaul("Prêt conso"),
-                new Attribut("Objet du prêt", "objet","object", true)
-                        .setValues("Travaux","Construction")
-                        .setDefaul("Travaux"),
-                new Attribut("Le montant principal", "montant","number", true),
-                new Attribut("Monnaie", "idSavingsTimeline", false),
-                new Attribut("Date limite de soumission", "","date|dd MM yyyy", false),
-                new Attribut("Date de paiement attendue", "","date|dd MM yyyy", false)
-
+                new Attribut("Type", "type","object", true)
+                        .setValues("Dépôt","Retrait"),
+                new Attribut("Montant", "montant","number", true),
+                new Attribut("Motif", "motif","text", true)
         );
         /*attributs.get(3).setValues(Arrays.asList("TAUX","INTERVAL"));
         Request request=new Request(attributs.get(0),"tmobile_operation/find_by_operateur");
@@ -76,12 +65,10 @@ public class PretBinder implements Serializable, BinderInterface {
 
     public EditeObject editeObject() {
         EditeObject editeObject = new EditeObject();
-        editeObject.setObject(new Pret());
+        editeObject.setObject(new Operation());
         editeObject.setAttribute(setAttribut());
-        editeObject.setDesignation(("Demander un prêt".toUpperCase()));
-        editeObject.setButtonLabel("REVUE");
-        editeObject.setNavigateClass(RevuPretActivity.class);
-        editeObject.setaClass(Pret.class);
+        editeObject.setDesignation(("Nouvelle opération").toUpperCase());
+        editeObject.setaClass(Operation.class);
         editeObject.setPostUrl(null);
         return editeObject;
     }
@@ -89,11 +76,11 @@ public class PretBinder implements Serializable, BinderInterface {
     public NavigateObject navigateObject() {
         NavigateObject navigateObject = new NavigateObject()
                 .setBinder(binder())
-                .setaClass(Pret.class)
-                .setTitle("Pret".toUpperCase())
-                .setEndPointSave("pret")
-                .setDataUrl("pret/all")
-                .setPostData(new Pret())
+                .setaClass(Operation.class)
+                .setTitle("Operation".toUpperCase())
+                .setEndPointSave("operation")
+                .setDataUrl("operation/all")
+                .setPostData(new Operation())
                 .setAddButton(true)
                 .setEditeObject(editeObject());
 
@@ -105,7 +92,7 @@ public class PretBinder implements Serializable, BinderInterface {
         editeObject.setObject(object);
         editeObject.setAttribute(setAttribut());
         editeObject.setDesignation(("Ajouter ").toUpperCase());
-        editeObject.setaClass(Pret.class);
+        editeObject.setaClass(Operation.class);
         editeObject.setPostUrl(null);
         return editeObject;
     }
@@ -113,10 +100,10 @@ public class PretBinder implements Serializable, BinderInterface {
     public NavigateObject navigateObject(Object object, EditeObject editeObject) {
         NavigateObject navigateObject = new NavigateObject()
                 .setBinder(binder())
-                .setaClass(Pret.class)
-                .setTitle("Pret".toUpperCase())
-                .setEndPointSave("pret")
-                .setDataUrl("pret/all")
+                .setaClass(Operation.class)
+                .setTitle("Operation".toUpperCase())
+                .setEndPointSave("operation")
+                .setDataUrl("operation/all")
                 .setPostData(object)
                 .setAddButton(true)
                 .setEditeObject(editeObject);

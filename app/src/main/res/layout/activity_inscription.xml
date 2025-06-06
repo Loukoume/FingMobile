@@ -82,29 +82,41 @@
             android:layout_width="wrap_content"
             android:src="@drawable/cadena"
             android:id="@+id/cadena"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_height="80dp">
 
         </ImageView>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:text="Numéro de téléphone"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:layout_height="wrap_content">
+        </TextView>
         <EditText
             android:id="@+id/etPhoneNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edittext_bg"
-            android:hint="Numéro de téléphone"
-            android:inputType="phone"
+            android:inputType="text"
+            android:textStyle="bold"
+            android:textColor="@color/textColore"
             android:padding="10dp"
-            android:layout_marginVertical="@dimen/fab_margin"
-            android:textSize="16sp"/>
+             android:textSize="16sp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:text="Numéro de téléphone"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:layout_height="wrap_content">
+        </TextView>
         <EditText
             android:id="@+id/mot_de_passe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="visible"
+            android:textColor="@color/textColore"
             android:background="@drawable/edittext_bg"
-            android:layout_marginVertical="@dimen/fab_margin"
-            android:hint="Mot de passe"
+            android:layout_marginBottom="@dimen/fab_margin"
             android:textColorHint="@color/colorSendre2"
             android:inputType="textPassword"
             android:padding="10dp"
@@ -113,7 +125,7 @@
              android:layout_width="match_parent"
              android:orientation="vertical"
              android:id="@+id/lnouveau"
-             android:visibility="visible"
+             android:visibility="gone"
 
              android:layout_height="wrap_content">
              <LinearLayout
@@ -152,9 +164,9 @@
             android:layout_marginHorizontal="2dp"
             android:textAllCaps="false"
             android:textStyle="bold"
-            android:textSize="15sp"
+            android:textSize="17sp"
             android:backgroundTint="@color/colorPrimary"
-            android:paddingHorizontal="2sp"
+            android:padding="4sp"
             android:id="@+id/ajouter"
             app:strokeColor="@color/colorAccent"
             android:layout_height="wrap_content">
@@ -209,7 +221,7 @@
         android:textColor="@color/colorAccent"
         android:layout_marginHorizontal="2dp"
         android:layout_marginBottom="16dp"
-    android:visibility="visible"
+    android:visibility="gone"
     style="?attr/materialButtonOutlinedStyle"
     app:strokeColor="@color/colorAccent"
 

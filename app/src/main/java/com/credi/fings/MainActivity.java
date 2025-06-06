@@ -140,8 +140,8 @@ public class MainActivity extends AppCompatActivity {
                 sheet.setAnimation(Anim.getAnimeBH(context));
             }
         });
-        pret="5 000 000 FCFA";
-        epargne="1 500 135 FCFA";
+        pret="";
+        epargne="";
         closEyes();
         getClientAcount();
     }
@@ -152,7 +152,10 @@ public class MainActivity extends AppCompatActivity {
             sheet.setVisibility(View.GONE);
             vide.setVisibility(View.GONE);
         }else
-          super.onBackPressed();
+        {
+            super.onBackPressed();
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        }
     }
 
     private void carousel(){
@@ -441,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
                     savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
                     setComptesValues();
                     // Erreur côté serveur ou JSON non parsable
-                    //  Dialogue.neutreDialog("","null",context).show();
+                      Dialogue.neutreDialog("","null",context).show();
                 }
                 hidePb();
             }
@@ -451,6 +454,7 @@ public class MainActivity extends AppCompatActivity {
                 // Problème réseau ou exception
                 hidePb();
                  client= (Client) Ut.fromJs(Json.json,Client.class);
+                 Dialogue.neutreDialog(t+"","",context).show();
                 loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
                 savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
                 setComptesValues();

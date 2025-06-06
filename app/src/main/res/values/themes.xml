@@ -100,10 +100,10 @@
     <!-- ============================================= -->
     <style name="ToolbarTitleStyle">
         <!-- On récupère la couleur définie pour le texte -->
-        <item name="android:textColor">@color/colorOnPrimary</item>
+        <item name="android:textColor">@color/white</item>
         <!-- Vous pouvez ajouter d’autres attributs si besoin (taille, fontFamily…) -->
         <item name="android:textSize">18sp</item>
-        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
         <item name="android:fontFamily">@font/poppins_regular</item>
     </style>
 
@@ -113,12 +113,13 @@
     <style name="MyTabLayoutStyle" parent="Widget.MaterialComponents.TabLayout">
         <!-- Couleur du texte de chaque onglet : on pointe vers notre selector -->
         <item name="tabTextColor">@color/tab_text_color</item>
+        <item name="fontFamily">@font/exo_bold</item>
         <!-- Couleur de l’icône de chaque onglet : on pointe vers notre selector -->
-        <item name="tabIconTint">@color/tab_icon_tint</item>
+        <item name="tabIconTint">@color/white</item>
         <!-- Couleur de l’indicateur (trait sous l’onglet sélectionné) -->
-        <item name="tabIndicatorColor">@color/tab_indicator</item>
+        <item name="tabIndicatorColor">@color/white</item>
         <!-- Fond des onglets si vous voulez restreindre la couleur (ici blanc) -->
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@color/colorPrimary</item>
         <!-- Distance entre l’indicateur et le bord (optionnel) -->
         <item name="tabIndicatorFullWidth">false</item>
     </style>

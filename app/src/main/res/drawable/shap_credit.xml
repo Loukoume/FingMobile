@@ -1,0 +1,43 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 1) Bord gauche épais -->
+    <item
+        android:width="6dp"
+        android:gravity="left">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/red"/>
+        </shape>
+    </item>
+
+    <!-- 2) Contenu principal : même forme que précédemment,
+         sans stroke ou avec un stroke fin (optionnel) -->
+    <item android:left="3dp">       <!-- On décale de 6dp pour ne pas recouvrir le trait -->
+        <shape android:shape="rectangle">
+
+            <!-- Si vous voulez un contour fin autour des 4 côtés : -->
+            <stroke
+                android:width="1dp"
+                android:color="@color/red" />
+
+            <solid android:color="@color/arg2" />
+
+            <gradient
+                android:startColor="@color/white"
+                android:centerColor="@color/white"
+                android:endColor="@color/white" />
+
+            <padding
+                android:left="1dp"
+                android:top="0dp"
+                android:right="1dp"
+                android:bottom="0dp" />
+
+            <corners
+                android:bottomLeftRadius="5dp"
+                android:bottomRightRadius="5dp"
+                android:topRightRadius="5dp"
+                android:topLeftRadius="5dp" />
+        </shape>
+    </item>
+
+</layer-list>

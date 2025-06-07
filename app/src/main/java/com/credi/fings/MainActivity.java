@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout lservice,sheet;
     FloatingActionButton add;
     Context context;
-    TextView solde_pret,solde_epargne;
+    TextView solde_pret,solde_epargne,symbole,name;
 
 
     @Override
@@ -108,6 +108,8 @@ public class MainActivity extends AppCompatActivity {
         context=this;
         sheet.setVisibility(View.GONE);
         mort=findViewById(R.id.mort);
+        symbole=findViewById(R.id.symbole);
+        name=findViewById(R.id.name);
         //carousel();
         services();clickBotom();
         vide.setOnClickListener(new View.OnClickListener() {
@@ -126,9 +128,15 @@ public class MainActivity extends AppCompatActivity {
         epargne="";
         closEyes();
         if(Inscription.user!=null){
+            if(Inscription.user.getUsername()!=null&&!Inscription.user.getUsername().isEmpty()){
+                String  sy=Inscription.user.getUsername().charAt(0)+"";
+                symbole.setText(sy.toUpperCase());
+            }
+            name.setText(Inscription.user.getUsername().toUpperCase());
+
             String js=MonFichier.lire(context,"client");
             if(!js.isEmpty()){
-                client= new Client().fromJs(js);
+                 client= new Client().fromJs(js);
                 loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
                 savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
                 setComptesValues();
@@ -171,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
+
     }
 
     @Override

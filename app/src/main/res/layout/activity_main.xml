@@ -52,85 +52,97 @@
                      android:layout_width="100dp"
                      android:layout_gravity="center_horizontal"
                      android:src="@drawable/micro"
+                     android:visibility="gone"
                      android:layout_marginVertical="8dp"
                      android:layout_height="100dp">
 
                  </de.hdodenhof.circleimageview.CircleImageView>
+            <TextView
+                android:layout_width="match_parent"
+                android:text="Nous contacter"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                android:layout_marginHorizontal="8dp"
+                android:layout_height="wrap_content">
+            </TextView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:visibility="visible"
+                android:layout_margin="@dimen/fab_margin"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="M"
+                        android:background="@drawable/shap_cercle_primary"
+                        android:textSize="30dp"
+                        android:id="@+id/symbole"
+                        android:paddingHorizontal="15dp"
+                        android:textColor="@color/white"
+                        android:layout_height="wrap_content">
+
+                    </TextView>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_marginHorizontal="8dp"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:src="@drawable/outline_attach_email_24"
+                            app:tint="@color/colorPrimary"
+                            app:layout_constraintStart_toStartOf="parent">
+                        </ImageView>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:text="Bienvenue,"
+                            android:textSize="25dp"
+                            android:textColor="@color/colorPrimary"
+                            android:layout_marginHorizontal="8dp"
+                            android:layout_height="wrap_content">
+                        </TextView>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_marginHorizontal="8dp"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/baseline_add_call_24"
+                            app:tint="@color/colorAccent"
+                            android:visibility="gone"
+                            app:layout_constraintStart_toStartOf="parent">
+                        </ImageView>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:text=""
+                            android:textStyle="bold"
+                            android:id="@+id/name"
+                            android:textColor="@color/black"
+                            android:layout_marginHorizontal="8dp"
+                            android:layout_height="wrap_content">
+                        </TextView>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:orientation="vertical"
                     android:gravity="center_horizontal"
                     android:layout_height="match_parent">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:text="Nous contacter"
-                        android:layout_marginTop="8dp"
-                        android:visibility="gone"
-                        android:layout_marginHorizontal="8dp"
-                        android:layout_height="wrap_content">
-                    </TextView>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:orientation="horizontal"
-                        android:visibility="gone"
-                        android:layout_marginBottom="@dimen/fab_margin"
-                        android:layout_height="wrap_content">
-                        <View
-                            android:layout_width="3dp"
-                            android:background="@color/colorAccent"
-                            android:layout_marginHorizontal="8dp"
-                            android:layout_height="match_parent">
 
-                        </View>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:orientation="vertical"
-
-                            android:layout_height="wrap_content">
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:orientation="horizontal"
-                                android:layout_marginHorizontal="8dp"
-                                android:layout_marginVertical="4dp"
-                                android:layout_height="wrap_content">
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/outline_attach_email_24"
-                                    app:tint="@color/colorPrimary"
-                                    app:layout_constraintStart_toStartOf="parent">
-                                </ImageView>
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:text="support@fingiciel.com"
-                                    android:textColor="@color/colorPrimary"
-                                    android:layout_marginHorizontal="8dp"
-                                    android:layout_height="wrap_content">
-                                </TextView>
-                            </LinearLayout>
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:orientation="horizontal"
-                                android:layout_marginHorizontal="8dp"
-                                android:layout_marginVertical="4dp"
-                                android:layout_height="wrap_content">
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/baseline_add_call_24"
-                                    app:tint="@color/colorAccent"
-                                    app:layout_constraintStart_toStartOf="parent">
-                                </ImageView>
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:text="0033695544758"
-                                    android:textColor="@color/colorAccent"
-                                    android:layout_marginHorizontal="8dp"
-                                    android:layout_height="wrap_content">
-                                </TextView>
-                            </LinearLayout>
-                        </LinearLayout>
-                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"

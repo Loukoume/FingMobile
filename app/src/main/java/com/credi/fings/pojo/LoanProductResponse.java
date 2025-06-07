@@ -1,5 +1,8 @@
 package com.credi.fings.pojo;
 
+import com.credi.fings.entity.Client;
+import com.google.gson.Gson;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -88,6 +91,13 @@ public class LoanProductResponse implements Serializable {
 
     public void setRatesEnabled(boolean ratesEnabled) {
         isRatesEnabled = ratesEnabled;
+    }
+    public String js() {
+        return new Gson().toJson(this);
+    }
+
+    public LoanProductResponse fromJs(String js) {
+        return new Gson().fromJson(js, LoanProductResponse.class);
     }
 }
 

@@ -56,7 +56,7 @@ public class LoanAccountBinder implements Serializable, BinderInterface {
         List<ProductOption> options=loanProductResponse.getProductOptions();
         if(options==null)options=new ArrayList<>();
         List<Attribut> attributs = Arrays.asList(
-                new Attribut("Produit de crédit", "productOption","object", true)
+                new Attribut("Produit de crédit", "productOption","object", false)
                         .setValuess(options.stream().map(ss->(ProductOption) ss).collect(Collectors.toList())).setLabel("name"),
                  new Attribut("Montant principal", "principal","number", true),
                 new Attribut("Date limite de soumission", "submittedOnDate","dateString|dd MMMM yyyy", false),

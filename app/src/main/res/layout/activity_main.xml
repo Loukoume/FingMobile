@@ -12,13 +12,22 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.08"
+            android:gravity="center_vertical"
+            android:background="@color/colorPrimary"
             android:paddingTop="8dp"
-            android:paddingBottom="@dimen/fab_margin"
-            android:background="@drawable/shap_carre_blanc"
+            android:paddingBottom="8dp"
             android:orientation="vertical"
             >
-            <include layout="@layout/fing_mobile"/>
+          <TextView
+              android:layout_width="match_parent"
+              android:text="FING MOBILE"
+              android:textSize="20dp"
+              android:textColor="@color/white"
+              android:textStyle="bold"
+              android:layout_marginStart="70dp"
+              android:layout_height="wrap_content">
 
+          </TextView>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -357,7 +366,7 @@
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="wrap_content"
             android:layout_marginHorizontal="8dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:layout_height="wrap_content">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -390,7 +399,7 @@
         android:layout_gravity="top|end"
         android:layout_marginTop="12sp"
         android:id="@+id/mort"
-        app:tint="@color/colorPrimary"
+        app:tint="@color/white"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_height="wrap_content">
 

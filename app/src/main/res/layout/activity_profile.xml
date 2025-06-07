@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+   >
+    <include layout="@layout/tool_bar"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/user_profile_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <!-- Photo de profil circulaire -->
+        <ImageView
+            android:id="@+id/imageProfilePhoto"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="14dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/user"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            android:background="@drawable/circle_background"/>
+
+        <!-- Nom de l'utilisateur -->
+        <TextView
+            android:id="@+id/textUserName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center_horizontal"
+            android:text=""
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            app:layout_constraintTop_toBottomOf="@id/imageProfilePhoto"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- Adresse e-mail -->
+        <TextView
+            android:id="@+id/textUserEmail"
+            android:layout_width="0dp"
+            android:gravity="center_horizontal"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text=""
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            app:layout_constraintTop_toBottomOf="@id/textUserName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- Numéro de téléphone -->
+        <TextView
+            android:id="@+id/textUserPhone"
+            android:layout_width="0dp"
+            android:gravity="center_horizontal"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text=""
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            app:layout_constraintTop_toBottomOf="@id/textUserEmail"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

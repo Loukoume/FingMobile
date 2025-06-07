@@ -64,7 +64,7 @@
                         android:textSize="14dp"
                         android:textColor="@color/colorOnPromary"
                         android:paddingVertical="5dp"
-                        android:text="2000"
+                        android:text=""
                         android:layout_height="wrap_content">
 
                     </TextView>
@@ -73,6 +73,7 @@
                         android:id="@+id/plus"
                         android:layout_gravity="end"
                         app:tint="@color/green"
+                        android:visibility="invisible"
                         android:src="@drawable/plus_argant"
                         android:layout_height="wrap_content">
                     </ImageView>

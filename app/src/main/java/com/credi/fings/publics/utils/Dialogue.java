@@ -17,7 +17,7 @@ public class Dialogue {
 
     public static AlertDialog neutreDialog(String titre, String T, final Context context) {
         // Création d'un boite de dialogue
-       // if(titre.contains("java.net")||titre.contains("javax.net"))titre="Vérifier votre connexion internet et réessayer";
+        if(titre.contains("java.net")||titre.contains("javax.net"))titre="Vérifier votre connexion internet et réessayer";
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 

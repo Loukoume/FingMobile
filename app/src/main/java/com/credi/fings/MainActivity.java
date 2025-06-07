@@ -25,6 +25,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.credi.fings.activity.Inscription;
 import com.credi.fings.activity.PagerActivity;
+import com.credi.fings.activity.ProfileActivity;
 import com.credi.fings.binder.CompteBinder;
 import com.credi.fings.binder.LoanAccountBinder;
 import com.credi.fings.binder.PretBinder;
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
     Context context;
     TextView solde_pret,solde_epargne;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,6 +126,17 @@ public class MainActivity extends AppCompatActivity {
         epargne="";
         closEyes();
         if(Inscription.user!=null){
+            String js=MonFichier.lire(context,"client");
+            if(!js.isEmpty()){
+                client= new Client().fromJs(js);
+                loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
+                savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
+                setComptesValues();
+            }
+            js=MonFichier.lire(context,"loanProductResponse");
+            if(!js.isEmpty()){
+                loanProductResponse=new LoanProductResponse().fromJs(js);
+            }
             getClientAcount();
             getTemplate();
         }else {
@@ -149,6 +162,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+            }
+        });
+        profil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(context, ProfileActivity.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
     }
@@ -536,6 +556,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<Client> call, Response<Client> response) {
                 if (response.isSuccessful() && response.body() != null) {
                      client = response.body();
+                     MonFichier.ecrire(context,"client",client.js());
                     loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
                     savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
                     setComptesValues();
@@ -554,11 +575,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<Client> call, Throwable t) {
                 // Problème réseau ou exception
                 hidePb();
-                 client= (Client) Ut.fromJs(Json.json,Client.class);
-                 Dialogue.neutreDialog(t+"","",context).show();
-                loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
-                savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
-                setComptesValues();
+                Dialogue.neutreDialog(t.getMessage()+"","Echec",context).show();
             }
         });
     }
@@ -599,6 +616,8 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<LoanProductResponse> call, Response<LoanProductResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                    loanProductResponse = response.body();
+
+                   MonFichier.ecrire(context,"loanProductResponse",loanProductResponse.js());
                    // loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
                     //= (List<Object>) Ut.getValue(client,"savingsAccounts");
                    // setComptesValues();

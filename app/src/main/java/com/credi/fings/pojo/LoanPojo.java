@@ -1,26 +1,15 @@
-package com.credi.fings.entity;
+package com.credi.fings.pojo;
 
-import com.google.gson.Gson;
+import com.credi.fings.entity.LoanDate;
+import com.credi.fings.entity.LoanType;
+import com.credi.fings.entity.Status;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import com.credi.fings.publics.AddActivity;
-import com.credi.fings.R;
-import com.credi.fings.publics.adapters.generiqueAdapter.ActionMenu;
-import com.credi.fings.publics.adapters.generiqueAdapter.Binder;
-import com.credi.fings.publics.adapters.generiqueAdapter.ElementRow;
-import com.credi.fings.publics.adapters.generiqueAdapter.MenuContextuel;
-import com.credi.fings.publics.adapters.generiqueAdapter.RowObject;
-import com.credi.fings.publics.service.BinderInterface;
-import com.credi.fings.publics.service.impl.Attribut;
-import com.credi.fings.publics.service.impl.Request;
-
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
-public class LoanAccount implements Serializable {
+public class LoanPojo implements Serializable {
     private String idLocal;
     @Expose
     @SerializedName("idLoanAccount")
@@ -28,19 +17,22 @@ public class LoanAccount implements Serializable {
     private Integer clientId;
     private String accountNo;
     private Integer productId;
-
+    private ProductOption productOption;
     private String productName;
     private String shortProductName;
     private Status status;
-    private LoanType loanType;
+    private String loanType;
     private Integer loanCycle;
     private LoanDate timeline;
     private Boolean inArrears;
     private BigDecimal originalLoan;
     private BigDecimal loanBalance;
+    private Boolean isEqualAmortization;
+    private Boolean allowPartialPeriodInterestCalcualtion;
+    private Integer fundId;
 
     @SerializedName("principal")
-    private Double principal;
+    private Integer principal;
 
     @SerializedName("loanTermFrequency")
     private Integer loanTermFrequency;
@@ -58,7 +50,7 @@ public class LoanAccount implements Serializable {
     private Integer repaymentFrequencyType;
 
     @SerializedName("interestRatePerPeriod")
-    private Double interestRatePerPeriod;
+    private Integer interestRatePerPeriod;
 
     @SerializedName("amortizationType")
     private Integer amortizationType;
@@ -88,136 +80,46 @@ public class LoanAccount implements Serializable {
     private Double maxOutstandingLoanBalance;
 
     private String dateFormat = "dd MMMM yyyy";
-    private String locale = "en";
-
+    private String locale = "fr";
 
     public String getIdLocal() {
-        return this.idLocal;
+        return idLocal;
     }
-
 
     public void setIdLocal(String idLocal) {
         this.idLocal = idLocal;
     }
 
-
     public String getIdServeur() {
-        return this.idServeur;
+        return idServeur;
     }
-
 
     public void setIdServeur(String idServeur) {
         this.idServeur = idServeur;
     }
 
-
-    public String getAccountNo() {
-        return this.accountNo;
+    public Boolean getEqualAmortization() {
+        return isEqualAmortization;
     }
 
-
-    public void setAccountNo(String accountNo) {
-        this.accountNo = accountNo;
+    public void setEqualAmortization(Boolean equalAmortization) {
+        isEqualAmortization = equalAmortization;
     }
 
-
-    public Integer getProductId() {
-        return this.productId;
+    public Boolean getAllowPartialPeriodInterestCalcualtion() {
+        return allowPartialPeriodInterestCalcualtion;
     }
 
-
-    public void setProductId(Integer productId) {
-        this.productId = productId;
+    public void setAllowPartialPeriodInterestCalcualtion(Boolean allowPartialPeriodInterestCalcualtion) {
+        this.allowPartialPeriodInterestCalcualtion = allowPartialPeriodInterestCalcualtion;
     }
 
-
-    public String getProductName() {
-        return this.productName;
+    public Integer getFundId() {
+        return fundId;
     }
 
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-
-    public String getShortProductName() {
-        return this.shortProductName;
-    }
-
-
-    public void setShortProductName(String shortProductName) {
-        this.shortProductName = shortProductName;
-    }
-
-
-    public Status getStatus() {
-        return this.status;
-    }
-
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-
-    public LoanType getLoanType() {
-        return this.loanType;
-    }
-
-
-    public void setLoanType(LoanType loanType) {
-        this.loanType = loanType;
-    }
-
-
-    public Integer getLoanCycle() {
-        return this.loanCycle;
-    }
-
-
-    public void setLoanCycle(Integer loanCycle) {
-        this.loanCycle = loanCycle;
-    }
-
-
-    public LoanDate getDate() {
-        return this.timeline;
-    }
-
-
-    public void setDate(LoanDate Date) {
-        this.timeline = Date;
-    }
-
-
-    public Boolean getInArrears() {
-        return this.inArrears;
-    }
-
-
-    public void setInArrears(Boolean inArrears) {
-        this.inArrears = inArrears;
-    }
-
-
-    public BigDecimal getOriginalLoan() {
-        return this.originalLoan;
-    }
-
-
-    public void setOriginalLoan(BigDecimal originalLoan) {
-        this.originalLoan = originalLoan;
-    }
-
-
-    public BigDecimal getLoanBalance() {
-        return this.loanBalance;
-    }
-
-
-    public void setLoanBalance(BigDecimal loanBalance) {
-        this.loanBalance = loanBalance;
+    public void setFundId(Integer fundId) {
+        this.fundId = fundId;
     }
 
     public Integer getClientId() {
@@ -228,6 +130,70 @@ public class LoanAccount implements Serializable {
         this.clientId = clientId;
     }
 
+    public String getAccountNo() {
+        return accountNo;
+    }
+
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
+    }
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public ProductOption getProductOption() {
+        return productOption;
+    }
+
+    public void setProductOption(ProductOption productOption) {
+        this.productOption = productOption;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getShortProductName() {
+        return shortProductName;
+    }
+
+    public void setShortProductName(String shortProductName) {
+        this.shortProductName = shortProductName;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public String getLoanType() {
+        return loanType;
+    }
+
+    public void setLoanType(String loanType) {
+        this.loanType = loanType;
+    }
+
+    public Integer getLoanCycle() {
+        return loanCycle;
+    }
+
+    public void setLoanCycle(Integer loanCycle) {
+        this.loanCycle = loanCycle;
+    }
+
     public LoanDate getTimeline() {
         return timeline;
     }
@@ -236,11 +202,35 @@ public class LoanAccount implements Serializable {
         this.timeline = timeline;
     }
 
-    public Double getPrincipal() {
+    public Boolean getInArrears() {
+        return inArrears;
+    }
+
+    public void setInArrears(Boolean inArrears) {
+        this.inArrears = inArrears;
+    }
+
+    public BigDecimal getOriginalLoan() {
+        return originalLoan;
+    }
+
+    public void setOriginalLoan(BigDecimal originalLoan) {
+        this.originalLoan = originalLoan;
+    }
+
+    public BigDecimal getLoanBalance() {
+        return loanBalance;
+    }
+
+    public void setLoanBalance(BigDecimal loanBalance) {
+        this.loanBalance = loanBalance;
+    }
+
+    public Integer getPrincipal() {
         return principal;
     }
 
-    public void setPrincipal(Double principal) {
+    public void setPrincipal(Integer principal) {
         this.principal = principal;
     }
 
@@ -284,11 +274,11 @@ public class LoanAccount implements Serializable {
         this.repaymentFrequencyType = repaymentFrequencyType;
     }
 
-    public Double getInterestRatePerPeriod() {
+    public Integer getInterestRatePerPeriod() {
         return interestRatePerPeriod;
     }
 
-    public void setInterestRatePerPeriod(Double interestRatePerPeriod) {
+    public void setInterestRatePerPeriod(Integer interestRatePerPeriod) {
         this.interestRatePerPeriod = interestRatePerPeriod;
     }
 
@@ -379,14 +369,4 @@ public class LoanAccount implements Serializable {
     public void setLocale(String locale) {
         this.locale = locale;
     }
-
-    public String js() {
-        return new Gson().toJson(this);
-    }
-
-    public LoanAccount fromJs(String js) {
-        return new Gson().fromJson(js, LoanAccount.class);
-    }
 }
-
-

@@ -21,9 +21,8 @@ import java.io.Serializable;
 
 public class LoanType implements Serializable {
     private String idLocal;
-    @Expose
-    @SerializedName("idLoanType")
-    private String idServeur;
+
+    private Long id;
     private String code;
     private String value;
 
@@ -37,15 +36,13 @@ public class LoanType implements Serializable {
     }
 
 
-    public String getIdServeur() {
-        return this.idServeur;
+    public Long getId() {
+        return id;
     }
 
-
-    public void setIdServeur(String idServeur) {
-        this.idServeur = idServeur;
+    public void setId(Long id) {
+        this.id = id;
     }
-
 
     public String getCode() {
         return this.code;

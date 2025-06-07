@@ -1,5 +1,6 @@
 package com.credi.fings;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,12 +15,19 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.credi.fings.activity.Inscription;
 import com.credi.fings.activity.PagerActivity;
 import com.credi.fings.binder.CompteBinder;
+import com.credi.fings.binder.LoanAccountBinder;
 import com.credi.fings.binder.PretBinder;
 import com.credi.fings.entity.Client;
 import com.credi.fings.entity.Compte;
+import com.credi.fings.entity.Currency;
 import com.credi.fings.entity.LoanAccount;
+import com.credi.fings.entity.LoanType;
+import com.credi.fings.pojo.LoanPojo;
+import com.credi.fings.pojo.LoanProductResponse;
+import com.credi.fings.pojo.LoginRequest;
 import com.credi.fings.publics.AddActivity;
 import com.credi.fings.publics.carousel.CarouselAdapter;
 import com.credi.fings.publics.carousel.CarouselItem;
@@ -48,6 +56,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
@@ -143,7 +152,12 @@ public class MainActivity extends AppCompatActivity {
         pret="";
         epargne="";
         closEyes();
-        getClientAcount();
+        if(Inscription.user!=null){
+            getClientAcount();
+            getTemplate();
+        }else {
+            finish();
+        }
     }
 
     @Override
@@ -216,14 +230,102 @@ public class MainActivity extends AppCompatActivity {
          imageView.setImageResource(ob.imageRes);
 
         }).setNumberItems(2).setBackground(R.color.colorSendre);
+
+
         lservice.addView(recyclierViewCp.view());
         recyclierViewCp.setOnClick((o,i)->{
+            if(loanAccounts==null){
+                loanAccounts=new ArrayList<>();
+            }
+            if(savingsAccounts==null){
+                savingsAccounts=new ArrayList<>();
+            }
+            if(loanProductResponse==null){
+                loanProductResponse=new LoanProductResponse();
+            }
             switch (i){
                 case 0:
                     break;
                 case 1:
-                    PretBinder pretBinder=new PretBinder();
-                    EditeObject editeObject=pretBinder.editeObject();
+                    LoanPojo loanAccount=new LoanPojo();
+                    loanAccount.setClientId(Inscription.user.getClientId());
+                    LoanType loanType=new LoanType();
+                    loanType.setId(1L);
+                    loanType.setCode("accountType.individual");
+                    loanType.setValue("individual");
+                    loanAccount.setLoanType(loanType.getValue());
+                    loanAccount.setInterestCalculationPeriodType(1);
+
+                    loanAccount.setProductId(1);
+
+// disbursementData : tableau vide
+
+                    loanAccount.setFundId(1);
+
+
+                    loanAccount.setLoanTermFrequency(24);
+                    loanAccount.setLoanTermFrequencyType(2);
+
+                    loanAccount.setNumberOfRepayments(24);
+                    loanAccount.setRepaymentEvery(1);
+                    loanAccount.setRepaymentFrequencyType(2);
+
+                    loanAccount.setInterestRatePerPeriod(4);
+                    loanAccount.setAmortizationType(1);
+
+                    loanAccount.setEqualAmortization(false);
+                    loanAccount.setInterestType(0);
+
+                    loanAccount.setAllowPartialPeriodInterestCalcualtion(false);
+
+                    loanAccount.setTransactionProcessingStrategyId(1);
+                    loanAccount.setLoanPurposeId(24);
+
+                    loanAccount.setLocale("fr");
+                    loanAccount.setDateFormat("dd MMMM yyyy");
+
+                    /*loanAccount.setExpectedDisbursementDate("05 octobre 2024");
+                    loanAccount.setSubmittedOnDate("05 octobre 2024");*/
+
+                    /*
+
+                    {"clientId":"9",
+                    "productId":1,
+                    "disbursementData":[],
+                    "fundId":1,
+                    "principal":2000000,
+                    "loanTermFrequency":24,
+                    "loanTermFrequencyType":2,
+                    "numberOfRepayments":24,
+                    "repaymentEvery":1,
+                    "repaymentFrequencyType":2,
+                    "interestRatePerPeriod":4,
+                    "amortizationType":1,
+                    "isEqualAmortization":false,
+                    "interestType":0,
+                    "interestCalculationPeriodType":1,
+                    "allowPartialPeriodInterestCalcualtion":false,
+                    "transactionProcessingStrategyId":1,
+                    "loanPurposeId":24,
+                    "locale":"fr",
+                    "dateFormat":"dd MMMM yyyy",
+                    "loanType":"individual",
+                    "expectedDisbursementDate":"05 octobre 2024",
+                    "submittedOnDate":"05 octobre 2024"}
+
+                    * */
+
+
+                   /* ClickHandler.setSendHttp((object,activity)->{
+                        LoanPojo loan= (LoanPojo) Ut.creatObject(object,LoanAccount.class);
+                        saveLoan(loan,activity);
+                    });*/
+                    List<String> comptes=loanAccounts.stream().map(ac->Ut.getValue(ac,"accountNo")+"").collect(Collectors.toList());
+                    System.out.println("comptes == "+comptes);
+                    LoanAccountBinder pretBinder=new LoanAccountBinder();
+                    EditeObject editeObject=pretBinder.editeObject(loanProductResponse,comptes);
+                    editeObject.setObject(loanAccount);
+
                     startActivity(new Intent(context, AddActivity.class)
                             .putExtra("object",editeObject));
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -409,24 +511,25 @@ public class MainActivity extends AppCompatActivity {
         pb.setVisibility(View.GONE);
         vide.setVisibility(View.GONE);
     }
-    List<Object> savingsAccounts;
-    List<Object> loanAccounts;
+    public static List<Object> savingsAccounts;
+    public static List<Object> loanAccounts;
+    public static LoanProductResponse loanProductResponse;
     Client client;
     void getClientAcount(){
         showPb();
         // 1. Spécifiez vos identifiants Basic Auth
-        String username = "adam";
-        String password = "nadia";
+        String username = Inscription.body.getUsername();
+       // String password = Inscription.user;
 
         // 2. Obtenez l'instance de RetrofitClient
-        RetrofitClient retrofitClient = RetrofitClient.getInstance(username, password);
+        RetrofitClient retrofitClient = RetrofitClient.getInstance(username, Inscription.body.getPassword());
         ApiService api = retrofitClient.getFineractApi();
 
         // 3. Préparez l'appel
-        long clientId = 8L;                     // ID du client (ici 8)
+        long clientId = Inscription.user.getClientId();                     // ID du client (ici 8)
         String tenant = "default";              // tenantIdentifier
 
-        Call<Client> call = api.getClientAccountsById("Basic " + okhttp3.Credentials.basic(username, password),
+        Call<Client> call = api.getClientAccountsById("Basic " + okhttp3.Credentials.basic(username, Inscription.body.getPassword()),
                 clientId, tenant);
 
         // 4. Exécutez l'appel de manière asynchrone
@@ -439,12 +542,12 @@ public class MainActivity extends AppCompatActivity {
                     savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
                     setComptesValues();
                 } else {
-                     client= (Client) Ut.fromJs(Json.json,Client.class);
-                    loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
-                    savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
-                    setComptesValues();
+                     //client= (Client) Ut.fromJs(Json.json,Client.class);
+                    //loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
+                   // savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
+                   // setComptesValues();
                     // Erreur côté serveur ou JSON non parsable
-                      Dialogue.neutreDialog("","null",context).show();
+                      Dialogue.neutreDialog(response.message()+" "+response.code(),response.errorBody()+"",context).show();
                 }
                 hidePb();
             }
@@ -474,4 +577,57 @@ public class MainActivity extends AppCompatActivity {
             closEyes();
         }
     }
+
+    void getTemplate(){
+        showPb();
+        // 1. Spécifiez vos identifiants Basic Auth
+        String username = Inscription.body.getUsername();
+        // String password = Inscription.user;
+
+        // 2. Obtenez l'instance de RetrofitClient
+        RetrofitClient retrofitClient = RetrofitClient.getInstance(username, Inscription.body.getPassword());
+        ApiService api = retrofitClient.getFineractApi();
+
+        // 3. Préparez l'appel
+        String clientId = "individual";                     // ID du client (ici 8)
+        String tenant = "default";              // tenantIdentifier
+
+        Call<LoanProductResponse> call = api.getTemplatePret("Basic " + okhttp3.Credentials.basic(username, Inscription.body.getPassword()),
+                clientId, tenant);
+
+        // 4. Exécutez l'appel de manière asynchrone
+        call.enqueue(new Callback<LoanProductResponse>() {
+            @Override
+            public void onResponse(Call<LoanProductResponse> call, Response<LoanProductResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                   loanProductResponse = response.body();
+                   // loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
+                    //= (List<Object>) Ut.getValue(client,"savingsAccounts");
+                   // setComptesValues();
+
+                } else {
+                    //client= (Client) Ut.fromJs(Json.json,Client.class);
+                    //loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
+                    // savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
+                    // setComptesValues();
+                    // Erreur côté serveur ou JSON non parsable
+                    Dialogue.neutreDialog(response.message()+" "+response.code(),response.errorBody()+"",context).show();
+                }
+                hidePb();
+            }
+
+            @Override
+            public void onFailure(Call<LoanProductResponse> call, Throwable t) {
+                // Problème réseau ou exception
+                hidePb();
+                /*client= (Client) Ut.fromJs(Json.json,Client.class);
+                Dialogue.neutreDialog(t+"","",context).show();
+                loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
+                savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
+                setComptesValues();*/
+            }
+        });
+    }
+
+
 }

@@ -4,6 +4,8 @@ import android.database.Observable;
 
 import com.credi.fings.entity.Client;
 import com.credi.fings.entity.LoanAccount;
+import com.credi.fings.pojo.LoanPojo;
+import com.credi.fings.pojo.LoanProductResponse;
 import com.credi.fings.publics.UploadFileResponse;
 
 import java.util.List;
@@ -58,10 +60,31 @@ public interface ApiService {
      * @param tenantIdentifier ("default" par défaut)
      * @return une réponse sérialisée dans ClientAccountsResponse
      */
-    @GET("fineract-provider/api/v1/clients/{id}/accounts")
+    @GET("fineract-provider/api/v1/self/clients/{id}/accounts")
     Call<Client> getClientAccountsById(
             @Header("Authorization") String authHeader,
             @Path("id") long clientId,
+            @Query("tenantIdentifier") String tenantIdentifier
+    );
+    /**
+     * Récupère la liste des prêts et comptes d’épargne pour un client donné.
+     * Ex. GET /fineract-provider/api/v1/clients/{id}/accounts?tenantIdentifier=default
+     *
+     * @param authHeader       header "Authorization: Basic <tokenBase64>"
+     * @param templateType         l’ID du client (par ex. 8)
+     * @param tenantIdentifier ("default" par défaut)
+     * @return une réponse sérialisée dans ClientAccountsResponse
+     */
+    @GET("fineract-provider/api/v1/self/loans/template")
+    Call<LoanProductResponse> getTemplatePret(
+            @Header("Authorization") String authHeader,
+            @Query("templateType") String templateType,
+            @Query("tenantIdentifier") String tenantIdentifier
+    );
+    @POST("fineract-provider/api/v1/self/loans")
+    Call<Object> saveLoan(
+            @Header("Authorization") String authHeader,
+            @Body LoanPojo loanAccount,
             @Query("tenantIdentifier") String tenantIdentifier
     );
     @GET
@@ -87,9 +110,8 @@ public interface ApiService {
     );
 
     @POST("fineract-provider/api/v1/self/authentication")
-    Observable<Client> authenticate(
-            @Query("username") String username,
-            @Query("password") String password
+    Call<Client> authenticate(
+            @Query("tenantIdentifier") String tenantIdentifier
     );
 
 }

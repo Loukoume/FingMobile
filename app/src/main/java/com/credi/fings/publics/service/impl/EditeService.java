@@ -87,13 +87,13 @@ public class EditeService<T> {
         boolean ok=true;
         for (Control c:controls){
             if(c.view==null){
-                RetourData<Object> v=getValues(EditeService.object,c.attribut.getColonne());
+                RetourData<Object> v=getValues(EditeService.object,c.attribut.getField()==null?c.attribut.getColonne():c.attribut.getField());
                 if(c.attribut.isRequierd()&&(v==null||(v.getData()==null||v.getData().toString().isEmpty()))){
                     return false;
                 }
             }else {
                 TextInputLayout view= (TextInputLayout) c.view;
-                RetourData<Object> v=getValues(EditeService.object,c.attribut.getColonne());
+                RetourData<Object> v=getValues(EditeService.object,c.attribut.getField()==null?c.attribut.getColonne():c.attribut.getField());
 
                 System.out.println(c.attribut.getColonne()+" cvv "+v);
                 if(c.attribut.isRequierd()&&(v==null||v.getData()==null||v.getData().toString().isEmpty())){
@@ -412,7 +412,33 @@ public class EditeService<T> {
                     editText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            new Composant(object,field,"yyyy-MM-dd'T'HH:mm:ss").showDateTimePicker(context,attribut.getName(),editText,"edite"
+                            new Composant(object,field,(finalFormat ==null?"yyyy-MM-dd'T'HH:mm:ss": finalFormat)).showDateTimePicker(context,attribut.getName(),editText,"edite"
+                                    ,(finalFormat ==null?"yyyy-MM-dd'T'HH:mm:ss": finalFormat));
+                        }
+                    });
+                    controls.add(new Control(attribut,textInputLayout,TYP.INPUT));
+                    visibles.add(new Control(attribut,view,TYP.INPUT));
+                    return view;
+                case "dateString":
+                    view=  LayoutInflater.from(context).inflate(R.layout.pick_date,null,false);
+                    editText=view.findViewById(R.id.id);
+                    // Récupérez le TextInputLayout
+                    textInputLayout = view.findViewById(R.id.textField);
+                    // Définissez le hint dynamiquement sur le TextInputLayout
+                    textInputLayout.setHint(attribut.getName());
+                    if(v!=null)
+                    {
+                        if(rt.getData() != null && format != null){
+                            editText.setText(S.date(v,"yyyy-MM-dd'T'HH:mm:ss",format));
+                        }else
+                            editText.setText(v);
+                    }
+                     finalFormat = format;
+                    editText.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            new Composant(object,field,(finalFormat ==null?"yyyy-MM-dd'T'HH:mm:ss": finalFormat))
+                                    .setDateString(true).showDateTimePicker(context,attribut.getName(),editText,"edite"
                                     ,(finalFormat ==null?"yyyy-MM-dd'T'HH:mm:ss": finalFormat));
                         }
                     });
@@ -492,10 +518,10 @@ public class EditeService<T> {
                     }else {
                         // select activity
                         EditeService.field=attribut;
-                        //System.out.println("_object__"+object);
-                        //System.out.println("_field__"+field);
+                        System.out.println("_object__"+object);
+                        System.out.println("_field__"+field);
                         Object  lb=Ut.getValue(object,field);
-                        // Dialogue.neutreDialog(Ut.js(lb)+"","",context).show();
+
                         context.startActivity(new Intent(context, SelectActivity.class)
                                 .putExtra("attribut",attribut)
                                 .putExtra("selected",Ut.js(lb)));
@@ -504,7 +530,7 @@ public class EditeService<T> {
                     if(attribut.getValues()!=null&&!attribut.getValues().isEmpty()){
                         ImageView ups=view.findViewById(R.id.ups);
                         List<Object> objects=attribut.getValues();
-                        //System.out.println(Ut.js(objects.get(0))+"===pop="+attribut.getLabel());
+                        System.out.println(Ut.js(objects.get(0))+"===pop="+attribut.getLabel());
 
                         PopupMenu pop=S.popupMenu(ups,attribut.getLabel()==null? attribut.getValues().toArray(new String[0])
                                 :objects.stream().filter(o->o!=null).map(o->
@@ -523,6 +549,8 @@ public class EditeService<T> {
                                 Object nouvelleObject=attribut.getValues().get(item.getItemId()-1);
                                 Object nouvelleValeur=attribut.getField()==null?nouvelleObject:Ut.getValue(nouvelleObject,attribut.getField());
                                 object=Ut.setField(fs,object,nouvelleValeur);
+
+
                                 for (Attribut at:depend){
                                     setValues(at,o,at.getRequest());
                                 }

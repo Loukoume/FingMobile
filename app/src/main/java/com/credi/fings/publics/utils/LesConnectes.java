@@ -2,27 +2,29 @@ package com.credi.fings.publics.utils;
 
 import android.content.Context;
 
+import com.credi.fings.entity.User;
 import com.google.gson.Gson;
 import com.credi.fings.publics.Compte;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class LesConnectes {
-    private List<Compte> Comptes;
+    private List<User> Comptes;
 
-    public LesConnectes(List<Compte> Comptes) {
+    public LesConnectes(List<User> Comptes) {
         this.Comptes = Comptes;
     }
 
     public LesConnectes() {
     }
 
-    public List<Compte> getComptes() {
+    public List<User> getComptes() {
         return Comptes;
     }
 
-    public void setComptes(List<Compte> Comptes) {
+    public void setComptes(List<User> Comptes) {
         this.Comptes = Comptes;
     }
 
@@ -36,33 +38,33 @@ public class LesConnectes {
        try{
            return gson.fromJson(js,LesConnectes.class);
        }catch (Exception e){
-           List<Compte> cl=new ArrayList<>();
+           List<User> cl=new ArrayList<>();
            return new LesConnectes(cl);
        }
     }
-    public List<Compte> comptes(Context c){
+    public List<User> comptes(Context c){
         String js= MonFichier.lire(c,"LesConnectes");
         if(js.length()==0)return new ArrayList<>();
         return fromJs(js).Comptes;
     }
-    public Compte compte(Context c){
+    public User compte(Context c){
         String js= MonFichier.lire(c,"LesConnectes");
         if(js.length()==0||fromJs(js).Comptes.size()==0)return null;
         return fromJs(js).Comptes.get(0);
     }
 
-    public void add(Context c,Compte ct){
-        List<Compte> l=comptes(c);
-        for(Compte cp:l){
-            if(cp.getIdServeur()==ct.getIdServeur())return;
+    public void add(Context c,User ct){
+        List<User> l=comptes(c);
+        for(User cp:l){
+            if(Objects.equals(cp.getUserId(), ct.getUserId()))return;
         }
         l.add(ct);
         MonFichier.ecrire(c,"LesConnectes",new LesConnectes(l).json());
     }
-    public void remove(Context c,Compte ct){
-        List<Compte> l=comptes(c);int i=0;
-        for(Compte cp:l){
-            if(cp.getIdServeur().equals(ct.getIdServeur())){
+    public void remove(Context c,User ct){
+        List<User> l=comptes(c);int i=0;
+        for(User cp:l){
+            if(cp.getUserId().equals(ct.getClientId())){
                 l.remove(i);
                  MonFichier.ecrire(c,"LesConnectes",new LesConnectes(l).json());
                 return;
@@ -71,10 +73,10 @@ public class LesConnectes {
         }
     }
 
-    public void update(Context c,Compte ct){
-        List<Compte> l=comptes(c);int i=0;
-        for(Compte cp:l){
-            if(cp.getIdServeur()==(ct.getIdServeur())){
+    public void update(Context c,User ct){
+        List<User> l=comptes(c);int i=0;
+        for(User cp:l){
+            if(Objects.equals(cp.getUserId(), ct.getUserId())){
                 l.remove(i);l.add(ct);
                 MonFichier.ecrire(c,"LesConnectes",new LesConnectes(l).json());
                 return;

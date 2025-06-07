@@ -5,6 +5,7 @@ import com.credi.fings.publics.utils.S;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -176,8 +177,15 @@ public class Attribut implements Serializable {
         this.values = values;
         return this;
     }
+    public Attribut setValuess(List<Object> values) {
+        this.values = values;
+        return this;
+    }
     public Attribut setValues(Object... values) {
-        this.values = Arrays.asList(values);
+        this.values=new ArrayList<>();
+        for (Object o:values){
+            this.values.add(o);
+        }
         return this;
     }
 

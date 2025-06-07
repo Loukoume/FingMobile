@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        souiM();
+       // souiM();
     }
 
     private void clic() {
@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.body() != null) {
                     if (response.body() != null) {
                         LoginActivity.compte= response.body();;
-                        new LesConnectes().add(context, response.body());
+                        //new LesConnectes().add(context, response.body());
                         MonFichier.ecrire(context, "compte", response.body().js());
                         switch (response.body().getProfile().getLibelle()) {
                             case "admin":
@@ -173,7 +173,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void souiM() {
+   /* private void souiM() {
         final List<Compte> l = new LesConnectes().comptes(context);
         if (l.size() == 1) {
             compte = l.get(0);
@@ -204,5 +204,5 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             return;
         }
-    }
+    }*/
 }

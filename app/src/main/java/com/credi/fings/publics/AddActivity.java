@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.credi.fings.publics.service.ClickHandler;
+import com.credi.fings.publics.service.SendHttp;
 import com.google.android.material.button.MaterialButton;
 import com.credi.fings.R;
 import com.credi.fings.publics.service.HttpApi;
@@ -34,6 +36,7 @@ public class AddActivity extends AppCompatActivity {
     ImageView back;
     Context context;
     EditeService ed;
+    SendHttp sendHttp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +44,7 @@ public class AddActivity extends AppCompatActivity {
         linearLayout=findViewById(R.id.main);
         textView=findViewById(R.id.tx_text);
         context=this;
+        sendHttp= ClickHandler.getSendHttp();
         editeObject= (EditeObject) getIntent().getSerializableExtra("object");
         if(editeObject==null&&getIntent().hasExtra("objectjs")){
             String jjs=getIntent().getStringExtra("objectjs");
@@ -75,17 +79,24 @@ public class AddActivity extends AppCompatActivity {
                     boolean ok=ed.controle();
                     if(ok){
                         object=ed.getObject();
-                        if(editeObject.getPostUrl()==null){
-                            if(editeObject.getNavigateClass()!=null){
-                                startActivity(new Intent(context,editeObject.getNavigateClass()));
-                            }else {
-                                editeObject=null;
-                            }
-                            finish();
-                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        if(sendHttp!=null){
+                            sendHttp.send(object,AddActivity.this);
                         }else {
-                            saveData(editeObject.getPostUrl(),object);
+                            if(editeObject.getPostUrl()==null){
+                                if(editeObject.getNavigateClass()!=null){
+                                    startActivity(new Intent(context,editeObject.getNavigateClass())
+                                            .putExtra("editeObject",Ut.js(object)));
+                                }else {
+                                    editeObject=null;
+                                }
+                                finish();
+                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                            }else {
+                                saveData(editeObject.getPostUrl(),object);
+                            }
                         }
+                    }else {
+                        Dialogue.neutreDialog(Ut.js(ed.getObject()),"",context).show();
                     }
                 }
             });

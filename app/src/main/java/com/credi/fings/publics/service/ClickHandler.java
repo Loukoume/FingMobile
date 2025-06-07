@@ -6,6 +6,7 @@ public class ClickHandler {
     private static OnItemViewClick onItemViewClick;
     private static CrudInterface crudInterface;
     private static OnBindViewHolderAction onBindViewHolderAction;
+    private static SendHttp sendHttp;
 
     public static void setOnItemViewClick(OnItemViewClick clickListener) {
         onItemViewClick = clickListener;
@@ -31,10 +32,19 @@ public class ClickHandler {
         ClickHandler.onBindViewHolderAction = onBindViewHolderAction;
     }
 
+    public static SendHttp getSendHttp() {
+        return sendHttp;
+    }
+
+    public static void setSendHttp(SendHttp sendHttp) {
+        ClickHandler.sendHttp = sendHttp;
+    }
+
     public static void annuler(){
         crudInterface=null;
         onItemViewClick=null;
         onBindViewHolderAction=null;
+        sendHttp=null;
     }
 }
 

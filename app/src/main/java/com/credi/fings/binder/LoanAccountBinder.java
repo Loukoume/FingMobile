@@ -1,7 +1,12 @@
 package com.credi.fings.binder;
 
 import com.credi.fings.R;
+import com.credi.fings.activity.PagerActivity;
+import com.credi.fings.activity.RevuPretActivity;
 import com.credi.fings.entity.LoanAccount;
+import com.credi.fings.pojo.LoanPojo;
+import com.credi.fings.pojo.LoanProductResponse;
+import com.credi.fings.pojo.ProductOption;
 import com.credi.fings.publics.AddActivity;
 import com.credi.fings.publics.adapters.generiqueAdapter.ActionMenu;
 import com.credi.fings.publics.adapters.generiqueAdapter.Binder;
@@ -15,8 +20,11 @@ import com.credi.fings.publics.service.impl.Request;
 import com.credi.fings.publics.service.pojo.NavigateObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LoanAccountBinder implements Serializable, BinderInterface {
     @Override
@@ -39,18 +47,20 @@ public class LoanAccountBinder implements Serializable, BinderInterface {
 
     @Override
     public List<Attribut> setAttribut() {
+        return Collections.emptyList();
+    }
+
+
+    public List<Attribut> setAttributs(LoanProductResponse loanProductResponse,
+                                       List<String> comptes) {
+        List<ProductOption> options=loanProductResponse.getProductOptions();
+        if(options==null)options=new ArrayList<>();
         List<Attribut> attributs = Arrays.asList(
-                new Attribut("Accountno", "accountNo", true),
-                new Attribut("Productid", "productId", true),
-                new Attribut("Productname", "productName", true),
-                new Attribut("Shortproductname", "shortProductName", true),
-                new Attribut("Status", "status", true),
-                new Attribut("Loantype", "loanType", true),
-                new Attribut("Loancycle", "loanCycle", true),
-                new Attribut("Date", "Date", true),
-                new Attribut("Inarrears", "inArrears", true),
-                new Attribut("Originalloan", "originalLoan", true),
-                new Attribut("Loanbalance", "loanBalance", true)
+                new Attribut("Produit de crédit", "productOption","object", true)
+                        .setValuess(options.stream().map(ss->(ProductOption) ss).collect(Collectors.toList())).setLabel("name"),
+                 new Attribut("Montant principal", "principal","number", true),
+                new Attribut("Date limite de soumission", "submittedOnDate","dateString|dd MMMM yyyy", false),
+                new Attribut("Date de paiement attendue", "expectedDisbursementDate","dateString|dd MMMM yyyy", false)
         );
         /*attributs.get(3).setValues(Arrays.asList("TAUX","INTERVAL"));
         Request request=new Request(attributs.get(0),"tmobile_operation/find_by_operateur");
@@ -70,39 +80,41 @@ public class LoanAccountBinder implements Serializable, BinderInterface {
         BinderInterface.super.setRequest(nam, request);
     }
 
-    public EditeObject editeObject() {
+    public EditeObject editeObject(LoanProductResponse loanProductResponse,
+                                   List<String> comptes) {
         EditeObject editeObject = new EditeObject();
-        editeObject.setObject(new LoanAccount());
-        editeObject.setAttribute(setAttribut());
-        editeObject.setDesignation(("Ajouter " + this.getClass().getSimpleName()).toUpperCase());
-        editeObject.setaClass(LoanAccount.class);
-        editeObject.setPostUrl(null);
+        editeObject.setObject(new LoanPojo());
+        editeObject.setAttribute(setAttributs(loanProductResponse,comptes));
+        editeObject.setDesignation(("Demander un prêt").toUpperCase());
+        editeObject.setaClass(LoanPojo.class);
+        editeObject.setNavigateClass(RevuPretActivity.class);
         return editeObject;
     }
 
-    public NavigateObject navigateObject() {
+    public NavigateObject navigateObject(LoanProductResponse loanProductResponse,
+                                         List<String> comptes) {
         NavigateObject navigateObject = new NavigateObject()
                 .setBinder(binder())
-                .setaClass(LoanAccount.class)
+                .setaClass(LoanPojo.class)
                 .setTitle("LoanAccount".toUpperCase())
                 .setEndPointSave("loan_account")
                 .setDataUrl("loan_account/all")
-                .setPostData(new LoanAccount())
+                .setPostData(new LoanPojo())
                 .setAddButton(true)
-                .setEditeObject(editeObject());
+                .setEditeObject(editeObject(loanProductResponse,comptes));
 
         return navigateObject;
     }
 
-    public EditeObject editeObject(Object object) {
+  /*  public EditeObject editeObject(Object object) {
         EditeObject editeObject = new EditeObject();
         editeObject.setObject(object);
-        editeObject.setAttribute(setAttribut());
+        editeObject.setAttribute(setAttributs());
         editeObject.setDesignation(("Ajouter ").toUpperCase());
         editeObject.setaClass(LoanAccount.class);
         editeObject.setPostUrl(null);
         return editeObject;
-    }
+    }*/
 
     public NavigateObject navigateObject(Object object, EditeObject editeObject) {
         NavigateObject navigateObject = new NavigateObject()

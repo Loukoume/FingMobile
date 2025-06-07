@@ -98,7 +98,7 @@ public class PlaceholderFragment extends Fragment {
                 break;
             case 2:
                 recyclierViewCp = new RecyclierViewCp(context, R.layout.row_epargne, PagerActivity.loanAccounts, (h, o, i) -> {
-                    setText(o, h, 0);
+                    setText(o, h, 2);
                 }).setNumberItems(1).setBackground(R.color.colorSendre);
                 main.addView(recyclierViewCp.view());
                 break;
@@ -127,6 +127,17 @@ public class PlaceholderFragment extends Fragment {
         Object loanBalance_ob = Ut.getValue(v, "accountBalance");
         Object currency_ob = Ut.getValue(v, "currency");
 
+        /*
+         values v = {"accountNo":"000000078",
+         "dateFormat":"dd MMMM yyyy","inArrears":false,
+         "loanType":{"code":"accountType.individual",
+         "id":1,"value":"Individual"},"locale":"en","productId":1,
+         "productName":"Prêt conso","shortProductName":"CONS",
+         "status":{"active":false,"closed":false,"closedObligationsMet":false,"closedRescheduled":false,"closedWrittenOff":false,"code":"loanStatusType.submitted.and.pending.approval","overpaid":false,"pendingApproval":true,"value":"Soumis et en attente d\u0027approbation","waitingForDisbursal":false},
+         "timeline":{"expectedDisbursementDate":[2025,6,3],"expectedMaturityDate":[2027,6,3],"submittedByFirstname":"App","submittedByLastname":"Administrator","submittedByUsername":"mifos","submittedOnDate":[2025,6,3]}}
+2025-06-06 18:41:00.459 18898-18898 System.out              com.credi.fings
+        * */
+
         View view = holder.view;
         ImageView plus = view.findViewById(R.id.plus),
                 mort = view.findViewById(R.id.menu);
@@ -139,7 +150,8 @@ public class PlaceholderFragment extends Fragment {
             second.setText(productName_ob.toString());
         }
         //Object loanBalance_ob=Ut.getValue(v,"loanBalance");
-        if (k == 0) {
+        if (k == 2) {
+            //System.out.println(" values v = "+Ut.js(v));
             loanBalance_ob = Ut.getValue(v, "loanBalance");
             Object initial = Ut.getValue(v, "originalLoan");
             if (loanBalance_ob != null) {
@@ -147,6 +159,13 @@ public class PlaceholderFragment extends Fragment {
             }
             if (initial != null) {
                 value.setText(Ut.formatMontant(Double.parseDouble(initial.toString())));
+            }
+            Object last_ob = Ut.getValue(v, "timeline:expectedDisbursementDate");
+            if (last_ob != null) {
+                List<Object> obs = (List<Object>) last_ob;
+                String sdate = obs.get(2) + " " + S.en2(Integer.parseInt(obs.get(1).toString())) + " " + obs.get(0);
+                String dat = S.date(sdate, "dd MM yyyy", "dd MMM yyyy");
+                date.setText(dat);
             }
         } else if (loanBalance_ob != null && currency_ob != null) {
             Object symb = Ut.getValue(currency_ob, "displaySymbol");

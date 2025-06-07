@@ -1,7 +1,5 @@
 package com.credi.fings.publics.service;
 
-// package : com.votreapp.network
-
 import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -9,6 +7,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.IOException;
@@ -20,15 +19,14 @@ public class RetrofitClient {
     private ApiService fineractApi;
 
     private RetrofitClient(String username, String password) {
-        // 1. Créer l’intercepteur pour le logging HTTP (optionnel mais conseillé en dev)
+        // 1. Logging HTTP (optionnel)
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.level(HttpLoggingInterceptor.Level.BODY);
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        // 2. Créer l’intercepteur pour ajouter le header Basic Auth
+        // 2. Intercepteur Basic Auth
         Interceptor authInterceptor = new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
-                // Génère "Basic base64(username:password)"
                 String credential = Credentials.basic(username, password);
                 Request originalRequest = chain.request();
                 Request.Builder builder = originalRequest.newBuilder()
@@ -38,13 +36,13 @@ public class RetrofitClient {
             }
         };
 
-        // 3. Construire le client OkHttpClient
+        // 3. Construction du client OkHttp
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(authInterceptor)
-                .addInterceptor(logging)                // pour afficher les requêtes/réponses en logcat
+                .addInterceptor(logging)
                 .build();
 
-        // 4. Construire Retrofit
+        // 4. Construction de Retrofit avec RxJava2Adapter
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(client)
@@ -55,10 +53,7 @@ public class RetrofitClient {
     }
 
     /**
-     * Singleton pour récupérer l'instance de l'API
-     *
-     * @param username nom d'utilisateur Basic Auth (ex. "mifos")
-     * @param password mot de passe Basic Auth (ex. "password")
+     * Retourne l’instance unique de RetrofitClient. Si elle n’existe pas, on la crée avec les identifiants passés.
      */
     public static RetrofitClient getInstance(String username, String password) {
         if (instance == null) {
@@ -67,8 +62,39 @@ public class RetrofitClient {
         return instance;
     }
 
+    /**
+     * Réinitialise l’instance pour pouvoir créer un nouveau RetrofitClient
+     * avec d’autres credentials (username/password).
+     */
+    public static void clearInstance() {
+        instance = null;
+    }
+
     public ApiService getFineractApi() {
         return fineractApi;
     }
-}
 
+    private static Retrofit retrofitInstance;
+
+    public static Retrofit getInstance() {
+        if (retrofitInstance == null) {
+            // 1) Logging Interceptor (optionnel, mais utile en dev)
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            // 2) OkHttpClient (on peut ajouter d'autres Interceptors si besoin)
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .addInterceptor(logging)
+                    .build();
+
+            // 3) Construction de Retrofit
+            retrofitInstance = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .client(client)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .build();
+        }
+        return retrofitInstance;
+    }
+}

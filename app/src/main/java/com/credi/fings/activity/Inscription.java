@@ -1,12 +1,16 @@
 package com.credi.fings.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,10 +19,29 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.credi.fings.entity.Client;
+import com.credi.fings.entity.User;
+import com.credi.fings.pojo.LoginRequest;
+import com.credi.fings.publics.service.ApiService;
+import com.credi.fings.publics.service.RetrofitClient;
+import com.credi.fings.publics.service.impl.Ut;
 import com.credi.fings.publics.utils.Dialogue;
+import com.credi.fings.publics.utils.LesConnectes;
+import com.credi.fings.publics.utils.MonFichier;
+import com.credi.fings.repository.AuthService;
 import com.google.android.material.button.MaterialButton;
 import com.credi.fings.MainActivity;
 import com.credi.fings.R;
+
+import java.io.IOException;
+import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.Credentials;
+import retrofit2.Call;
 
 public class Inscription extends AppCompatActivity {
     private ConstraintLayout layoutCreationCompte;
@@ -29,10 +52,11 @@ public class Inscription extends AppCompatActivity {
     private TextView tvPhoneTitle;
     private EditText etPhoneNumber;
     private EditText motDePasse;
-    private EditText etPassWord;
-    private EditText confirmeetPassWord;
+    private View view;
+    private ProgressBar bp;
     private TextView tvSeparator;
     private MaterialButton btnRegisterGoogle,save,ajouter;
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,15 +68,17 @@ public class Inscription extends AppCompatActivity {
         tvPhoneTitle = findViewById(R.id.tvPhoneTitle);
         etPhoneNumber = findViewById(R.id.etPhoneNumber);
         motDePasse = findViewById(R.id.mot_de_passe);
-        etPassWord = findViewById(R.id.etPassWord);
+        view = findViewById(R.id.vide);
         lnouveau=findViewById(R.id.lnouveau);
         cadena=findViewById(R.id.cadena);
-        confirmeetPassWord = findViewById(R.id.confirmeetPassWord);
+        bp = findViewById(R.id.pb);
         tvSeparator = findViewById(R.id.tvSeparator);
         btnRegisterGoogle = findViewById(R.id.btnRegisterGoogle);
         save=findViewById(R.id.saves);
         ajouter=findViewById(R.id.ajouter);
+        context=this;
         connexion();
+        souiM();
     }
     private void inscrition(){
          tvPhoneTitle.setText("Inscription");
@@ -93,11 +119,100 @@ public class Inscription extends AppCompatActivity {
             public void onClick(View view) {
                 String mdp=motDePasse.getText().toString();
                 String login=etPhoneNumber.getText().toString();
-                Dialogue.neutreDialog(" mtp = "+mdp,"login = "+login,view.getContext()).show();
-               // startActivity(new Intent(Inscription.this, MainActivity.class));
-               // overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                authenticateUser(login,mdp);
+               // Dialogue.neutreDialog(" mtp = "+mdp,"login = "+login,view.getContext()).show();
+
             }
         });
+    }
+
+    //https://fingiciel.ngrok.io/fineract-provider/api/v1/clients/8/accounts?&tenantIdentifier=default
+    //https://fingiciel.ngrok.io/fineract-provider/api/v1/self/clients/1?&tenantIdentifier=default
+
+    //https://fingiciel.ngrok.io/fineract-provider/api/v1/self/clients/1/accounts?&tenantIdentifier=default
+//https://fingiciel.ngrok.io//fineract-provider/api/v1/self/authentication
+    private  AuthService authService;
+    private final CompositeDisposable disposables = new CompositeDisposable();
+
+
+    public static User user;
+    public static LoginRequest body;
+    public void authenticateUser(String username, String password) {
+        show();
+        // 1) Récupération du service Retrofit
+        authService = RetrofitClient.getInstance().create(AuthService.class);
+
+        // 2) Construction du corps JSON pour l’authentification
+         body = new LoginRequest(username, password);
+
+        // 3) Génération du header Basic Auth (optionnel si votre instance Fineract l'exige)
+        String authorizationHeader = Credentials.basic(username, password);
+
+        // 4) Tenant identifier requis par Fineract
+        String tenantIdentifier = "default";
+
+        // 5) Appel Retrofit mis à jour pour inclure le @Body
+        Disposable d = authService.authenticate(
+                        authorizationHeader,
+                        tenantIdentifier,
+                        body
+                )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        user -> {
+                            Inscription.user=user;
+                            MonFichier.ecrire(context,"password",password);
+                            new LesConnectes().add(context, user);
+                             startActivity(new Intent(Inscription.this, MainActivity.class));
+                             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                             finish();
+                            hide();
+                        },
+                        throwable -> {
+                            hide();
+                            // Gestion de l’erreur
+                            Log.e("AuthRepo", "Erreur d'auth : " + throwable.getMessage());
+                        }
+                );
+
+        disposables.add(d);
+    }
+
+
+    public void clear() {
+        disposables.clear();
+    }
+
+    private void show() {
+       view.setVisibility(View.VISIBLE);
+       bp.setVisibility(View.VISIBLE);
+    }
+    private void hide() {
+        view.setVisibility(View.GONE);
+        bp.setVisibility(View.GONE);
+    }
+
+    private void souiM() {
+        final List<User> l = new LesConnectes().comptes(context);
+        if (l.size() == 1) {
+            Inscription.user = l.get(0);
+            body = new LoginRequest(Inscription.user.getUsername(), MonFichier.lire(context,"password"));
+            Intent intent = new Intent(context, MainActivity.class);
+           // intent.putExtra("compte", user);
+            startActivity(intent);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            finish();
+
+        } else if (l.size() > 1) {
+
+            String m[] = new String[l.size() + 1];
+            for (int i = 0; i < l.size(); i++) {
+
+            }
+        } else {
+            return;
+        }
     }
 
 }

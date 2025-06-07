@@ -26,6 +26,7 @@ public class Composant {
     private Object object;
     private String field;
     private String dateFormat;
+    private boolean dateString;
     private boolean withHour;
 
     public Composant(Object object, String field, String dateFormat) {
@@ -33,6 +34,15 @@ public class Composant {
         this.field = field;
         this.dateFormat = dateFormat;
         this.withHour = dateFormat != null && dateFormat.contains("HH");
+    }
+
+    public boolean isDateString() {
+        return dateString;
+    }
+
+    public Composant setDateString(boolean dateString) {
+        this.dateString = dateString;
+        return this;
     }
 
     public void showTimePicker(Context context, String title, View view, String typeView) {
@@ -82,9 +92,15 @@ public class Composant {
             // On convertit ce timestamp en date puis on formate la date.
             SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.getDefault());
             String selectedDate = sdf.format(new Date(selection));
-            Date date = S.date(selectedDate, dateFormat);
-            if (object != null && field != null)
-                object = Ut.setField(field, object, date);
+
+            if(!dateString){
+                Date date = S.date(selectedDate, dateFormat);
+                if (object != null && field != null)
+                    object = Ut.setField(field, object, date);
+            }else {
+                if (object != null && field != null)
+                    object = Ut.setField(field, object, selectedDate);
+            }
             switch (typeView) {
                 case "TextView":
                     ((TextView) view).setText(selectedDate);
@@ -141,9 +157,14 @@ public class Composant {
                     SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.getDefault());
                     String selectedDateTime = sdf.format(calendar.getTime());
 
-                    Date date = S.date(selectedDateTime, dateFormat);
-                    if (object != null && field != null)
-                        object = Ut.setField(field, object, date);
+                    if(!dateString){
+                        Date date = S.date(selectedDateTime, dateFormat);
+                        if (object != null && field != null)
+                            object = Ut.setField(field, object, date);
+                    }else {
+                        if (object != null && field != null)
+                            object = Ut.setField(field, object, selectedDateTime);
+                    }
 
                     sdf = new SimpleDateFormat(format, Locale.getDefault());
                     selectedDateTime = sdf.format(calendar.getTime());

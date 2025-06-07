@@ -1,11 +1,13 @@
 package com.credi.fings.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,13 +18,25 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.credi.fings.R;
 import com.credi.fings.entity.Client;
+import com.credi.fings.entity.LoanAccount;
 import com.credi.fings.main.SectionsPagerAdapter;
+import com.credi.fings.pojo.LoanPojo;
+import com.credi.fings.pojo.LoanProductResponse;
+import com.credi.fings.publics.service.ApiService;
+import com.credi.fings.publics.service.RetrofitClient;
 import com.credi.fings.publics.service.impl.Ut;
+import com.credi.fings.publics.utils.Dialogue;
+import com.credi.fings.utils.Json;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
+import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PagerActivity extends AppCompatActivity {
     public static int tab;
@@ -36,6 +50,9 @@ public class PagerActivity extends AppCompatActivity {
     public static List<Object> savingsAccounts;
     public static List<Object> loanAccounts;
     Client client;
+    ViewPager viewPager;
+    TabLayout tabs;
+    SectionsPagerAdapter sectionsPagerAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,14 +62,15 @@ public class PagerActivity extends AppCompatActivity {
         cover=findViewById(R.id.cover);
         top=findViewById(R.id.top);
         ltop=findViewById(R.id.ltop);
+
         client= (Client) getIntent().getSerializableExtra("client");
         loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
         savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
 
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
+        sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+         viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
-        TabLayout tabs = findViewById(R.id.tabs);
+         tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
         ImageView fab = findViewById(R.id.mor);
 
@@ -81,6 +99,7 @@ public class PagerActivity extends AppCompatActivity {
                 top.setVisibility(View.GONE);
             }
         });
+
     }
 
     @Override
@@ -88,4 +107,5 @@ public class PagerActivity extends AppCompatActivity {
         super.onBackPressed();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
+
 }

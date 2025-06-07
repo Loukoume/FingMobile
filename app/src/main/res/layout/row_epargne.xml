@@ -35,7 +35,6 @@
                 android:id="@+id/secondre"
                 android:textSize="12dp"
                 android:text="@string/app_name"
-                android:layout_marginVertical="5dp"
                 android:alpha="0.6"
                 android:layout_height="wrap_content">
 
@@ -43,48 +42,52 @@
             <TableLayout
                 android:layout_width="match_parent"
                 android:stretchColumns="*"
-                android:layout_marginTop="@dimen/fab_margin"
+                android:layout_marginTop="8dp"
                 android:layout_height="wrap_content">
                 <TableRow
                     >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:id="@+id/date"
-                        android:textSize="12dp"
-                        android:textColor="@color/colorOnPromary"
-                        android:text=""
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
                         android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:id="@+id/textePourcentage"
+                            android:textSize="18dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/textColore"
+                            android:gravity="bottom"
+                            android:text="150"
+                            android:layout_height="match_parent">
 
-                    </TextView>
+                        </TextView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:id="@+id/date"
+                            android:gravity="end"
+                            android:textSize="14dp"
+                            android:alpha="0.6"
+                            android:textColor="@color/textColore"
+                            android:text="Montant emprunté"
+                            android:layout_height="wrap_content">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:id="@+id/textePourcentage"
-                        android:gravity="center"
-                        android:textSize="14dp"
-                        android:textColor="@color/colorOnPromary"
-                        android:paddingVertical="5dp"
-                        android:text=""
-                        android:layout_height="wrap_content">
+                        </TextView>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center_vertical"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:id="@+id/menu"
+                            android:layout_gravity="end"
+                            android:src="@drawable/ic_mort_noir"
+                            android:layout_height="wrap_content">
 
-                    </TextView>
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:id="@+id/plus"
-                        android:layout_gravity="end"
-                        app:tint="@color/red"
-                        android:visibility="invisible"
-                        android:src="@drawable/plus_argant"
-                        android:layout_height="wrap_content">
-                    </ImageView>
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:id="@+id/menu"
-                        android:layout_gravity="end"
-                        android:src="@drawable/ic_mort_noir"
-                        android:layout_height="wrap_content">
+                        </ImageView>
+                    </LinearLayout>
 
-                    </ImageView>
                 </TableRow>
             </TableLayout>
             <View
@@ -102,7 +105,7 @@
             android:id="@+id/title2"
             android:textStyle="bold"
             android:layout_marginVertical="8dp"
-            android:text="xd"
+            android:text=""
             android:textSize="17dp"
             android:layout_gravity="top|right"
             android:layout_height="wrap_content">
@@ -110,13 +113,13 @@
         </TextView>
         <TextView
             android:layout_width="wrap_content"
-            android:textColor="@color/colorOnPromary"
+            android:textColor="@color/textColore"
             android:id="@+id/secondre2"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="30dp"
             android:textStyle="normal"
             android:alpha="0.5"
-            android:text="cv"
-            android:textSize="13dp"
+            android:text="Montant restant dû"
+            android:textSize="14dp"
             android:layout_gravity="top|right"
             android:layout_height="wrap_content">
 

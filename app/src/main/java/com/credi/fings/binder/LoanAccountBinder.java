@@ -88,6 +88,8 @@ public class LoanAccountBinder implements Serializable, BinderInterface {
         editeObject.setDesignation(("Demander un prêt").toUpperCase());
         editeObject.setaClass(LoanPojo.class);
         editeObject.setNavigateClass(RevuPretActivity.class);
+        editeObject.setFinish(false);
+        editeObject.setButtonLabel("REVUE");
         return editeObject;
     }
 

@@ -3,6 +3,7 @@ package com.credi.fings.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -28,6 +29,7 @@ import com.credi.fings.publics.service.impl.EditeObject;
 import com.credi.fings.publics.service.impl.Ut;
 import com.credi.fings.publics.utils.Dialogue;
 
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -70,6 +72,8 @@ public class RevuPretActivity extends AppCompatActivity {
         // 4) Boutons d’action (inclus via <include layout="@layout/two_button"/>)
         buttonEditLoan    = findViewById(R.id.saves);
         buttonConfirmLoan = findViewById(R.id.ajouter);
+        vide=findViewById(R.id.vide);
+        pb=findViewById(R.id.pb);
         if(getIntent().hasExtra("editeObject")){
             String js=getIntent().getStringExtra("editeObject");
             if(js!=null){
@@ -77,22 +81,20 @@ public class RevuPretActivity extends AppCompatActivity {
                 if(loan!=null){
                     if (loan != null) {
                         // Numéro de compte
-                        tvAccountNumberValue.setText(loan.getAccountNo());
+                        tvAccountNumberValue.setText("Indéfini");
 
                         // Produit de crédit (nom du produit)
                         tvLoanProductValue.setText(
-                                loan.getProductName() != null
-                                        ? loan.getProductName()
-                                        : loan.getShortProductName()
+                                loan.getProductOption() != null
+                                        ? loan.getProductOption().getName()
+                                        : loan.getProductName()
                         );
 
                         // Objet du prêt (ID à traduire en texte selon votre logique métier)
                         // Par exemple, si vous avez une Map<Integer, String> loanPurposeMap :
                         // tvLoanPurposeValue.setText( loanPurposeMap.get(loan.getLoanPurposeId()) );
                         tvLoanPurposeValue.setText(
-                                loan.getLoanPurposeId() != null
-                                        ? String.valueOf(loan.getLoanPurposeId())
-                                        : "-"
+                               ""
                         );
 
                         // Montant principal
@@ -125,21 +127,23 @@ public class RevuPretActivity extends AppCompatActivity {
                    buttonConfirmLoan.setOnClickListener(new View.OnClickListener() {
                        @Override
                        public void onClick(View view) {
+                           AddActivity.finish=true;
                            saveLoan(loan);
                        }
                    });
                     buttonEditLoan.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            List<String> comptes=loanAccounts.stream().map(ac->Ut.getValue(ac,"accountNo")+"").collect(Collectors.toList());
+                           /* List<String> comptes=loanAccounts.stream().map(ac->Ut.getValue(ac,"accountNo")+"").collect(Collectors.toList());
                             LoanAccountBinder pretBinder=new LoanAccountBinder();
                             EditeObject editeObject=pretBinder.editeObject(MainActivity.loanProductResponse,comptes);
                             editeObject.setObject(loan);
 
                             startActivity(new Intent(context, AddActivity.class)
-                                    .putExtra("object",editeObject));
-                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                                    .putExtra("object",editeObject));*/
+                            AddActivity.finish=false;
                             finish();
+                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         }
                     });
                 }
@@ -151,6 +155,7 @@ public class RevuPretActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        AddActivity.finish=true;
     }
     private String formatDate(String dateStr, String fromPattern, String toPattern) {
         try {
@@ -201,7 +206,23 @@ public class RevuPretActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     getClientAcount();
                 } else {
-                    //   Dialogue.neutreDialog(Ut.js(loanAccount)+" "+response.code(),response.errorBody()+"",context).show();
+                    String errorContent;
+                    try {
+                        // Lit le corps de la réponse d’erreur en String
+                        errorContent = response.errorBody() != null
+                                ? response.errorBody().string()
+                                : "Corps de l’erreur vide";
+                    } catch (IOException e) {
+                        // En cas de problème de lecture
+                        e.printStackTrace();
+                        errorContent = "Impossible de lire le contenu de l’erreur";
+                    }
+                    // Affiche le message d’erreur et le code HTTP
+                    Dialogue.neutreDialog(
+                            errorContent,
+                            "Code d'erreur : " + response.code(),
+                            context
+                    ).show();
                 }
                 hidePb();
             }
@@ -211,7 +232,13 @@ public class RevuPretActivity extends AppCompatActivity {
                 // Problème réseau ou exception
                 hidePb();
 
-                Dialogue.neutreDialog(t+"   "+Ut.js(loanAccount),"",context).show();
+                // 1) Loggez la stack trace dans Logcat
+                Log.e("LoanSave", "Erreur onFailure", t);
+
+                // 2) Récupérez la stack trace complète
+                String stackTrace = Log.getStackTraceString(t);
+
+                Dialogue.neutreDialog(stackTrace, "Echec", context).show();
             }
         });
     }
@@ -243,8 +270,12 @@ public class RevuPretActivity extends AppCompatActivity {
                     client = response.body();
                     loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
                     savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
-
+                    startActivity(new Intent(context, PagerActivity.class)
+                            .putExtra("new","new"));
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 } else {
+                    Dialogue.neutreDialog(response.message()+" "+response.code(),response.errorBody()+"",context).show();
+
                 }
                 hidePb();
             }

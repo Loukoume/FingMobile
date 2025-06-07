@@ -99,6 +99,9 @@ public class PagerActivity extends AppCompatActivity {
                 top.setVisibility(View.GONE);
             }
         });
+        if(getIntent().hasExtra("new")){
+            tabs.getTabAt(1).select();
+        }
 
     }
 

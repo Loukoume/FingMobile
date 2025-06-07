@@ -155,18 +155,18 @@ public class PlaceholderFragment extends Fragment {
             loanBalance_ob = Ut.getValue(v, "loanBalance");
             Object initial = Ut.getValue(v, "originalLoan");
             if (loanBalance_ob != null) {
-                title2.setText(Ut.formatMontant(Double.parseDouble(loanBalance_ob.toString())));
+                title2.setText("CFA "+Ut.formatMontant(Double.parseDouble(loanBalance_ob.toString())));
             }
             if (initial != null) {
-                value.setText(Ut.formatMontant(Double.parseDouble(initial.toString())));
+                value.setText("CFA "+Ut.formatMontant(Double.parseDouble(initial.toString())));
             }
-            Object last_ob = Ut.getValue(v, "timeline:expectedDisbursementDate");
+            /*Object last_ob = Ut.getValue(v, "timeline:expectedDisbursementDate");
             if (last_ob != null) {
                 List<Object> obs = (List<Object>) last_ob;
                 String sdate = obs.get(2) + " " + S.en2(Integer.parseInt(obs.get(1).toString())) + " " + obs.get(0);
                 String dat = S.date(sdate, "dd MM yyyy", "dd MMM yyyy");
                 date.setText(dat);
-            }
+            }*/
         } else if (loanBalance_ob != null && currency_ob != null) {
             Object symb = Ut.getValue(currency_ob, "displaySymbol");
             String sb = symb == null ? "" : symb.toString();

@@ -14,7 +14,15 @@ public class EditeObject implements Serializable {
     private String postUrl;
     private String buttonLabel;
     private Class<?> navigateClass;
+    private boolean finish=true;
 
+    public boolean isFinish() {
+        return finish;
+    }
+
+    public void setFinish(boolean finish) {
+        this.finish = finish;
+    }
 
     public String getButtonLabel() {
         return buttonLabel;

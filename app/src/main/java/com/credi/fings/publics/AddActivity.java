@@ -37,6 +37,7 @@ public class AddActivity extends AppCompatActivity {
     Context context;
     EditeService ed;
     SendHttp sendHttp;
+    public static boolean finish=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,17 +87,21 @@ public class AddActivity extends AppCompatActivity {
                                 if(editeObject.getNavigateClass()!=null){
                                     startActivity(new Intent(context,editeObject.getNavigateClass())
                                             .putExtra("editeObject",Ut.js(object)));
+                                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                 }else {
                                     editeObject=null;
                                 }
-                                finish();
-                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                                if(editeObject.isFinish())
+                                {
+                                    finish();
+                                }
+
                             }else {
                                 saveData(editeObject.getPostUrl(),object);
                             }
                         }
                     }else {
-                        Dialogue.neutreDialog(Ut.js(ed.getObject()),"",context).show();
+                        //Dialogue.neutreDialog(Ut.js(ed.getObject()),"",context).show();
                     }
                 }
             });
@@ -136,8 +141,13 @@ public class AddActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        if(EditeService.field!=null&&nouvellValue!=null){
-          ed.update(nouvellValue);
+        if(finish){
+            finish=false;
+            finish();
+        }else {
+            if(EditeService.field!=null&&nouvellValue!=null){
+                ed.update(nouvellValue);
+            }
         }
     }
 }

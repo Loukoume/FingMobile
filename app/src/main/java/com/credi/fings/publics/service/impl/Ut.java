@@ -1,12 +1,14 @@
 package com.credi.fings.publics.service.impl;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -927,6 +929,11 @@ public class Ut {
     }
     public static int getColor(Context context,int color){
         return ContextCompat.getColor(context,color);
+    }
+
+    public static void setImageTint(ImageView icone,int color,Context context){
+         ColorStateList tint = ContextCompat.getColorStateList(context, color);
+         icone.setImageTintList(tint);
     }
 
     public static boolean equals(Object object1,Object object2,String field){

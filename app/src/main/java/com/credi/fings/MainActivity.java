@@ -1,10 +1,14 @@
 package com.credi.fings;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -12,7 +16,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.credi.fings.activity.Inscription;
@@ -49,6 +57,7 @@ import com.credi.fings.publics.utils.Dialogue;
 import com.credi.fings.publics.utils.MonFichier;
 import com.credi.fings.publics.utils.S;
 import com.credi.fings.utils.Json;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -72,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
     private int currentPage = 0;
     CircleImageView profil;
     ProgressBar pb;
-    ImageView eye_pret,eye_epargne;
+    ImageView eye_pret,eye_epargne,mort;
     View vide;
     LinearLayout lservice,sheet;
     FloatingActionButton add;
@@ -96,8 +105,9 @@ public class MainActivity extends AppCompatActivity {
         pb=findViewById(R.id.pb);
         context=this;
         sheet.setVisibility(View.GONE);
+        mort=findViewById(R.id.mort);
         //carousel();
-        services();
+        services();clickBotom();
         vide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,46 +117,7 @@ public class MainActivity extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sheet.setVisibility(View.VISIBLE);
-                sheet.removeAllViews();
-                SheetCp sheetCp=new SheetCp(context)
-                        .setTitle("Source de ravitaillement");
-                View vv=sheetCp.view();
-                LinearLayout content=vv.findViewById(R.id.content);
-                sheet.addView(vv);
-                View tm= Ut.getView(context,R.layout.row_jrs);
-                ImageView im1=tm.findViewById(R.id.icone);
-                CheckBox checkbox=tm.findViewById(R.id.checkbox);
-                checkbox.setVisibility(View.GONE);
-                im1.setImageResource(R.drawable.mixx);
-                TextView til=tm.findViewById(R.id.title);
-                til.setText("Mixx by yas");
-                content.addView(tm);
 
-                View fz= Ut.getView(context,R.layout.row_jrs);
-                ImageView im2=fz.findViewById(R.id.icone);
-                CheckBox ch=fz.findViewById(R.id.checkbox);
-                ch.setVisibility(View.GONE);
-                im2.setImageResource(R.drawable.flooz);
-                TextView ti=fz.findViewById(R.id.title);
-                ti.setText("Flooz");
-                content.addView(fz);
-                vide.setVisibility(View.VISIBLE);
-                fz.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        sheet.setVisibility(View.GONE);
-                        vide.setVisibility(View.GONE);
-                    }
-                });
-                tm.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        sheet.setVisibility(View.GONE);
-                        vide.setVisibility(View.GONE);
-                    }
-                });
-                sheet.setAnimation(Anim.getAnimeBH(context));
             }
         });
         pret="";
@@ -158,6 +129,28 @@ public class MainActivity extends AppCompatActivity {
         }else {
             finish();
         }
+        mort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String[] m={"Se déconnecter","Qui somme nous"};
+                PopupMenu pop=S.popupMenu(view,m);
+                pop.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()){
+                            case 1:
+                                startActivity(new Intent(context, Inscription.class));
+                                finish();
+                                break;
+                            case 2:
+                                break;
+                        }
+                        return false;
+                    }
+                });
+
+            }
+        });
     }
 
     @Override
@@ -165,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
         if(sheet.getVisibility()==View.VISIBLE){
             sheet.setVisibility(View.GONE);
             vide.setVisibility(View.GONE);
+            bottomNav.setSelectedItemId(R.id.navigation_home);
         }else
         {
             super.onBackPressed();
@@ -412,15 +406,19 @@ public class MainActivity extends AppCompatActivity {
     boolean isShowingEprgne=true,isShowingPret=true;
     String pret,epargne;
     private void closEyes(){
-        solde_pret.setText(pret);
-        solde_epargne.setText(epargne);
+        if(pret!=null&&!pret.isEmpty()){
+            solde_pret.setText(pret+" CFA");
+        }
+        if(epargne!=null&&!epargne.isEmpty()){
+            solde_epargne.setText(epargne+" CFA");
+        }
         eye_pret.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
               isShowingPret=!isShowingPret;
               MonFichier.ecrire(context,"isShowingPret",isShowingPret+"");
               if(isShowingPret){
-                  solde_pret.setText(pret);
+                  solde_pret.setText(pret+" CFA");
                   eye_pret.setImageResource(R.drawable.ic_eye_off_24dp2);
               }else {
                   eye_pret.setImageResource(R.drawable.ic_eye_white_24dp);
@@ -435,7 +433,7 @@ public class MainActivity extends AppCompatActivity {
                 MonFichier.ecrire(context,"isShowingEprgne",isShowingEprgne+"");
                 if(isShowingEprgne){
                     eye_epargne.setImageResource(R.drawable.ic_eye_off_24dp2);
-                 solde_epargne.setText(epargne);
+                 solde_epargne.setText(epargne+" CFA");
                 }else {
                     eye_epargne.setImageResource(R.drawable.ic_eye_white_24dp);
                   solde_epargne.setText("***************");
@@ -628,6 +626,141 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    BottomNavigationView bottomNav;
+    void clickBotom(){
+         bottomNav = findViewById(R.id.bottom_navigation);
 
+        // (Re)appliquer les modes si besoin
+       // bottomNav.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
+       // bottomNav.setItemHorizontalTranslationEnabled(false);
 
+        // Gérer les clics sur les items
+        bottomNav.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getTitle().toString()) {
+                    case "Accueil":
+                        // TODO: Afficher la page d'accueil
+                        return true;
+                    case "Bénéficiaires":
+                        // TODO: Afficher les bénéficiaires
+                        return true;
+                    case "Enquêtes":
+                        // TODO: Afficher les enquêtes
+                        return true;
+                    case "Nous contacter":
+                       showContact();
+                        return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    void showContact(){
+        sheet.setVisibility(View.VISIBLE);
+        sheet.removeAllViews();
+        SheetCp sheetCp=new SheetCp(context)
+                .setTitle("Nous contacter");
+        View vv=sheetCp.view();
+        LinearLayout content=vv.findViewById(R.id.content);
+        sheet.addView(vv);
+        View tm= Ut.getView(context,R.layout.row_jrs);
+        ImageView im1=tm.findViewById(R.id.icone);
+        ImageView close=vv.findViewById(R.id.close);
+        CheckBox checkbox=tm.findViewById(R.id.checkbox);
+        checkbox.setVisibility(View.GONE);
+        im1.setImageResource(R.drawable.outline_attach_email_24);
+        Ut.setImageTint(im1,R.color.colorPrimary,context);
+        TextView til=tm.findViewById(R.id.title);
+        til.setText("support@fingiciel.com");
+        til.setTextColor(Ut.getColor(context,R.color.colorPrimary));
+        content.addView(tm);
+
+        View fz= Ut.getView(context,R.layout.row_jrs);
+        ImageView im2=fz.findViewById(R.id.icone);
+        CheckBox ch=fz.findViewById(R.id.checkbox);
+        ch.setVisibility(View.GONE);
+        im2.setImageResource(R.drawable.baseline_add_call_24);
+        Ut.setImageTint(im2,R.color.colorAccent,context);
+        TextView ti=fz.findViewById(R.id.title);
+        ti.setText("0033695544758");
+        ti.setTextColor(Ut.getColor(context,R.color.colorAccent));
+        content.addView(fz);
+        vide.setVisibility(View.VISIBLE);
+        fz.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                appel("0033695544758",context);
+                sheet.setVisibility(View.GONE);
+                vide.setVisibility(View.GONE);
+                bottomNav.setSelectedItemId(R.id.navigation_home);
+            }
+        });
+        tm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                email();
+                sheet.setVisibility(View.GONE);
+                vide.setVisibility(View.GONE);
+                bottomNav.setSelectedItemId(R.id.navigation_home);
+            }
+        });
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sheet.setVisibility(View.GONE);
+                vide.setVisibility(View.GONE);
+                bottomNav.setSelectedItemId(R.id.navigation_home);
+            }
+        });
+        sheet.setAnimation(Anim.getAnimeBH(context));
+    }
+
+    private void email() {
+        try {
+            Intent email = new Intent(Intent.ACTION_SEND);
+            email.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@fingiciel.com"});
+            email.putExtra(Intent.EXTRA_SUBJECT, "");
+            email.putExtra(Intent.EXTRA_TEXT, "");
+            //need this to prompts email client only
+            email.setType("message/rfc822");
+            startActivity(email);
+        } catch (Exception e) {
+        }
+    }
+
+   // @RequiresApi(api = Build.VERSION_CODES.M)
+    private void appel(String tel, Context context) {
+        tel = tel.replace("Tel: ", "").replace(" ", "");
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + tel));
+        if (context.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    Activity#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for Activity#requestPermissions for more details.
+            int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+            if (currentapiVersion >= android.os.Build.VERSION_CODES.M) {
+                if (checkPermission(context)) {
+                    //Toast.makeText(getApplicationContext(), "Permission already granted", Toast.LENGTH_LONG).show();
+                } else {
+                    requestPermission();
+                }
+            }
+            return;
+        }
+        context.startActivity(callIntent);
+    }
+    private boolean checkPermission(Context c) {
+        return (ContextCompat.checkSelfPermission(c, "android.permission.READ_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED) &&
+                (ContextCompat.checkSelfPermission(c, "android.permission.CALL_PHONE") == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.CALL_PHONE"}, 1);
+    }
 }

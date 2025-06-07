@@ -39,21 +39,90 @@
             android:layout_weight="0.86"
             android:orientation="vertical"
             >
+                 <de.hdodenhof.circleimageview.CircleImageView
+                     android:layout_width="100dp"
+                     android:layout_gravity="center_horizontal"
+                     android:src="@drawable/micro"
+                     android:layout_marginVertical="8dp"
+                     android:layout_height="100dp">
 
+                 </de.hdodenhof.circleimageview.CircleImageView>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:orientation="vertical"
                     android:gravity="center_horizontal"
                     android:layout_height="match_parent">
-                    <ImageView
-                        android:layout_width="80dp"
-                        android:layout_height="80sp"
-                        android:src="@drawable/monais"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/limage">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:text="Nous contacter"
+                        android:layout_marginTop="8dp"
+                        android:visibility="gone"
+                        android:layout_marginHorizontal="8dp"
+                        android:layout_height="wrap_content">
+                    </TextView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        android:layout_marginBottom="@dimen/fab_margin"
+                        android:layout_height="wrap_content">
+                        <View
+                            android:layout_width="3dp"
+                            android:background="@color/colorAccent"
+                            android:layout_marginHorizontal="8dp"
+                            android:layout_height="match_parent">
 
-                    </ImageView>
+                        </View>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="vertical"
+
+                            android:layout_height="wrap_content">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:orientation="horizontal"
+                                android:layout_marginHorizontal="8dp"
+                                android:layout_marginVertical="4dp"
+                                android:layout_height="wrap_content">
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/outline_attach_email_24"
+                                    app:tint="@color/colorPrimary"
+                                    app:layout_constraintStart_toStartOf="parent">
+                                </ImageView>
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:text="support@fingiciel.com"
+                                    android:textColor="@color/colorPrimary"
+                                    android:layout_marginHorizontal="8dp"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:orientation="horizontal"
+                                android:layout_marginHorizontal="8dp"
+                                android:layout_marginVertical="4dp"
+                                android:layout_height="wrap_content">
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/baseline_add_call_24"
+                                    app:tint="@color/colorAccent"
+                                    app:layout_constraintStart_toStartOf="parent">
+                                </ImageView>
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:text="0033695544758"
+                                    android:textColor="@color/colorAccent"
+                                    android:layout_marginHorizontal="8dp"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:orientation="horizontal"
@@ -62,7 +131,7 @@
                         android:background="@color/white"
                         android:layout_marginHorizontal="8dp"
                         android:paddingHorizontal="@dimen/fab_margin"
-                        android:paddingVertical="8sp"
+                        android:paddingVertical="4sp"
                         android:layout_height="wrap_content">
                         <LinearLayout
                             android:layout_width="0dp"
@@ -131,10 +200,10 @@
                         android:weightSum="3"
                         android:id="@+id/main"
                         android:background="@color/white"
-                        android:layout_marginTop="@dimen/fab_margin"
+                        android:layout_marginTop="8dp"
                         android:layout_marginHorizontal="8dp"
                         android:paddingHorizontal="@dimen/fab_margin"
-                        android:paddingVertical="8sp"
+                        android:paddingVertical="4sp"
                         android:layout_height="wrap_content">
                         <LinearLayout
                             android:layout_width="0dp"
@@ -202,7 +271,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:orientation="vertical"
-                        android:layout_marginTop="8sp"
+                        android:layout_marginTop="2sp"
                         android:paddingHorizontal="4dp"
                         android:background="@color/colorSendre"
                         android:layout_height="match_parent">
@@ -252,11 +321,14 @@
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bottom_navigation"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 app:menu="@menu/bottom_navigation_menu"
                 app:itemIconTint="@drawable/selector"
                 app:itemTextColor="@drawable/selector"
-                android:background="@color/white" />
+                app:labelVisibilityMode="selected"
+                app:itemHorizontalTranslationEnabled="true"
+                android:background="@color/white" >
+            </com.google.android.material.bottomnavigation.BottomNavigationView>
 
         </LinearLayout>
     </LinearLayout>
@@ -317,6 +389,7 @@
         android:src="@drawable/ic_mort_noir"
         android:layout_gravity="top|end"
         android:layout_marginTop="12sp"
+        android:id="@+id/mort"
         app:tint="@color/colorPrimary"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_height="wrap_content">
@@ -330,4 +403,5 @@
         android:layout_height="wrap_content">
 
     </ProgressBar>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

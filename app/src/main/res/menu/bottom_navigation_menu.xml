@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/baseline_cabin_24"
@@ -12,10 +13,10 @@
 
     <item
         android:id="@+id/navigation_notifications"
-        android:icon="@drawable/baseline_add_location_24"
-        android:title="Notifications" />
+        android:icon="@drawable/outline_analytics_24"
+        android:title="Enquêtes" />
     <item
         android:id="@+id/activite"
-        android:icon="@drawable/baseline_agriculture_24"
-        android:title="Activités" />
+        android:icon="@drawable/outline_attach_email_24"
+        android:title="Nous contacter" />
 </menu>

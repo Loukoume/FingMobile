@@ -28,7 +28,7 @@
         android:layout_marginBottom="50dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/fabChild1Label"
@@ -59,7 +59,7 @@
         android:layout_marginBottom="20dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/fabChild2Label"

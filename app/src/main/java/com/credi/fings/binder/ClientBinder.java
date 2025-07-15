@@ -101,7 +101,7 @@ new Attribut("Guarantoraccounts","guarantorAccounts",true)
 
         return navigateObject;
     }
- public EditeObject editeObject(Object object){
+   public EditeObject editeObject(Object object){
         EditeObject editeObject=new EditeObject();
         editeObject.setObject(object);
         editeObject.setAttribute(setAttribut());

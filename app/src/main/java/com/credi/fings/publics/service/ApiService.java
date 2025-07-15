@@ -44,7 +44,8 @@ public interface ApiService {
      * @param clientId         l'ID du client (ici 8)
      * @param tenantIdentifier ("default" par défaut)
      */
-    @GET("fineract-provider/api/v1/clients/{id}")
+    //fineract-provider/api/v1/self/clients/1?&tenantIdentifier=default
+    @GET("fineract-provider/api/v1/self/clients/{id}")
     Call<Client> getClientById(
             @Header("Authorization") String authHeader,
             @Path("id") long clientId,

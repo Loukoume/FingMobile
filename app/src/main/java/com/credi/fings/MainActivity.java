@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
@@ -42,6 +43,7 @@ import com.credi.fings.publics.carousel.CarouselAdapter;
 import com.credi.fings.publics.carousel.CarouselItem;
 import com.credi.fings.publics.composant.RecyclierViewCp;
 import com.credi.fings.publics.composant.SheetCp;
+import com.credi.fings.publics.drawer.NavigationDrawer;
 import com.credi.fings.publics.service.ApiClient;
 import com.credi.fings.publics.service.ApiService;
 import com.credi.fings.publics.service.ClickHandler;
@@ -55,6 +57,7 @@ import com.credi.fings.publics.service.interfacs.CrudInterface;
 import com.credi.fings.publics.service.pojo.NavigateObject;
 import com.credi.fings.publics.utils.DateObject;
 import com.credi.fings.publics.utils.Dialogue;
+import com.credi.fings.publics.utils.LesConnectes;
 import com.credi.fings.publics.utils.MonFichier;
 import com.credi.fings.publics.utils.S;
 import com.credi.fings.utils.Json;
@@ -82,14 +85,15 @@ public class MainActivity extends AppCompatActivity {
     private int currentPage = 0;
     CircleImageView profil;
     ProgressBar pb;
-    ImageView eye_pret,eye_epargne,mort;
+    ImageView eye_pret,eye_epargne,mort,drawer;
     View vide;
-    LinearLayout lservice,sheet;
+    LinearLayout lservice,sheet,drawer_lineair;
     FloatingActionButton add;
     Context context;
     TextView solde_pret,solde_epargne,symbole,name;
 
-
+    NavigationDrawer navigationDrawer;
+    View viewDrawer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
         lservice=findViewById(R.id.lservice);
         sheet=findViewById(R.id.sheet);
         add=findViewById(R.id.add);
+        drawer=findViewById(R.id.drawer);
+        drawer_lineair=findViewById(R.id.drawer_lineair);
         vide=findViewById(R.id.vide);
         pb=findViewById(R.id.pb);
         context=this;
@@ -127,26 +133,48 @@ public class MainActivity extends AppCompatActivity {
         pret="";
         epargne="";
         closEyes();
+        boolean testPlayStor=Inscription.body.getPassword().equalsIgnoreCase("fingiciel")&&
+                Inscription.body.getUsername().equalsIgnoreCase("fingiciel");
         if(Inscription.user!=null){
-            if(Inscription.user.getUsername()!=null&&!Inscription.user.getUsername().isEmpty()){
-                String  sy=Inscription.user.getUsername().charAt(0)+"";
-                symbole.setText(sy.toUpperCase());
-            }
-            name.setText(Inscription.user.getUsername().toUpperCase());
-
             String js=MonFichier.lire(context,"client");
+            if(js.isEmpty()&&testPlayStor){
+                js=Json.client;
+            }
             if(!js.isEmpty()){
                  client= new Client().fromJs(js);
+               // System.out.println("=client=> "+js);
                 loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
                 savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
                 setComptesValues();
             }
             js=MonFichier.lire(context,"loanProductResponse");
+            if(js.isEmpty()&&testPlayStor){
+                js=Json.loanProductResponse;
+            }
             if(!js.isEmpty()){
+                //logLongIterative("=loanProductResponse_tag=>",js);
+                //System.out.println("=loanProductResponse=> "+js);
                 loanProductResponse=new LoanProductResponse().fromJs(js);
             }
-            getClientAcount();
-            getTemplate();
+            js=MonFichier.lire(context,"displayName");
+            if(js.isEmpty()&&testPlayStor){
+                js=Json.displayNam;
+            }
+            if(!js.isEmpty()){
+                //logLongIterative("=displayName_tag=>",js);
+                //System.out.println("=displayName=> "+js);
+                Client cl=new Client().fromJs(js);
+                if(cl.getDisplayName()!=null&&!cl.getDisplayName().isEmpty()){
+                    String  sy=cl.getDisplayName().charAt(0)+"";
+                    symbole.setText(sy.toUpperCase());
+                    name.setText(cl.getDisplayName());
+                }
+            }
+            if(!testPlayStor){
+                getClientAcount();
+                getClient();
+                getTemplate();
+            }
         }else {
             finish();
         }
@@ -160,6 +188,9 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()){
                             case 1:
+                                new LesConnectes().remove(context,Inscription.user);
+                                MonFichier.ecrire(context,"displayName","");
+                                MonFichier.ecrire(context,"client","");
                                 startActivity(new Intent(context, Inscription.class));
                                 finish();
                                 break;
@@ -179,7 +210,20 @@ public class MainActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
+        navigationDrawer=new NavigationDrawer(context,drawer,drawer_lineair);
+        navigationDrawer.setVide(vide);
+        navigationDrawer.setSheet(sheet);
+        navigationDrawer.view();
+    }
+    public static List<String> backColors = Arrays.asList("#EEEEEE", "#FFFFFF", "#EEEEEE", "#FFFFFF", "#E6E9FB");
 
+    private static final int MAX_LOG_LENGTH = 4000;
+    public static void logLongIterative(String tag, String text) {
+        int length = text.length();
+        for (int i = 0; i < length; i += MAX_LOG_LENGTH) {
+            int end = Math.min(length, i + MAX_LOG_LENGTH);
+            Log.v(tag, text.substring(i, end));
+        }
     }
 
     @Override
@@ -268,6 +312,7 @@ public class MainActivity extends AppCompatActivity {
             }
             switch (i){
                 case 0:
+                    S.toast(context,"Module en cours de developpement");
                     break;
                 case 1:
                     LoanPojo loanAccount=new LoanPojo();
@@ -424,12 +469,15 @@ public class MainActivity extends AppCompatActivity {
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                      break;
                 case 3:
+                    S.toast(context,"Module en cours de developpement");
                     break;
             }
         });
         recyclierViewCp.setOnLongClick((o,i)->{
           //  Dialogue.neutreDialog(o+"",i+" long",MainActivity.this).show();
         });
+
+
     }
 
     boolean isShowingEprgne=true,isShowingPret=true;
@@ -494,15 +542,15 @@ public class MainActivity extends AppCompatActivity {
 
     void getClient(){
         // 1. Spécifiez vos identifiants Basic Auth
-        String username = "adam";
-        String password = "nadia";
+        String username = Inscription.user.getUsername();
+        String password = Inscription.body.getPassword();
 
         // 2. Obtenez l'instance de RetrofitClient
         RetrofitClient retrofitClient = RetrofitClient.getInstance(username, password);
         ApiService api = retrofitClient.getFineractApi();
 
         // 3. Préparez l'appel
-        long clientId = 8L;                     // ID du client (ici 8)
+        long clientId = Inscription.user.getClientId();                     // ID du client (ici 8)
         String tenant = "default";              // tenantIdentifier
 
         Call<Client> call = api.getClientById("Basic " + okhttp3.Credentials.basic(username, password),
@@ -514,18 +562,24 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<Client> call, Response<Client> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Client client = response.body();
-                    String displayName = client.getFirstname() + " " + client.getLastname();
-                   // Dialogue.neutreDialog(Ut.js(client),"",context).show();
+                    MonFichier.ecrire(context,"displayName",client.js());
+                    System.out.println(" displayName => "+client.js());
+                   // String displayName = client.getFirstname() + " " + client.getLastname();
+                    if(client.getDisplayName()!=null&&!client.getDisplayName().isEmpty()){
+                        String  sy=client.getDisplayName().charAt(0)+"";
+                        symbole.setText(sy);
+                        name.setText(client.getDisplayName());
+                    }
                 } else {
                     // Erreur côté serveur ou JSON non parsable
-                   //  Dialogue.neutreDialog("","null",context).show();
+                    Dialogue.neutreDialog(response.message()+" "+response.errorBody(),"null",context).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Client> call, Throwable t) {
                 // Problème réseau ou exception
-               //Dialogue.neutreDialog(t.toString(),"",context).show();
+               Dialogue.neutreDialog(t.toString(),"",context).show();
             }
         });
     }
@@ -565,7 +619,9 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<Client> call, Response<Client> response) {
                 if (response.isSuccessful() && response.body() != null) {
                      client = response.body();
+
                      MonFichier.ecrire(context,"client",client.js());
+                    System.out.println(" client => "+client.js());
                     loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
                     savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
                     setComptesValues();
@@ -593,6 +649,7 @@ public class MainActivity extends AppCompatActivity {
         return v==null||v.isEmpty()?0:Double.parseDouble(v);
     }
     private void setComptesValues(){
+
         if(loanAccounts!=null){
             Double prets=loanAccounts.stream().mapToDouble(x->value(Ut.getAllValues(x,"loanBalance"))).sum();
             Double eprgne=savingsAccounts.stream().mapToDouble(x->value(Ut.getAllValues(x,"accountBalance"))).sum();
@@ -625,7 +682,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<LoanProductResponse> call, Response<LoanProductResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                    loanProductResponse = response.body();
-
+                    System.out.println(" loanProductResponse => "+loanProductResponse.js());
                    MonFichier.ecrire(context,"loanProductResponse",loanProductResponse.js());
                    // loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
                     //= (List<Object>) Ut.getValue(client,"savingsAccounts");
@@ -671,7 +728,7 @@ public class MainActivity extends AppCompatActivity {
                         // TODO: Afficher la page d'accueil
                         return true;
                     case "Bénéficiaires":
-                        // TODO: Afficher les bénéficiaires
+                       startActivity(new Intent(context, ListActivity.class));
                         return true;
                     case "Enquêtes":
                         // TODO: Afficher les enquêtes

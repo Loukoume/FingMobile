@@ -63,8 +63,10 @@ public class LesConnectes {
     }
     public void remove(Context c,User ct){
         List<User> l=comptes(c);int i=0;
+        System.out.println("ll=="+l);
         for(User cp:l){
-            if(cp.getUserId().equals(ct.getClientId())){
+            System.out.println();
+            if(cp.getUserId().equals(ct.getUserId())){
                 l.remove(i);
                  MonFichier.ecrire(c,"LesConnectes",new LesConnectes(l).json());
                 return;

@@ -3,4 +3,8 @@
     <string name="tab_text_1">Epargne</string>
     <string name="tab_text_2">Crédit</string>
     <string name="tab_text_3">PART</string>
+    <string name="auth_text">
+        En cliquant sur « S’authentifier », vous confirmez avoir pris connaissance et accepté notre
+        <a href="https://loukoume.github.io/politique/">politique de confidentialité</a>.
+    </string>
 </resources>

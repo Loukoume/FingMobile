@@ -57,7 +57,7 @@
                             android:textStyle="bold"
                             android:textColor="@color/textColore"
                             android:gravity="bottom"
-                            android:text="150"
+                            android:text=""
                             android:layout_height="match_parent">
 
                         </TextView>

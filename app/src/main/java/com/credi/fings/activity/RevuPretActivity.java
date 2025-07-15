@@ -271,8 +271,10 @@ public class RevuPretActivity extends AppCompatActivity {
                     loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
                     savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
                     startActivity(new Intent(context, PagerActivity.class)
+                            .putExtra("client",client)
                             .putExtra("new","new"));
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
                 } else {
                     Dialogue.neutreDialog(response.message()+" "+response.code(),response.errorBody()+"",context).show();
 

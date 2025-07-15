@@ -79,4 +79,10 @@ public class Anim {
     public static Animation getAnimeD(Context c) {
         return AnimationUtils.loadAnimation(c, R.anim.drt_gche);
     }
+
+    public static Animation getAnimeGD(Context c) {
+        // drt_ch = AnimationUtils.loadAnimation(c, R.anim.drt_gche);
+        return AnimationUtils.loadAnimation(c, R.anim.gch_drt);
+    }
+
 }

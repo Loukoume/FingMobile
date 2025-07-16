@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.credi.fings">
+    package="com.credi.fing">
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -35,31 +35,34 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
-            android:name=".activity.ProfileActivity"
+            android:name="com.credi.fing.activity.Beneficiaire"
             android:exported="false" />
         <activity
-            android:name=".activity.RevuPretActivity"
+            android:name="com.credi.fing.activity.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.PagerActivity"
+            android:name="com.credi.fing.activity.RevuPretActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.Inscription"
+            android:name="com.credi.fing.activity.PagerActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.credi.fing.activity.Inscription"
             android:exported="false" />
         <activity
-            android:name=".publics.service.impl.ListActivity"
+            android:name="com.credi.fing.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".publics.acty.SelectActivity"
+            android:name="com.credi.fing.publics.service.impl.ListActivity"
             android:exported="false" />
         <activity
-            android:name=".publics.AddActivity"
+            android:name="com.credi.fing.publics.acty.SelectActivity"
             android:exported="false" />
         <activity
-            android:name=".SplashScreen"
+            android:name="com.credi.fing.publics.AddActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.credi.fing.SplashScreen"
             android:exported="true"
             android:theme="@style/Spash">
             <intent-filter>

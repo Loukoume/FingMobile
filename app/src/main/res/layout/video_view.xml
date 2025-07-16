@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.credi.fings.publics.service.CustomVideoView
+    <fing.publics.service.CustomVideoView
         android:id="@+id/custom_video"
         android:layout_width="match_parent"
         android:visibility="visible"

@@ -81,6 +81,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:id="@+id/menu"
+                            android:visibility="gone"
                             android:layout_gravity="end"
                             android:src="@drawable/ic_mort_noir"
                             android:layout_height="wrap_content">

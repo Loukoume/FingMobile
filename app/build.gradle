@@ -5,16 +5,15 @@ plugins {
 }
 
 android {
-    namespace 'com.credi.fings'
+    namespace 'com.credi.fing'
     compileSdk 35
 
     defaultConfig {
-        applicationId "com.credi.fings"
+        applicationId "com.credi.fing"
         minSdk 27
         targetSdk 34
-        versionCode 2
+        versionCode 3
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -54,7 +53,6 @@ dependencies {
     implementation "androidx.compose.material3:material3"
     // pour un build.gradle (Groovy DSL)
     implementation "com.google.android.material:material:1.10.0"
-
 
     // Dans build.gradle (Groovy DSL)
     implementation "androidx.coordinatorlayout:coordinatorlayout:1.2.0"

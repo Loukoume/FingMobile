@@ -23,12 +23,12 @@
                     <androidx.coordinatorlayout.widget.CoordinatorLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-                        <com.credi.fings.publics.service.CustomImageView
+                        <fing.publics.service.CustomImageView
                             android:id="@+id/custom_image"
                             android:layout_width="match_parent"
                             android:layout_height="200dp"
                             android:background="@color/white" />
-                        <com.credi.fings.publics.service.CustomVideoView
+                        <fing.publics.service.CustomVideoView
                             android:id="@+id/custom_video"
                             android:layout_width="match_parent"
                             android:visibility="gone"

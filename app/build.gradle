@@ -12,7 +12,7 @@ android {
         applicationId "com.credi.fing"
         minSdk 27
         targetSdk 34
-        versionCode 3
+        versionCode 4
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -53,6 +53,11 @@ dependencies {
     implementation "androidx.compose.material3:material3"
     // pour un build.gradle (Groovy DSL)
     implementation "com.google.android.material:material:1.10.0"
+
+    //Qr code
+    implementation 'com.google.zxing:core:3.4.1'
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+
 
     // Dans build.gradle (Groovy DSL)
     implementation "androidx.coordinatorlayout:coordinatorlayout:1.2.0"

@@ -27,6 +27,7 @@ import com.credi.fing.activity.Beneficiaire;
 import com.credi.fing.activity.Inscription;
 import com.credi.fing.activity.PagerActivity;
 import com.credi.fing.activity.ProfileActivity;
+import com.credi.fing.activity.ViewQrCodeReadActivity;
 import com.credi.fing.binder.LoanAccountBinder;
 import com.credi.fing.entity.Client;
 import com.credi.fing.entity.LoanType;
@@ -123,8 +124,8 @@ public class MainActivity extends AppCompatActivity {
         pret="";
         epargne="";
         closEyes();
-        boolean testPlayStor=Inscription.body.getPassword().equalsIgnoreCase("fingiciel")&&
-                Inscription.body.getUsername().equalsIgnoreCase("fingiciel");
+        boolean testPlayStor=Inscription.body==null||(Inscription.body.getPassword().equalsIgnoreCase("fingiciel")&&
+                Inscription.body.getUsername().equalsIgnoreCase("fingiciel"));
         if(Inscription.user!=null){
             String js=MonFichier.lire(context,"client");
             if(js.isEmpty()&&testPlayStor){
@@ -309,7 +310,8 @@ public class MainActivity extends AppCompatActivity {
             }
             switch (i){
                 case 0:
-                    S.toast(context,"Module en cours de developpement");
+                    //S.toast(context,"Module en cours de developpement");
+                    startActivity(new Intent(context, ViewQrCodeReadActivity.class));
                     break;
                 case 1:
                     LoanPojo loanAccount=new LoanPojo();

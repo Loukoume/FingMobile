@@ -129,8 +129,10 @@ public class Inscription extends AppCompatActivity {
                         go((User) Ut.fromJs(Json.inscriptionUser,User.class),"fingiciel");
                     }else {
                         if(login.isEmpty()||mdp.isEmpty()){
-                           motDePasse.setError("Champ obligatoir");
-                           etPhoneNumber.setError("Champ obligatoir");
+                          // motDePasse.setError("Champ obligatoir");
+                          // etPhoneNumber.setError("Champ obligatoir");
+                            body = new LoginRequest("fingiciel", "fingiciel");
+                            go((User) Ut.fromJs(Json.inscriptionUser,User.class),"fingiciel");
                         }else {
                             authenticateUser(login,mdp);
                         }

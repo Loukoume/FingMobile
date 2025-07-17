@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.ViewQrCodeActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+        <include layout="@layout/tool_bar"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:background="@color/backgrund2"
+            android:layout_height="match_parent">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal">
+
+                    <!-- Titre ou description -->
+                    <TextView
+                        android:id="@+id/tv_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Votre QR Code"
+                        android:textSize="20sp"
+                        android:visibility="gone"
+                        android:paddingBottom="8dp"/>
+
+                    <!-- Vue pour le QR Code -->
+                    <ImageView
+                        android:id="@+id/iv_qrcode"
+                        android:layout_width="256dp"
+                        android:layout_height="256dp"
+                        android:contentDescription="QR Code"/>
+                    <!-- Espace -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="16dp" />
+
+                    <!-- Autres informations -->
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:id="@+id/share"
+                        android:src="@drawable/baseline_share_40"
+                        android:layout_height="100dp">
+
+                    </ImageView>
+
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:background="@color/black_transparant"
+        android:id="@+id/vide"
+        android:visibility="gone"
+        android:layout_height="match_parent">
+
+    </View>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:id="@+id/sheet"
+        android:layout_marginHorizontal="5dp"
+        android:orientation="vertical"
+        android:background="@null"
+        android:layout_height="wrap_content">
+
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

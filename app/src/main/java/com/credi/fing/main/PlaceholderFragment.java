@@ -1,5 +1,6 @@
 package com.credi.fing.main;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.credi.fing.R;
 import com.credi.fing.activity.PagerActivity;
+import com.credi.fing.activity.ViewQrCodeActivity;
 import com.credi.fing.binder.OperationBinder;
 import com.credi.fing.publics.AddActivity;
 import com.credi.fing.publics.adapters.generiqueAdapter.AdapterViewHolder;
@@ -207,7 +209,7 @@ public class PlaceholderFragment extends Fragment {
             mort.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String[] m = {"Transactions", "Opération"};
+                    String[] m = {"Transactions", "Afficher le Qr code"};
                     PopupMenu popupMenu = S.popupMenu(view, m);
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
@@ -217,6 +219,9 @@ public class PlaceholderFragment extends Fragment {
                                    setOperation();
                                     break;
                                 case 2:
+                                    startActivity(new Intent(context, ViewQrCodeActivity.class)
+                                            .putExtra("compte", Ut.js(v)));
+                                    ((Activity)context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                     break;
                             }
                             return false;

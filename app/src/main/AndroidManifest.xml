@@ -3,6 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.credi.fing">
 
+    <queries>
+
+        <!-- Permet de vérifier l'installation de WhatsApp (grand public) -->
+        <package android:name="com.whatsapp" />
+        <!-- Si tu veux aussi prendre en charge WhatsApp Business -->
+        <package android:name="com.whatsapp.w4b" />
+    </queries>
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -28,41 +36,55 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/lgo"
+        android:icon="@drawable/logofing_512"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/lgo"
+        android:roundIcon="@drawable/logofing_512"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
-            android:name="com.credi.fing.activity.Beneficiaire"
+            android:name=".activity.ViewQrCodeReadActivity"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.ViewQrCodeActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".activity.Beneficiaire"
             android:exported="false" />
         <activity
-            android:name="com.credi.fing.activity.ProfileActivity"
+            android:name=".activity.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name="com.credi.fing.activity.RevuPretActivity"
+            android:name=".activity.RevuPretActivity"
             android:exported="false" />
         <activity
-            android:name="com.credi.fing.activity.PagerActivity"
+            android:name=".activity.PagerActivity"
             android:exported="false" />
         <activity
-            android:name="com.credi.fing.activity.Inscription"
+            android:name=".activity.Inscription"
             android:exported="false" />
         <activity
-            android:name="com.credi.fing.MainActivity"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name="com.credi.fing.publics.service.impl.ListActivity"
+            android:name=".publics.service.impl.ListActivity"
             android:exported="false" />
         <activity
-            android:name="com.credi.fing.publics.acty.SelectActivity"
+            android:name=".publics.acty.SelectActivity"
             android:exported="false" />
         <activity
-            android:name="com.credi.fing.publics.AddActivity"
+            android:name=".publics.AddActivity"
             android:exported="false" />
         <activity
-            android:name="com.credi.fing.SplashScreen"
+            android:name=".SplashScreen"
             android:exported="true"
             android:theme="@style/Spash">
             <intent-filter>
@@ -71,6 +93,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

@@ -14,7 +14,6 @@
         android:background="@drawable/sharp_epargne"
         android:layout_height="wrap_content">
         <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:orientation="vertical"
 
@@ -95,7 +94,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:id="@+id/menu"
-                            android:visibility="gone"
+                            android:visibility="visible"
                             android:layout_gravity="end"
                             android:src="@drawable/ic_mort_noir"
                             android:layout_height="wrap_content">

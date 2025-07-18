@@ -73,18 +73,18 @@
                 android:layout_marginStart="8dp"
                 android:layout_height="wrap_content">
                 <LinearLayout
-                    android:layout_width="60dp"
+                    android:layout_width="50dp"
                     android:gravity="center_vertical"
                     android:layout_height="match_parent">
                     <TextView
-                        android:layout_width="55dp"
+                        android:layout_width="45dp"
                         android:text="M"
                         android:background="@drawable/shap_cercle_primary"
-                        android:textSize="30dp"
+                        android:textSize="20dp"
                         android:gravity="center"
                         android:id="@+id/symbole"
                         android:textColor="@color/white"
-                        android:layout_height="55dp">
+                        android:layout_height="45dp">
 
                     </TextView>
                 </LinearLayout>
@@ -95,7 +95,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:text="Bienvenue,"
-                        android:textSize="20dp"
+                        android:textSize="17dp"
                         android:textColor="@color/colorPrimary"
                         android:layout_marginHorizontal="8dp"
                         android:layout_height="wrap_content">
@@ -104,7 +104,7 @@
                         android:layout_width="match_parent"
                         android:text=""
                         android:textStyle="bold"
-                        android:textSize="20dp"
+                        android:textSize="17dp"
                         android:id="@+id/name"
                         android:textColor="@color/black"
                         android:layout_marginHorizontal="8dp"

@@ -73,7 +73,7 @@ public class Inscription extends AppCompatActivity {
         context=this;
 
          checkBox=findViewById(R.id.checked_politique);
-        connexion();
+         connexion();
 
        // souiM();
 

@@ -20,7 +20,7 @@ public class Beneficiary implements Serializable {
     private String clientName;
 
     @SerializedName("accountType")
-    private AccountType accountType;
+    private AccountTypeOption accountType;
 
     @SerializedName("accountNumber")
     private String accountNumber;

@@ -44,6 +44,7 @@ public class ViewQrCodeReadActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(intent, REQUEST_PICK_IMAGE);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override

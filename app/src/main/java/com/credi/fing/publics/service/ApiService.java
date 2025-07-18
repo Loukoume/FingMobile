@@ -1,5 +1,7 @@
 package com.credi.fing.publics.service;
 
+import com.credi.fing.entity.Beneficiary;
+import com.credi.fing.entity.BeneficiaryTemplate;
 import com.credi.fing.entity.Client;
 import com.credi.fing.pojo.LoanPojo;
 import com.credi.fing.pojo.LoanProductResponse;
@@ -111,5 +113,35 @@ public interface ApiService {
     Call<Client> authenticate(
             @Query("tenantIdentifier") String tenantIdentifier
     );
+
+    /**
+     * GET /fineract-provider/api/v1/self/beneficiaries/tpt
+     * - Authorization: Basic …
+     * - Fineract-Platform-TenantId: default
+     */
+    @GET("fineract-provider/api/v1/self/beneficiaries/tpt")
+    Call<List<Beneficiary>> getBeneficiaries(
+            @Header("Authorization") String authorization,
+            @Query("tenantIdentifier") String tenantIdentifier
+    );
+
+    @GET("fineract-provider/api/v1/self/beneficiaries/tpt")
+    Call<List<Beneficiary>> getTemplate(
+            @Header("Authorization") String authorization,
+            @Query("tenantIdentifier") String tenantIdentifier
+    );
+
+    /**
+     * GET /fineract-provider/api/v1/self/beneficiaries/tpt/template
+     * - Authorization: Basic …
+     * - tenantIdentifier en query
+     */
+    @GET("fineract-provider/api/v1/self/beneficiaries/tpt/template")
+    Call<BeneficiaryTemplate> getBeneficiariesTemplate(
+            @Header("Authorization") String authorization,
+            @Query("tenantIdentifier") String tenantIdentifier
+    );
+
+    //https://fingiciel.ngrok.io/fineract-provider/api/v1/self/beneficiaries/tpt/template?&tenantIdentifier=default
 
 }

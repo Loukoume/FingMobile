@@ -1,7 +1,7 @@
 package com.credi.fing.binder;
 
 import com.credi.fing.R;
-import com.credi.fing.entity.Client;
+import com.credi.fing.entity.Beneficiary;
 import com.credi.fing.publics.AddActivity;
 import com.credi.fing.publics.adapters.generiqueAdapter.ActionMenu;
 import com.credi.fing.publics.adapters.generiqueAdapter.Binder;
@@ -21,13 +21,13 @@ import java.util.List;
 public class BeneficiaryBinder implements Serializable, BinderInterface {
     @Override
     public Binder binder() {
-        Binder binder=new Binder("firstname","")
-                .setDefaultMenu();
+        Binder binder=new Binder("clientName","accountNumber")
+                .setSecondry2("officeName");
 
         binder.setRowClick(new MenuContextuel(
                 ActionMenu.NAVIGATE, AddActivity.class
         ));
-        binder.setRowObject(new RowObject(R.layout.card_image_horiz_row, ElementRow.SIMPL_MEDIA)
+        binder.setRowObject(new RowObject(R.layout.card_simple_row, ElementRow.SIMPL_MEDIA)
         );
 
         binder.setMediaClick(new MenuContextuel(
@@ -39,32 +39,12 @@ public class BeneficiaryBinder implements Serializable, BinderInterface {
     @Override
     public List<Attribut> setAttribut() {
         List<Attribut> attributs= Arrays.asList(
-                new Attribut("Accountno","accountNo",true),
-                new Attribut("Externalid","externalId",true),
-                new Attribut("Status","status",true),
-                new Attribut("Substatus","subStatus",true),
-                new Attribut("Active","active",true),
-                new Attribut("Activationdate","activationDate",true),
-                new Attribut("Firstname","firstname",true),
-                new Attribut("Lastname","lastname",true),
-                new Attribut("Displayname","displayName",true),
-                new Attribut("Mobileno","mobileNo",true),
-                new Attribut("Dateofbirth","dateOfBirth",true),
-                new Attribut("Gender","gender",true),
-                new Attribut("Clienttype","clientType",true),
-                new Attribut("Clientclassification","clientClassification",true),
-                new Attribut("Isstaff","isStaff",true),
-                new Attribut("Officeid","officeId",true),
-                new Attribut("Officename","officeName",true),
-                new Attribut("Date","Date",true),
-                new Attribut("Savingsaccountid","savingsAccountId",true),
-                new Attribut("Legalform","legalForm",true),
-                new Attribut("Groups","groups",true),
-                new Attribut("Clientnonpersondetails","clientNonPersonDetails",true),
-                new Attribut("Loanaccounts","loanAccounts",true),
-                new Attribut("Savingsaccounts","savingsAccounts",true),
-                new Attribut("Grouploanindividualmonitoringaccounts","groupLoanIndividualMonitoringAccounts",true),
-                new Attribut("Guarantoraccounts","guarantorAccounts",true)
+                new Attribut("Désignation","name",true),
+                new Attribut("Libelle service","officeName",true),
+                new Attribut("Nom du client","clientName",true),
+                new Attribut("Type de compte","accountType","object",true)
+                        .setLabel("value"),
+                new Attribut("Numéro compte","accountNumber",true)
         );
         /*attributs.get(3).setValues(Arrays.asList("TAUX","INTERVAL"));
         Request request=new Request(attributs.get(0),"tmobile_operation/find_by_operateur");
@@ -84,21 +64,20 @@ public class BeneficiaryBinder implements Serializable, BinderInterface {
     }
     public EditeObject editeObject() {
         EditeObject editeObject = new EditeObject();
-        editeObject.setObject(new Client());
+        editeObject.setObject(new Beneficiary());
         editeObject.setAttribute(setAttribut());
-        editeObject.setDesignation(("Ajouter " + this.getClass().getSimpleName()).toUpperCase());
-        editeObject.setaClass(Client.class);
+        editeObject.setDesignation(("Ajouter un bénéficiaire").toUpperCase());
+        editeObject.setaClass(Beneficiary.class);
         editeObject.setPostUrl(null);
         return editeObject;
     }
     public NavigateObject navigateObject() {
         NavigateObject navigateObject = new NavigateObject()
                 .setBinder(binder())
-                .setaClass(Client.class)
-                .setTitle("Client".toUpperCase())
-                .setEndPointSave("client")
-                .setDataUrl("client/all")
-                .setPostData(new Client())
+                .setaClass(Beneficiary.class)
+                .setTitle("beneficiary".toUpperCase())
+                .setDataUrl("beneficiary/all")
+                .setPostData(new Beneficiary())
                 .setAddButton(true)
                 .setEditeObject(editeObject());
 
@@ -108,18 +87,18 @@ public class BeneficiaryBinder implements Serializable, BinderInterface {
         EditeObject editeObject=new EditeObject();
         editeObject.setObject(object);
         editeObject.setAttribute(setAttribut());
-        editeObject.setDesignation(("Ajouter ").toUpperCase());
-        editeObject.setaClass(Client.class);
+        editeObject.setDesignation(("Ajouter un bénéficiaire").toUpperCase());
+        editeObject.setaClass(Beneficiary.class);
         editeObject.setPostUrl(null);
         return editeObject;
     }
     public NavigateObject navigateObject(Object object, EditeObject editeObject){
         NavigateObject navigateObject=new NavigateObject()
                 .setBinder(binder())
-                .setaClass(Client.class)
-                .setTitle("Client".toUpperCase())
-                .setEndPointSave("client")
-                .setDataUrl("client/all")
+                .setaClass(Beneficiary.class)
+                .setTitle("beneficiary".toUpperCase())
+                .setEndPointSave("beneficiary")
+                .setDataUrl("beneficiary/all")
                 .setPostData(object)
                 .setAddButton(true)
                 .setEditeObject(editeObject);

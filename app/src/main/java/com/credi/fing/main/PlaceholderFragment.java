@@ -1,5 +1,7 @@
 package com.credi.fing.main;
 
+import static android.view.View.GONE;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -118,13 +120,13 @@ public class PlaceholderFragment extends Fragment {
     }
 
 
-    void setText(Object v, AdapterViewHolder holder, int k) {
+    void setText(Object object, AdapterViewHolder holder, int k) {
         TextView title = holder.title, second = holder.secondre,
                 title2 = holder.title2, secondre2 = holder.secondre2, date = holder.date, value = holder.textePourcentage;
-        Object productN_ob = Ut.getValue(v, "accountNo");
-        Object productName_ob = Ut.getValue(v, "productName");
-        Object loanBalance_ob = Ut.getValue(v, "accountBalance");
-        Object currency_ob = Ut.getValue(v, "currency");
+        Object productN_ob = Ut.getValue(object, "accountNo");
+        Object productName_ob = Ut.getValue(object, "productName");
+        Object loanBalance_ob = Ut.getValue(object, "accountBalance");
+        Object currency_ob = Ut.getValue(object, "currency");
 
         /*
          values v = {"accountNo":"000000078",
@@ -151,8 +153,8 @@ public class PlaceholderFragment extends Fragment {
         //Object loanBalance_ob=Ut.getValue(v,"loanBalance");
         if (k == 2) {
             //System.out.println(" values v = "+Ut.js(v));
-            loanBalance_ob = Ut.getValue(v, "loanBalance");
-            Object initial = Ut.getValue(v, "originalLoan");
+            loanBalance_ob = Ut.getValue(object, "loanBalance");
+            Object initial = Ut.getValue(object, "originalLoan");
             if (loanBalance_ob != null) {
                 title2.setText("CFA "+Ut.formatMontant(Double.parseDouble(loanBalance_ob.toString())));
             }
@@ -167,6 +169,7 @@ public class PlaceholderFragment extends Fragment {
                 date.setText(dat);
             }*/
         } else if (loanBalance_ob != null && currency_ob != null) {
+            mort.setVisibility(GONE);
             Object symb = Ut.getValue(currency_ob, "displaySymbol");
             String sb = symb == null ? "" : symb.toString();
             title2.setText(sb + " " + Ut.formatMontant(Double.parseDouble(loanBalance_ob.toString())));
@@ -175,14 +178,14 @@ public class PlaceholderFragment extends Fragment {
             String displsb = displ == null ? "" : displ.toString();
             secondre2.setText(displsb);
 
-            Object last_ob = Ut.getValue(v, "lastActiveTransactionDate");
+            Object last_ob = Ut.getValue(object, "lastActiveTransactionDate");
             if (last_ob != null) {
                 List<Object> obs = (List<Object>) last_ob;
                 String sdate = obs.get(2) + " " + S.en2(Integer.parseInt(obs.get(1).toString())) + " " + obs.get(0);
                 String dat = S.date(sdate, "dd MM yyyy", "dd MMM yyyy");
                 date.setText(dat);
             }
-            Object type = Ut.getValue(v, "depositType");
+            Object type = Ut.getValue(object, "depositType");
             if (type != null) {
                 Object vl = Ut.getValue(type, "value");
                 if (vl != null) {
@@ -220,7 +223,7 @@ public class PlaceholderFragment extends Fragment {
                                     break;
                                 case 2:
                                     startActivity(new Intent(context, ViewQrCodeActivity.class)
-                                            .putExtra("compte", Ut.js(v)));
+                                            .putExtra("compte", Ut.js(object)));
                                     ((Activity)context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                     break;
                             }
@@ -230,6 +233,15 @@ public class PlaceholderFragment extends Fragment {
                 }
             });
         }
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(getActivity() instanceof PagerActivity){
+                    PagerActivity activity=(PagerActivity) getActivity();
+                    activity.showContact(object);
+                }
+            }
+        });
     }
 
     void setOperation() {

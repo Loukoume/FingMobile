@@ -78,7 +78,8 @@ public class ViewQrCodeActivity extends AppCompatActivity {
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showContact();
+                //showContact();
+                sendQrViaWhatsApp();
             }
         });
     }
@@ -94,8 +95,13 @@ public class ViewQrCodeActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        finish();
+    }
 
-    private void clickWhatsAppx( String phone) {
+    private void clickWhatsAppx(String phone) {
         // Packages WhatsApp
         final String WHATSAPP_BUSINESS = "com.whatsapp.w4b";
         final String WHATSAPP_STANDARD = "com.whatsapp";
@@ -126,7 +132,7 @@ public class ViewQrCodeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void sendQrViaWhatsApp(String phone) {
+    private void sendQrViaWhatsApp() {
         final String WHATSAPP_BUSINESS = "com.whatsapp.w4b";
         final String WHATSAPP_STANDARD = "com.whatsapp";
         final String text  = "Voici le QR Code :";
@@ -157,8 +163,8 @@ public class ViewQrCodeActivity extends AppCompatActivity {
         shareIntent.setType("image/png");
         shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
         shareIntent.putExtra(Intent.EXTRA_TEXT, text);
-        String jid = phone + "@s.whatsapp.net";
-        shareIntent.putExtra("jid", jid);
+        //String jid = phone + "@s.whatsapp.net";
+        //shareIntent.putExtra("jid", jid);
         shareIntent.setPackage(pkgToUse);
         // permission pour WhatsApp de lire l'URI
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -202,7 +208,7 @@ public class ViewQrCodeActivity extends AppCompatActivity {
                     if(pt.startsWith("+")){
                         sheet.setVisibility(View.GONE);
                         vide.setVisibility(View.GONE);
-                        sendQrViaWhatsApp(pt);
+                        sendQrViaWhatsApp();
                     }else {
                         Dialogue.neutreDialog("Le numéro de téléphone doit inclure l'indicatif téléphonique du pays",
                                 "Recommendation",context).show();

@@ -75,6 +75,11 @@ public class RecyclierViewCp {
         return view;
     }
 
+    public void view(RecyclerView recyclerView){
+        this.recyclerView=recyclerView;
+        preparerDatas();
+    }
+
     private void preparerDatas() {
       adapter=new Adapter(context,objects,row_layout,onBindViewHolderAction);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, numberItems);

@@ -58,6 +58,9 @@ dependencies {
     implementation 'com.google.zxing:core:3.4.1'
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
 
+    //step view
+    implementation 'com.github.baoyachi:StepView:1.9'
+
 
     // Dans build.gradle (Groovy DSL)
     implementation "androidx.coordinatorlayout:coordinatorlayout:1.2.0"

@@ -27,6 +27,7 @@ import com.credi.fing.activity.Beneficiaire;
 import com.credi.fing.activity.Inscription;
 import com.credi.fing.activity.PagerActivity;
 import com.credi.fing.activity.ProfileActivity;
+import com.credi.fing.activity.TransferActivity;
 import com.credi.fing.activity.ViewQrCodeReadActivity;
 import com.credi.fing.binder.LoanAccountBinder;
 import com.credi.fing.entity.Client;
@@ -311,7 +312,9 @@ public class MainActivity extends AppCompatActivity {
             switch (i){
                 case 0:
                     //S.toast(context,"Module en cours de developpement");
-                    startActivity(new Intent(context, ViewQrCodeReadActivity.class));
+                    //startActivity(new Intent(context, ViewQrCodeReadActivity.class));
+                    startActivity(new Intent(context, TransferActivity.class));
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     break;
                 case 1:
                     LoanPojo loanAccount=new LoanPojo();

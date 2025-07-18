@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:step="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -12,7 +13,7 @@
         android:orientation="vertical"
         android:layout_height="match_parent">
         <include layout="@layout/tool_bar"/>
-
+        <include layout="@layout/layout_step_view"/>
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

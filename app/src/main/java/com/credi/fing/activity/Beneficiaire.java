@@ -324,7 +324,8 @@ public class Beneficiaire extends AppCompatActivity {
             public void onClick(View view) {
                 sheet.setVisibility(View.GONE);
                 vide.setVisibility(View.GONE);
-
+                startActivity(new Intent(context, ScanQrCodeActivity.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
         close.setOnClickListener(new View.OnClickListener() {

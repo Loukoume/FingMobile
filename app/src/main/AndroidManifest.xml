@@ -17,6 +17,9 @@
     <uses-feature
         android:name="android.hardware.telephony"
         android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="false" />
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission
@@ -43,6 +46,12 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
+            android:name=".activity.TransferActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ScanQrCodeActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.ViewQrCodeReadActivity"
             android:exported="false">
             <intent-filter>
@@ -55,7 +64,7 @@
         </activity>
         <activity
             android:name=".activity.ViewQrCodeActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".activity.Beneficiaire"
             android:exported="false" />

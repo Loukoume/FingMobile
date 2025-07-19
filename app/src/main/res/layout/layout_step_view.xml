@@ -2,25 +2,121 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
 
+    <!-- ① StepView vertical, hauteur wrap_content -->
     <com.baoyachi.stepview.VerticalStepView
         android:id="@+id/step_view"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:vs_completedIndicator="@drawable/ic_step_completed"
+        app:vs_defaultIndicator="@drawable/ic_step_default"
+        app:vs_drawIndicator="true"
+        app:vs_drawText="true"
+        app:vs_linePaddingProportion="0.85"
+        app:vs_stepNum="4"
+        app:vs_textSize="14sp" />
 
+    <!-- ② Conteneur des formulaires, sous le StepView -->
+    <FrameLayout
+        android:id="@+id/container_forms"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_prev"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/container_forms"
+        app:layout_constraintTop_toBottomOf="@id/step_view">
+
+        <!-- Étape 0 : Émetteur -->
+        <LinearLayout
+            android:id="@+id/form_step_0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/et_sender_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nom de l’émetteur" />
+
+            <EditText
+                android:id="@+id/et_sender_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="N° de compte émetteur" />
+        </LinearLayout>
+
+        <!-- Étape 1 : Bénéficiaire -->
+        <LinearLayout
+            android:id="@+id/form_step_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/et_beneficiary_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nom du bénéficiaire" />
+
+            <EditText
+                android:id="@+id/et_beneficiary_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="N° de compte bénéficiaire" />
+        </LinearLayout>
+
+        <!-- Étape 2 : Montant -->
+        <LinearLayout
+            android:id="@+id/form_step_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/et_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Montant à transférer"
+                android:inputType="numberDecimal" />
+        </LinearLayout>
+
+        <!-- Étape 3 : Observation -->
+        <LinearLayout
+            android:id="@+id/form_step_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/et_note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Observation (optionnel)"
+                android:inputType="textMultiLine"
+                android:lines="3" />
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <!-- ③ Boutons de navigation -->
     <Button
         android:id="@+id/btn_prev"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Précédent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btn_next"
@@ -28,6 +124,6 @@
         android:layout_height="wrap_content"
         android:text="Suivant"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

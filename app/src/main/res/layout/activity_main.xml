@@ -6,48 +6,49 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.08"
-            android:gravity="center_vertical"
-            android:background="@color/colorPrimary"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:orientation="vertical"
-            >
-          <TextView
-              android:layout_width="match_parent"
-              android:text="FING MOBILE"
-              android:textSize="20dp"
-              android:textColor="@color/white"
-              android:textStyle="bold"
-              android:layout_marginStart="70dp"
-              android:layout_height="wrap_content">
 
-          </TextView>
-        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:gravity="bottom"
-            android:layout_height="wrap_content">
-            <View
-                android:layout_width="match_parent"
-                android:alpha="0.5"
-                android:background="@color/colorPrimary"
-                android:layout_height="1dp">
-            </View>
+            android:id="@+id/limage"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_marginVertical="8dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/fing"
+                    android:layout_height="40dp">
+
+                </ImageView>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="0.9"
+
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:src="@drawable/mobile"
+                    android:layout_height="35dp">
+
+                </ImageView>
+            </LinearLayout>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/colorSendre"
+            android:background="@drawable/shap_tabe_body"
             android:layout_weight="0.86"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
                  <de.hdodenhof.circleimageview.CircleImageView
                      android:layout_width="100dp"
                      android:layout_gravity="center_horizontal"
@@ -67,56 +68,77 @@
             </TextView>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:visibility="visible"
-                android:layout_marginVertical="@dimen/fab_margin"
-                android:layout_marginStart="8dp"
+                android:orientation="vertical"
+                android:layout_margin="@dimen/fab_margin"
+                android:elevation="6dp"
+                android:background="@drawable/gradient"
                 android:layout_height="wrap_content">
                 <LinearLayout
-                    android:layout_width="50dp"
-                    android:gravity="center_vertical"
-                    android:layout_height="match_parent">
-                    <TextView
-                        android:layout_width="45dp"
-                        android:text="M"
-                        android:background="@drawable/shap_cercle_primary"
-                        android:textSize="20dp"
-                        android:gravity="center"
-                        android:id="@+id/symbole"
-                        android:textColor="@color/white"
-                        android:layout_height="45dp">
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="visible"
+                    android:layout_marginVertical="@dimen/fab_margin"
+                    android:layout_marginStart="8dp"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="50dp"
+                        android:gravity="center_vertical"
+                        android:layout_height="match_parent">
+                        <TextView
+                            android:layout_width="45dp"
+                            android:text="M"
+                            android:background="@drawable/circle_background_red"
+                            android:textSize="20dp"
+                            android:gravity="center"
+                            android:id="@+id/symbole"
+                            android:textColor="@color/black"
+                            android:layout_height="45dp">
 
-                    </TextView>
+                        </TextView>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:text="Bienvenue,"
+                            android:textSize="17dp"
+                            android:textColor="@color/arg2"
+                            android:layout_marginHorizontal="8dp"
+                            android:layout_height="wrap_content">
+                        </TextView>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:text=""
+                            android:textStyle="bold"
+                            android:textSize="17dp"
+                            android:id="@+id/name"
+                            android:textColor="@color/black"
+                            android:layout_marginHorizontal="8dp"
+                            android:layout_height="wrap_content">
+                        </TextView>
+                    </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:orientation="vertical"
+                    android:gravity="bottom"
+                    android:paddingHorizontal="@dimen/fab_margin"
+                    android:visibility="visible"
                     android:layout_height="wrap_content">
-                    <TextView
+                    <View
                         android:layout_width="match_parent"
-                        android:text="Bienvenue,"
-                        android:textSize="17dp"
-                        android:textColor="@color/colorPrimary"
-                        android:layout_marginHorizontal="8dp"
-                        android:layout_height="wrap_content">
-                    </TextView>
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:text=""
-                        android:textStyle="bold"
-                        android:textSize="17dp"
-                        android:id="@+id/name"
-                        android:textColor="@color/black"
-                        android:layout_marginHorizontal="8dp"
-                        android:layout_height="wrap_content">
-                    </TextView>
+                        android:alpha="0.5"
+                        android:background="@color/colorAccent"
+                        android:layout_height="1dp">
+                    </View>
                 </LinearLayout>
-            </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:orientation="vertical"
                     android:gravity="center_horizontal"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
 
 
                     <LinearLayout
@@ -124,7 +146,6 @@
                         android:orientation="horizontal"
                         android:weightSum="3"
                         android:id="@+id/main0"
-                        android:background="@color/white"
                         android:layout_marginHorizontal="8dp"
                         android:paddingHorizontal="@dimen/fab_margin"
                         android:paddingVertical="4sp"
@@ -138,7 +159,8 @@
                                 android:layout_width="wrap_content"
                                 android:text="Total épargne"
                                 android:textAllCaps="true"
-                                android:alpha="0.5"
+                                android:textSize="12sp"
+                                android:alpha="0.9"
                                 android:layout_height="wrap_content">
                             </TextView>
                             <TextView
@@ -155,12 +177,13 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_marginTop="8dp"
+                            android:visibility="gone"
                             android:gravity="end|center"
                             android:layout_height="match_parent">
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:src="@drawable/ic_eye_off_24dp2"
-                                app:tint="@color/colorOnPromary"
+                                app:tint="@color/colorSendre2"
                                 android:id="@+id/eye_epargne"
                                 android:layout_height="wrap_content">
                             </ImageView>
@@ -182,20 +205,13 @@
 
                         </LinearLayout>
                     </LinearLayout>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_marginHorizontal="8dp"
-                        android:alpha="0.5"
-                        android:background="@color/colorOnPromary"
-                        android:layout_height="1dp">
 
-                    </View>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:orientation="horizontal"
                         android:weightSum="3"
                         android:id="@+id/main"
-                        android:background="@color/white"
+                        android:layout_marginVertical="8dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginHorizontal="8dp"
                         android:paddingHorizontal="@dimen/fab_margin"
@@ -209,7 +225,8 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:text="Prêt total"
-                                android:alpha="0.5"
+                                android:alpha="0.9"
+                                android:textSize="12sp"
                                 android:textAllCaps="true"
                                 android:layout_height="wrap_content">
                             </TextView>
@@ -227,15 +244,16 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_weight="1"
-
                             android:layout_marginTop="8dp"
+                            android:visibility="gone"
                             android:gravity="end|center"
                             android:layout_height="match_parent">
                             <ImageView
                                 android:layout_width="wrap_content"
-                                 android:src="@drawable/ic_eye_off_24dp2"
-                                app:tint="@color/colorOnPromary"
+                                android:src="@drawable/ic_eye_off_24dp2"
+                                app:tint="@color/colorSendre2"
                                 android:id="@+id/eye_pret"
+
                                 android:layout_height="wrap_content">
                             </ImageView>
                             <FrameLayout
@@ -256,50 +274,44 @@
 
                         </LinearLayout>
                     </LinearLayout>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_marginHorizontal="8dp"
-                        android:background="@color/colorOnPromary"
-                        android:alpha="0.5"
-                        android:layout_height="1dp">
 
-                    </View>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:orientation="vertical"
-                        android:layout_marginTop="2sp"
-                        android:paddingHorizontal="4dp"
-                        android:background="@color/colorSendre"
-                        android:layout_height="match_parent">
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:text="Nos services"
-                            android:layout_marginTop="8sp"
-                            android:visibility="gone"
-                            android:layout_marginStart="5sp"
-                            android:textColor="@color/colorSendre2"
-                            android:layout_height="wrap_content">
-                        </TextView>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_marginStart="5sp"
-                            android:background="@color/colorSendre2"
-                            android:layout_marginBottom="8sp"
-                            android:visibility="gone"
-                            android:alpha="0.5"
-                            android:layout_height="1dp">
-
-                        </View>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:id="@+id/lservice"
-                            android:orientation="vertical"
-                            android:gravity="bottom"
-                            android:layout_height="match_parent">
-
-                        </LinearLayout>
-                    </LinearLayout>
                 </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_marginTop="2sp"
+                android:paddingHorizontal="4dp"
+                android:background="@color/colorSendre"
+                android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:text="Nos services"
+                    android:layout_marginTop="8sp"
+                    android:visibility="gone"
+                    android:layout_marginStart="5sp"
+                    android:textColor="@color/colorSendre2"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginStart="5sp"
+                    android:background="@color/colorSendre2"
+                    android:layout_marginBottom="8sp"
+                    android:visibility="gone"
+                    android:alpha="0.5"
+                    android:layout_height="1dp">
+
+                </View>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:id="@+id/lservice"
+                    android:orientation="vertical"
+                    android:gravity="bottom"
+                    android:layout_height="match_parent">
+
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -386,17 +398,19 @@
             android:layout_gravity="top|end"
             android:layout_marginTop="12sp"
             android:id="@+id/drawer"
-            android:visibility="gone"
-            app:tint="@color/white"
+            android:visibility="visible"
+            app:tint="@color/colorPrimary"
             android:layout_marginStart="8dp"
             android:layout_height="wrap_content">
 
         </ImageView>
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="40dp"
-            android:src="@drawable/lgo"
+            android:src="@drawable/logofing_512"
             android:layout_gravity="top|end"
             android:layout_marginTop="8sp"
+            android:visibility="gone"
+            android:backgroundTint="@color/white"
             android:id="@+id/drawer_replace"
             android:layout_marginStart="8dp"
             android:layout_height="40dp">
@@ -409,7 +423,7 @@
         android:layout_gravity="top|end"
         android:layout_marginTop="12sp"
         android:id="@+id/mort"
-        app:tint="@color/white"
+        app:tint="@color/colorPrimary"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_height="wrap_content">
 

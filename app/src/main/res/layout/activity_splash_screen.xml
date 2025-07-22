@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:gravity="center"
-    android:background="@color/backgrund2"
+    android:background="@color/white"
     android:layout_height="match_parent"
     tools:context=".SplashScreen">
     <LinearLayout
@@ -17,7 +17,7 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="150dp"
             android:id="@+id/logo"
-            android:src="@drawable/lgo"
+            android:src="@drawable/logofing_512"
             android:layout_height="150dp">
         </de.hdodenhof.circleimageview.CircleImageView>
         <LinearLayout

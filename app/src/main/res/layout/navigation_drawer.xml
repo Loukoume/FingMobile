@@ -23,9 +23,9 @@
                 <ImageView
                     android:id="@+id/profile_images"
                     android:layout_width="match_parent"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:scaleType="fitXY"
-                    android:src="@drawable/lgo"
+                    android:src="@drawable/ic_menu_slideshow"
                     android:layout_height="@dimen/nav_header_height"
                     >
                 </ImageView>

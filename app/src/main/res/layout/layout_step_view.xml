@@ -14,13 +14,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:vs_completedIndicator="@drawable/ic_step_completed"
-        app:vs_defaultIndicator="@drawable/ic_step_default"
-        app:vs_drawIndicator="true"
-        app:vs_drawText="true"
-        app:vs_linePaddingProportion="0.85"
-        app:vs_stepNum="4"
-        app:vs_textSize="14sp" />
+         />
 
     <!-- ② Conteneur des formulaires, sous le StepView -->
     <FrameLayout

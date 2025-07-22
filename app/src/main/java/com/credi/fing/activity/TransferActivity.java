@@ -1,109 +1,109 @@
 package com.credi.fing.activity;
 
+import static android.view.View.GONE;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.baoyachi.stepview.VerticalStepView;
 
 import com.credi.fing.R;
+import com.credi.fing.activity.pagerAdapter.SenderFragment;
+import com.credi.fing.activity.pagerAdapter.TransferPagerAdapter;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class TransferActivity extends AppCompatActivity {
 
-    private VerticalStepView stepView;
-    private View[] formSteps;
+    private ViewPager2 viewPager;
+    ImageView mort;
+    TextView tx;
+    private MaterialButton btnPrev, btnNext;
+    private TransferPagerAdapter adapter;
+    private TextView tvStepHeader,numero_etape,un_sur_total;
     private final List<String> steps = Arrays.asList(
-            "Émetteur", "Bénéficiaire", "Montant", "Observation"
+            "Émetteur", "Bénéficiaire", "Montant"
     );
-    private int currentStep = 0;
-    private Button btnNext, btnPrev;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transfer);
-        stepView = findViewById(R.id.step_view);
+        viewPager = findViewById(R.id.view_pager);
+        tvStepHeader = findViewById(R.id.tv_step_header);
+        btnPrev   = findViewById(R.id.btn_prev);
+        btnNext   = findViewById(R.id.btn_next);
+        tx=findViewById(R.id.tx_text);
+        //back=findViewById(R.id.back);
+       // mort=findViewById(R.id.ic_mort);
+        //numero_etape=findViewById(R.id.numero_etape);
+        //un_sur_total=findViewById(R.id.un_sur_total);
 
-        formSteps = new View[]{
-                findViewById(R.id.form_step_0),
-                findViewById(R.id.form_step_1),
-                findViewById(R.id.form_step_2),
-                findViewById(R.id.form_step_3)
-        };
-        btnPrev = findViewById(R.id.btn_prev);
-        btnNext = findViewById(R.id.btn_next);
-        configureStepView();
-
-        findViewById(R.id.btn_next).setOnClickListener(v -> {
-            if (currentStep < steps.size() - 1) {
-                currentStep++;
-                configureStepView();
-            }
-        });
-        findViewById(R.id.btn_prev).setOnClickListener(v -> {
-            if (currentStep > 0) {
-                currentStep--;
-                configureStepView();
-            }
-        });
-
-        /*btnPrev.setOnClickListener(v -> {
-            if (currentStep > 0) {
-                currentStep--;
-                refreshUI();
-            }
-        });
-        btnNext.setOnClickListener(v -> {
-            if (currentStep < steps.size() - 1) {
-                currentStep++;
-                refreshUI();
-            } else {
-                submitTransfer();
+        tx.setText("Transfert d'argent".toUpperCase());
+       /* back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });*/
+        //mort.setVisibility(GONE);
+        // 1) Pager + Adapter
+        adapter = new TransferPagerAdapter(this);
+        viewPager.setAdapter(adapter);
+//        configureStepView();
 
-       // refreshUI();
+
+        // 3) Navigation des boutons
+        btnPrev.setOnClickListener(v -> {
+            int p = viewPager.getCurrentItem();
+            if (p > 0) viewPager.setCurrentItem(p - 1, true);
+        });
+        btnNext.setOnClickListener(v -> {
+            int p = viewPager.getCurrentItem();
+            if (p < adapter.getItemCount() - 1) {
+                viewPager.setCurrentItem(p + 1, true);
+            } else {
+                submitAllData();
+            }
+        });
+
+        // 4) Mise à jour des boutons selon la page
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int pos) {
+                tvStepHeader.setText(steps.get(pos));
+                btnPrev.setEnabled(pos > 0);
+                btnNext.setText(pos < steps.size() - 1 ? "Suivant" : "Terminer");
+                //numero_etape.setText((pos+1)+"");
+                //un_sur_total.setText((pos+1)+"/"+steps.size());
+            }
+        });
     }
-
-    private void configureStepView() {
-        stepView
-                .setStepsViewIndicatorComplectingPosition(currentStep)    // position courante
-                .reverseDraw(false)                                        // top→bottom
-                .setStepViewTexts(steps)                                   // libellés
-
-                // Espacement si besoin
-                .setLinePaddingProportion(0.85f)
-
-                // Couleurs de ligne
-                .setStepsViewIndicatorUnCompletedLineColor(R.color.black)
-                .setStepsViewIndicatorCompletedLineColor(R.color.purple_700)
-
-                // Couleurs de texte
-                .setStepViewUnComplectedTextColor(R.color.black)
-                .setStepViewComplectedTextColor(R.color.purple_700)
-
-                // Icônes (optionnel)
-                .setStepsViewIndicatorCompleteIcon(ContextCompat.getDrawable(this, R.drawable.ok_check))
-                .setStepsViewIndicatorDefaultIcon(ContextCompat.getDrawable(this, R.drawable.plus_50));
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
-
-    private void refreshUI() {
-        // StepView
-        stepView.setStepsViewIndicatorComplectingPosition(currentStep);
-        // Formulaire
-        for (int i = 0; i < formSteps.length; i++) {
-            formSteps[i].setVisibility(i == currentStep ? View.VISIBLE : View.GONE);
-        }
-        // Texte du bouton Next
-        btnNext.setText(currentStep < steps.size() - 1 ? "Suivant" : "Terminer");
-        btnPrev.setEnabled(currentStep > 0);
+    private void submitAllData() {
+        // Exemple : récupération des fragments
+        SenderFragment sf = (SenderFragment)getSupportFragmentManager()
+                .findFragmentByTag("f" + 0);
+        // ... ou mieux : partager un ViewModel pour collecter les saisies
+        Toast.makeText(this, "Transfert soumis !", Toast.LENGTH_LONG).show();
     }
 
     private void submitTransfer() {

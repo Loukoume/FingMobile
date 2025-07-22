@@ -7,4 +7,6 @@
         En cliquant sur « S’authentifier », vous confirmez avoir pris connaissance et accepté notre
         <a href="https://loukoume.github.io/politique/">politique de confidentialité</a>.
     </string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

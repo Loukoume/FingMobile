@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:paddingBottom="@dimen/fab_margin"
@@ -18,8 +18,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_marginHorizontal="0dp"
-        android:alpha="0.7"
-        android:layout_marginTop="@dimen/fab_margin"
+        android:alpha="0.9"
+        android:layout_marginTop="8dp"
+        android:textSize="12sp"
         android:gravity="center_horizontal"
         android:text="Ajouter des bénéficiaires externes à votre compte.
 Soit manuellement, lire un Qr code ou scanner le Qr code du compte."
@@ -29,7 +30,7 @@ Soit manuellement, lire un Qr code ou scanner le Qr code du compte."
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/fab_margin"
+        android:layout_marginTop="10dp"
         android:paddingHorizontal="@dimen/fab_margin"
         android:layout_height="wrap_content">
         <LinearLayout
@@ -38,11 +39,12 @@ Soit manuellement, lire un Qr code ou scanner le Qr code du compte."
             android:layout_gravity="start"
             android:layout_height="wrap_content">
             <ImageView
-                android:layout_width="50dp"
+                android:layout_width="40dp"
                 android:layout_gravity="center"
                 android:id="@+id/editer"
+                app:tint="@color/colorPrimary"
                 android:src="@drawable/edition_multiple_100"
-                android:layout_height="50dp">
+                android:layout_height="40dp">
 
             </ImageView>
             <TextView
@@ -59,11 +61,12 @@ Soit manuellement, lire un Qr code ou scanner le Qr code du compte."
             android:layout_gravity="center"
             android:layout_height="wrap_content">
             <ImageView
-                android:layout_width="50dp"
+                android:layout_width="40dp"
                 android:src="@drawable/qr_code"
                 android:id="@+id/qr_code"
+                app:tint="@color/colorPrimary"
                 android:layout_gravity="center"
-                android:layout_height="50dp">
+                android:layout_height="40dp">
             </ImageView>
             <TextView
                 android:layout_width="wrap_content"
@@ -79,11 +82,12 @@ Soit manuellement, lire un Qr code ou scanner le Qr code du compte."
             android:layout_gravity="end"
             android:layout_height="wrap_content">
             <ImageView
-                android:layout_width="50dp"
+                android:layout_width="40dp"
                 android:src="@drawable/qr_code_100"
                 android:layout_gravity="center"
+                app:tint="@color/colorPrimary"
                 android:id="@+id/balayer"
-                android:layout_height="50dp">
+                android:layout_height="40dp">
             </ImageView>
             <TextView
                 android:layout_width="wrap_content"
@@ -93,7 +97,5 @@ Soit manuellement, lire un Qr code ou scanner le Qr code du compte."
                 android:layout_height="wrap_content">
             </TextView>
         </LinearLayout>
-
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </LinearLayout>

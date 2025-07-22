@@ -5,7 +5,7 @@ android:shape="rectangle">
     android:startColor="@color/arg3"
     android:centerColor="@color/arg1"
     android:endColor="@color/arg2"
-    android:angle="0"/>
+    android:angle="-90"/>
 <corners
     android:radius="5dp"/>
 </shape>

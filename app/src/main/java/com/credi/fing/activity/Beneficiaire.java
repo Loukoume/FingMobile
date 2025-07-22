@@ -66,7 +66,7 @@ public class Beneficiaire extends AppCompatActivity {
         super.onCreate(savedInstanceState);
          setContentView(R.layout.activity_beneficiaire);
         nodata=findViewById(R.id.nodata);
-        nodata.setVisibility(GONE);
+        nodata.setVisibility(VISIBLE);
         text=findViewById(R.id.text);
         tx=findViewById(R.id.tx_text);
         recyclerView=findViewById(R.id.liste);
@@ -99,7 +99,7 @@ public class Beneficiaire extends AppCompatActivity {
                 MonFichier.ecrire(context,"beneficiaries","");
             }
         }else {
-            waite.setVisibility(VISIBLE);
+            nodata.setVisibility(VISIBLE);
         }
         js=MonFichier.lire(context,"beneficiaries_template");
         if(!js.isEmpty()){

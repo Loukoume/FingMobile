@@ -333,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
 
                     loanAccount.setProductId(1);
 
-// disbursementData : tableau vide
+                    // disbursementData : tableau vide
 
                     loanAccount.setFundId(1);
 

@@ -1,5 +1,6 @@
 package com.credi.fing.activity.pagerBeneficiaireAdd;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,7 +15,11 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.credi.fing.R;
 import com.credi.fing.activity.pagerAdapter.SenderFragment;
 import com.credi.fing.activity.pagerAdapter.TransferPagerAdapter;
+import com.credi.fing.entity.Beneficiary;
 import com.credi.fing.enums.TypeAdapter;
+import com.credi.fing.publics.service.impl.EditeObject;
+import com.credi.fing.publics.service.impl.Ut;
+import com.credi.fing.publics.utils.Dialogue;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.Arrays;
@@ -29,6 +34,9 @@ public class AddBeneciaireActivity extends AppCompatActivity {
     private final List<String> steps = Arrays.asList(
             "Infos générales", "Compte"
     );
+    Beneficiary beneficiary;
+    EditeObject editeObject;
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +46,8 @@ public class AddBeneciaireActivity extends AppCompatActivity {
         btnPrev   = findViewById(R.id.btn_prev);
         btnNext   = findViewById(R.id.btn_next);
         tx=findViewById(R.id.tx_text);
-
+        context=this;
+        editeObject= (EditeObject) getIntent().getSerializableExtra("object");
         adapter = new TransferPagerAdapter(this,2, TypeAdapter.BENEFICIAIRE);
         viewPager.setAdapter(adapter);
 //        configureStepView();
@@ -81,5 +90,32 @@ public class AddBeneciaireActivity extends AppCompatActivity {
                 .findFragmentByTag("f" + 0);
         // ... ou mieux : partager un ViewModel pour collecter les saisies
         Toast.makeText(this, "Transfert soumis !", Toast.LENGTH_LONG).show();
+    }
+
+    public Beneficiary getBeneficiary() {
+        if(beneficiary==null){
+            beneficiary=new Beneficiary();
+        }
+        return beneficiary;
+    }
+
+    public void setBeneficiary(Beneficiary beneficiary) {
+        this.beneficiary = beneficiary;
+    }
+
+    public EditeObject getEditeObject() {
+        return editeObject;
+    }
+
+    public void setEditeObject(EditeObject editeObject) {
+        this.editeObject = editeObject;
+    }
+
+    public void updateBeneFiciaire(String key, Object value){
+        if(beneficiary==null){
+            beneficiary=new Beneficiary();
+        }
+        Object object= Ut.setField(key,beneficiary,value);
+        this.beneficiary= (Beneficiary) Ut.creatObject(object, Beneficiary.class);
     }
 }

@@ -2,13 +2,22 @@ package com.credi.fing.activity.pagerBeneficiaireAdd;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.credi.fing.R;
+import com.credi.fing.publics.service.impl.Attribut;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,5 +73,43 @@ public class BeneficiaireFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_beneficiaire, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        TextInputLayout input=view.findViewById(R.id.textField);
+        TextInputEditText nom=view.findViewById(R.id.nom);
+        input.setHint("Libelle service");
+
+        AddBeneciaireActivity activity= (AddBeneciaireActivity) view.getContext();
+        if(activity!=null&&activity.editeObject!=null){
+            List<Attribut> attributs=activity.editeObject.getAttribute();
+           // Attribut attribut=attributs.stream().filter(a->a.getColonne().equals("officeName")).findFirst().get();
+        }
+
+        nom.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String value=s.toString();
+              if(activity!=null){
+                  if(!value.isEmpty()){
+                      activity.updateBeneFiciaire("clientName",value);
+                  }else {
+                      activity.updateBeneFiciaire("clientName",null);
+                  }
+              }
+            }
+        });
     }
 }

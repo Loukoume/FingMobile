@@ -19,7 +19,7 @@
                 android:id="@+id/tx_text"
                 android:textColor="@color/white"
                 android:textSize="20dp"
-                android:text="Transfert d'argent"
+                android:text="Ajouter un bénéficiaire"
                 android:textAllCaps="true"
                 android:layout_margin="@dimen/fab_margin"
                 android:layout_height="wrap_content">
@@ -42,13 +42,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_gravity="bottom"
-        android:visibility="gone"
-        android:layout_height="wrap_content">
-        <include layout="@layout/two_button"/>
-    </LinearLayout>
     <ImageView
         android:layout_width="60dp"
         android:src="@drawable/logofing_512"

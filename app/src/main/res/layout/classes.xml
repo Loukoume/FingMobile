@@ -4,7 +4,7 @@
     android:id="@+id/swifeRefresh"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@color/colorSendre"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -32,7 +32,7 @@
                 android:id="@+id/liste"
                 android:layout_marginTop="0dp"
                 android:layout_width="match_parent"
-                android:background="@color/colorSendre"
+                android:background="@color/white"
                 android:layout_marginHorizontal="0dp"
                 android:layout_height="match_parent"/>
             <androidx.recyclerview.widget.RecyclerView

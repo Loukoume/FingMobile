@@ -1,5 +1,6 @@
 package com.credi.fing.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -138,7 +139,16 @@ public class Inscription extends AppCompatActivity {
                         }
                     }
                 }else {
-                    Dialogue.neutreDialog("Veuillez accepter la politique de confidentialité","Information",context).show();
+
+                    if (context instanceof Activity) {
+                        Activity activity = (Activity) context;
+                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                            activity.runOnUiThread(() -> {
+                                Dialogue.neutreDialog("Veuillez accepter la politique de confidentialité","Information",context).show();
+                            });
+                        }
+                    }
+
                 }
 
                // Dialogue.neutreDialog(" mtp = "+mdp,"login = "+login,view.getContext()).show();
@@ -205,7 +215,15 @@ public class Inscription extends AppCompatActivity {
                         },
                         throwable -> {
                             hide();
-                            Dialogue.neutreDialog(throwable.getMessage(),"Echèc d'authentifaction",context).show();
+                            if (context instanceof Activity) {
+                                Activity activity = (Activity) context;
+                                if (!activity.isFinishing() && !activity.isDestroyed()) {
+                                    activity.runOnUiThread(() -> {
+                                        Dialogue.neutreDialog(throwable.getMessage(),"Echèc d'authentifaction",context).show();
+                                    });
+                                }
+                            }
+
                             // Gestion de l’erreur
                             Log.e("AuthRepo", "Erreur d'auth : " + throwable.getMessage());
                         }
@@ -233,7 +251,8 @@ public class Inscription extends AppCompatActivity {
         if (l.size() == 1) {
             Inscription.user = l.get(0);
             System.out.println(" =user=> "+Ut.js(Inscription.user));
-            Dialogue.neutreDialog(Ut.js(Inscription.user),"",context).show();
+            //Dialogue.neutreDialog(Ut.js(Inscription.user),"",context).show();
+
             body = new LoginRequest(Inscription.user.getUsername(), MonFichier.lire(context,"password"));
             Intent intent = new Intent(context, MainActivity.class);
            // intent.putExtra("compte", user);

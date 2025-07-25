@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center_horizontal"
+    android:background="@drawable/shape_vide"
     android:paddingBottom="@dimen/fab_margin"
     android:layout_height="wrap_content">
     <TextView
@@ -31,6 +32,7 @@ Soit manuellement, lire un Qr code ou scanner le Qr code du compte."
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="@dimen/fab_margin"
         android:paddingHorizontal="@dimen/fab_margin"
         android:layout_height="wrap_content">
         <LinearLayout

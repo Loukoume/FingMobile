@@ -24,31 +24,99 @@ public class RecyclerHandler {
     }
 
     public interface ItemTouchListener {
-        void execute( final int position,View view);
-    }
-    public interface ItemLongTouchListener {
-        void execute( final int position,View view);
+        void execute(final int position, View view);
     }
 
-    public void setOnItemTouchListener(ItemTouchListener action,ItemLongTouchListener longAction){
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(context,
-                recyclerView, new Interface() {
+    public interface ItemLongTouchListener {
+        void execute(final int position, View view);
+    }
+
+    public interface OnSwipeLeft {
+        void execute(final int position, View view);
+    }
+
+    public interface OnSwipeRight {
+        void execute(final int position, View view);
+    }
+
+
+    private RecyclerTouchListener recyclerTouchListener; // Stocker la référence
+    private RecyclerTouchListener recyclerTouchListenerWithSweep;
+
+    public void setOnItemTouchListener(ItemTouchListener action, ItemLongTouchListener longAction) {
+
+        if (recyclerTouchListener != null) {
+            recyclerView.removeOnItemTouchListener(recyclerTouchListener);
+        }
+
+
+        recyclerTouchListener = new RecyclerTouchListener(context, recyclerView, new RecyclerTouchListener.SwipeClickListener() {
             @Override
             public void onClick(View view, final int position) {
                 adapter.setP(position);
                 adapter.setaClass(aClass);
-                if(action!=null){
-
-                    action.execute(position,view);
+                if (action != null) {
+                    action.execute(position, view);
                 }
             }
 
             @Override
             public void onLongClick(View view, int position) {
-                if(longAction!=null){
-                    longAction.execute(position,view);
+                if (longAction != null) {
+                    longAction.execute(position, view);
                 }
             }
-        }));
+
+            @Override
+            public void onSwipeLeft(View view, int position) {}
+
+            @Override
+            public void onSwipeRight(View view, int position) {}
+        });
+
+        recyclerView.addOnItemTouchListener(recyclerTouchListener);
+    }
+
+    public void setOnItemTouchListener(ItemTouchListener action, ItemLongTouchListener longAction, OnSwipeLeft onSwipeLeft, OnSwipeRight onSwipeRight) {
+        if (recyclerTouchListenerWithSweep != null) {
+            recyclerView.removeOnItemTouchListener(recyclerTouchListenerWithSweep);
+        }
+
+        recyclerTouchListenerWithSweep = new RecyclerTouchListener(context, recyclerView, new RecyclerTouchListener.SwipeClickListener() {
+            @Override
+            public void onClick(View view, final int position) {
+                adapter.setP(position);
+                adapter.setaClass(aClass);
+                if (action != null) {
+                    action.execute(position, view);
+                }
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+                if (longAction != null) {
+                    longAction.execute(position, view);
+                }
+            }
+
+            @Override
+            public void onSwipeLeft(View view, int position) {
+                if (onSwipeLeft != null) {
+                    view.animate().translationX(-600f).setDuration(300).start();
+                    onSwipeLeft.execute(position, view);
+                }
+            }
+
+            @Override
+            public void onSwipeRight(View view, int position) {
+                if (onSwipeRight != null) {
+                    view.animate().translationX(600f).setDuration(300).start();
+                    onSwipeRight.execute(position, view);
+                }
+            }
+        });
+
+        recyclerView.addOnItemTouchListener(recyclerTouchListenerWithSweep);
+
     }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="gradient_colors">
+        <item>#003C8F</item>
+        <item>#1565C0</item>
+        <item>#C06515</item>
+        <!-- ajoutez autant de <item> que nécessaire -->
+    </array>
+</resources>

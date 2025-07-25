@@ -1,6 +1,7 @@
 package com.credi.fing.publics;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
@@ -70,7 +71,16 @@ public class LoginAddActivity extends AppCompatActivity {
             public void onClick(View view) {
                 LoginActivity. compte = textValue();
                 if (LoginActivity. compte == null) {
-                    Dialogue.neutreDialog(" Veuillez renseigner correctement le formulaire", "Alerte", context).show();
+
+                    if (context instanceof Activity) {
+                        Activity activity = (Activity) context;
+                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                            activity.runOnUiThread(() -> {
+                                Dialogue.neutreDialog(" Veuillez renseigner correctement le formulaire", "Alerte", context).show();
+                            });
+                        }
+                    }
+
                 } else {
                     addCompte(LoginActivity.compte);
                 }
@@ -170,18 +180,42 @@ public class LoginAddActivity extends AppCompatActivity {
                     if(response.body()!=null){
                         finish();
                     }else {
-                        Dialogue.neutreDialog("Erreur technique","Alerte", context).show();
+                        if (context instanceof Activity) {
+                            Activity activity = (Activity) context;
+                            if (!activity.isFinishing() && !activity.isDestroyed()) {
+                                activity.runOnUiThread(() -> {
+                                    Dialogue.neutreDialog("Erreur technique","Alerte", context).show();
+                                });
+                            }
+                        }
+
                     }
 
                 }else {
-                    Dialogue.neutreDialog("Problème technique","Alerte", context).show();
+                    if (context instanceof Activity) {
+                        Activity activity = (Activity) context;
+                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                            activity.runOnUiThread(() -> {
+                                Dialogue.neutreDialog("Problème technique","Alerte", context).show();
+                            });
+                        }
+                    }
+
                 }
             }
             @Override
             public void onFailure(Call<Compte> call, Throwable t) {
                 pb.setVisibility(View.GONE);
                 String st=t+"";
-                    Dialogue.neutreDialog(t+"","Alerte", context).show();
+                if (context instanceof Activity) {
+                    Activity activity = (Activity) context;
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        activity.runOnUiThread(() -> {
+                            Dialogue.neutreDialog(t+"","Alerte", context).show();
+                        });
+                    }
+                }
+
             }
         });
     }}

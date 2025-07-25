@@ -2,6 +2,7 @@ package com.credi.fing.publics.composant;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -13,6 +14,7 @@ import com.credi.fing.publics.ecouteur.GridSpacingItemDecoration;
 import com.credi.fing.publics.ecouteur.Interface;
 import com.credi.fing.publics.ecouteur.RecyclerTouchListener;
 import com.credi.fing.publics.service.OnBindViewHolderAction;
+import com.credi.fing.publics.service.impl.RecyclerHandler;
 import com.credi.fing.publics.service.impl.Ut;
 import com.credi.fing.publics.service.interfacs.OnSelect;
 import com.credi.fing.publics.utils.S;
@@ -37,9 +39,36 @@ public class RecyclierViewCp {
         return this;
     }
 
+    public List<Object> getObjects() {
+        return objects;
+    }
+
+    public void setObjects(List<Object> objects) {
+        this.objects = objects;
+    }
+
+    public Adapter getAdapter() {
+        return adapter;
+    }
+
+    public void setAdapter(Adapter adapter) {
+        this.adapter = adapter;
+    }
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
+
+    public void setRecyclerView(RecyclerView recyclerView) {
+        this.recyclerView = recyclerView;
+    }
+
     private OnBindViewHolderAction onBindViewHolderAction;
     private OnSelect onLongClick;
     private OnSelect onClick;
+
+    RecyclerHandler.OnSwipeRight onSwipeRight;
+    RecyclerHandler.OnSwipeLeft onSwipeLeft;
 
     public int getNumberItems() {
         return numberItems;
@@ -56,6 +85,30 @@ public class RecyclierViewCp {
 
     public void setOnClick(OnSelect onClick) {
         this.onClick = onClick;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public RecyclerHandler.OnSwipeRight getOnSwipeRight() {
+        return onSwipeRight;
+    }
+
+    public void setOnSwipeRight(RecyclerHandler.OnSwipeRight onSwipeRight) {
+        this.onSwipeRight = onSwipeRight;
+    }
+
+    public RecyclerHandler.OnSwipeLeft getOnSwipeLeft() {
+        return onSwipeLeft;
+    }
+
+    public void setOnSwipeLeft(RecyclerHandler.OnSwipeLeft onSwipeLeft) {
+        this.onSwipeLeft = onSwipeLeft;
     }
 
     public RecyclierViewCp(Context context, int row_layout, List<Object> objects, OnBindViewHolderAction onBindViewHolderAction) {
@@ -81,31 +134,64 @@ public class RecyclierViewCp {
     }
 
     private void preparerDatas() {
-      adapter=new Adapter(context,objects,row_layout,onBindViewHolderAction);
+        adapter = new Adapter(context, objects, row_layout, onBindViewHolderAction);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, numberItems);
         recyclerView.setLayoutManager(mLayoutManager);
-        if(recyclerView.getItemDecorationCount()==0)
-            recyclerView.addItemDecoration(new GridSpacingItemDecoration(numberItems, S.dpToPx(2,context.getResources()), true));
+
+        if (recyclerView.getItemDecorationCount() == 0)
+            recyclerView.addItemDecoration(new GridSpacingItemDecoration(numberItems, S.dpToPx(2, context.getResources()), true));
+
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(context,
-                recyclerView, new Interface() {
+                recyclerView, new RecyclerTouchListener.SwipeClickListener() {
 
             @Override
             public void onClick(View view, int position) {
-                if(onClick!=null){
-                    onClick.select(objects.get(position),position);
+                if (onClick != null) {
+                    onClick.select(objects.get(position), position);
                 }
             }
 
             @Override
             public void onLongClick(View view, int position) {
-                if(onLongClick!=null){
-                    onLongClick.select(objects.get(position),position);
+                if (onLongClick != null) {
+                    onLongClick.select(objects.get(position), position);
+                }
+            }
+
+            @Override
+            public void onSwipeLeft(View view, int position) {
+                if (onSwipeLeft != null) {
+                    view.animate().translationX(-600f).setDuration(300).start();
+                    onSwipeLeft.execute(position, view);
+                }
+            }
+
+            @Override
+            public void onSwipeRight(View view, int position) {
+                if (onSwipeRight != null) {
+                    view.animate().translationX(600f).setDuration(300).start();
+                    onSwipeRight.execute(position, view);
                 }
             }
         }));
+    }
+
+    /**
+     * Met à jour les données du RecyclerView et notifie l'adaptateur.
+     *
+     * @param list nouvelle liste de données à afficher
+     */
+    public void updateList(List<Object> list) {
+        if (adapter != null && list != null) {
+            this.objects = list;
+            adapter.setList(list); // ⚠️ Assurez-vous que Adapter a une méthode setList(List<Object>)
+            adapter.notifyDataSetChanged();
+        } else {
+            Toast.makeText(context, "Adapter ou données non initialisés", Toast.LENGTH_SHORT).show();
+        }
     }
 
 

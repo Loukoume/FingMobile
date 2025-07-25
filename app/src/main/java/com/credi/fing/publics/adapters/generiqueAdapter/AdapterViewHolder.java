@@ -22,7 +22,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class AdapterViewHolder extends RecyclerView.ViewHolder {
     public TextView title,title2,textePourcentage,date;
     public  ProgressBar pbc;
-    public TextView secondre,secondre2,notif;
+    public TextView secondre,secondre2,notif,symbole;
     public ImageView not_sente,icon_notif,up;
     public CircleImageView circ_img;
     public ImageView image;
@@ -46,6 +46,7 @@ public class AdapterViewHolder extends RecyclerView.ViewHolder {
         barreProgressionInterieure=view.findViewById(R.id.barreProgressionInterieure);
         aSwitch=view.findViewById(R.id.id_switch);
         star=view.findViewById(R.id.star);
+        symbole=view.findViewById(R.id.symbole);
         icon_notif=view.findViewById(R.id.notif);
         pbc = view.findViewById(R.id.pbc);
         lnotif=view.findViewById(R.id.lnotif);

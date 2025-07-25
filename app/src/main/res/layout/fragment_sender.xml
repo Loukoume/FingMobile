@@ -13,22 +13,7 @@
         android:layout_height="wrap_content">
 
         <!-- Champ Numéro de compte -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hintTextColor="@color/colorAccent"
-            app:boxBackgroundColor="@color/white"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_marginBottom="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_account_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Numéro de compte"
-                android:inputType="number"
-                android:maxLines="1"/>
-        </com.google.android.material.textfield.TextInputLayout>
+        <include layout="@layout/input_drop_mt_outlin"/>
 
         <!-- Champ Nom complet -->
         <com.google.android.material.textfield.TextInputLayout

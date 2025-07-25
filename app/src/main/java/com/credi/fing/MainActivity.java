@@ -1,9 +1,12 @@
 package com.credi.fing;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -79,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     ProgressBar pb;
     ImageView eye_pret,eye_epargne,mort,drawer;
     View vide;
-    LinearLayout lservice,sheet,drawer_lineair;
+    LinearLayout lservice,sheet,drawer_lineair,gradien;
     FloatingActionButton add;
     Context context;
     TextView solde_pret,solde_epargne,symbole,name;
@@ -103,12 +106,14 @@ public class MainActivity extends AppCompatActivity {
         drawer_lineair=findViewById(R.id.drawer_lineair);
         vide=findViewById(R.id.vide);
         pb=findViewById(R.id.pb);
+        gradien=findViewById(R.id.gradien);
         context=this;
         sheet.setVisibility(View.GONE);
         mort=findViewById(R.id.mort);
         symbole=findViewById(R.id.symbole);
         name=findViewById(R.id.name);
         //carousel();
+        //gradien.setBackground(gradien());
         services();clickBotom();
         vide.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -574,14 +579,30 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } else {
                     // Erreur côté serveur ou JSON non parsable
-                    Dialogue.neutreDialog(response.message()+" "+response.errorBody(),"null",context).show();
+                    if (context instanceof Activity) {
+                        Activity activity = (Activity) context;
+                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                            activity.runOnUiThread(() -> {
+                                Dialogue.neutreDialog(response.message()+" "+response.errorBody(),"null",context).show();
+                            });
+                        }
+                    }
+
                 }
             }
 
             @Override
             public void onFailure(Call<Client> call, Throwable t) {
                 // Problème réseau ou exception
-               Dialogue.neutreDialog(t.toString(),"",context).show();
+                if (context instanceof Activity) {
+                    Activity activity = (Activity) context;
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        activity.runOnUiThread(() -> {
+                            Dialogue.neutreDialog(t.toString(),"",context).show();
+                        });
+                    }
+                }
+
             }
         });
     }
@@ -633,7 +654,16 @@ public class MainActivity extends AppCompatActivity {
                    // savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
                    // setComptesValues();
                     // Erreur côté serveur ou JSON non parsable
-                      Dialogue.neutreDialog(response.message()+" "+response.code(),response.errorBody()+"",context).show();
+
+                    if (context instanceof Activity) {
+                        Activity activity = (Activity) context;
+                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                            activity.runOnUiThread(() -> {
+                                Dialogue.neutreDialog(response.message()+" "+response.code(),response.errorBody()+"",context).show();
+                            });
+                        }
+                    }
+
                 }
                 hidePb();
             }
@@ -642,7 +672,15 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<Client> call, Throwable t) {
                 // Problème réseau ou exception
                 hidePb();
-                Dialogue.neutreDialog(t.getMessage()+"","Echec",context).show();
+                if (context instanceof Activity) {
+                    Activity activity = (Activity) context;
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        activity.runOnUiThread(() -> {
+                            Dialogue.neutreDialog(t.getMessage()+"","Echec",context).show();
+                        });
+                    }
+                }
+
             }
         });
     }
@@ -696,7 +734,15 @@ public class MainActivity extends AppCompatActivity {
                     // savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
                     // setComptesValues();
                     // Erreur côté serveur ou JSON non parsable
-                    Dialogue.neutreDialog(response.message()+" "+response.code(),response.errorBody()+"",context).show();
+                    if (context instanceof Activity) {
+                        Activity activity = (Activity) context;
+                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                            activity.runOnUiThread(() -> {
+                                Dialogue.neutreDialog(response.message()+" "+response.code(),response.errorBody()+"",context).show();
+                            });
+                        }
+                    }
+
                 }
                 hidePb();
             }
@@ -853,5 +899,24 @@ public class MainActivity extends AppCompatActivity {
 
     private void requestPermission() {
         ActivityCompat.requestPermissions(this, new String[]{"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.CALL_PHONE"}, 1);
+    }
+
+
+    public GradientDrawable gradien(){
+        int[] colors = new int[]{
+                Ut.getColor(context,R.color.blue),
+                Ut.getColor(context,R.color.backgrund2)
+                // Ajoutez d'autres couleurs ici si besoin
+        };
+
+// 2. Créez le GradientDrawable
+        GradientDrawable gradientDrawable = new GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM,
+                colors
+        );
+
+// 3. Définissez la forme (rectangle par défaut, c’est optionnel)
+        gradientDrawable.setShape(GradientDrawable.RECTANGLE);
+        return gradientDrawable;
     }
 }

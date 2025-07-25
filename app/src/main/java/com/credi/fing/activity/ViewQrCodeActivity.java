@@ -2,6 +2,7 @@ package com.credi.fing.activity;
 
 import static android.view.View.GONE;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -210,8 +211,17 @@ public class ViewQrCodeActivity extends AppCompatActivity {
                         vide.setVisibility(View.GONE);
                         sendQrViaWhatsApp();
                     }else {
-                        Dialogue.neutreDialog("Le numéro de téléphone doit inclure l'indicatif téléphonique du pays",
-                                "Recommendation",context).show();
+                        if (context instanceof Activity) {
+                            Activity activity = (Activity) context;
+                            if (!activity.isFinishing() && !activity.isDestroyed()) {
+                                activity.runOnUiThread(() -> {
+                                    Dialogue.neutreDialog("Le numéro de téléphone doit inclure l'indicatif téléphonique du pays",
+                                            "Recommendation",context).show();
+                                    //Dialogue.neutreDialog(t.toString(), "", context).show();
+                                });
+                            }
+                        }
+
                     }
                 }else {
                   inputLyout.setError("Numéro obligatoire");

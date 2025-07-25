@@ -1,5 +1,6 @@
 package com.credi.fing.publics.service.impl;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -338,7 +339,15 @@ public class ListActivity extends AppCompatActivity {
                  ///Dialogue.neutreDialog(Ut.js(object)+"","",context).show();
                 adapter.notifyItemChanged(p);
             }else if(!s.equalsIgnoreCase("local")){
-                Dialogue.neutreDialog(s,"Echèc",context).show();
+                if (context instanceof Activity) {
+                    Activity activity = (Activity) context;
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        activity.runOnUiThread(() -> {
+                            Dialogue.neutreDialog(s,"Echèc",context).show();
+                        });
+                    }
+                }
+
             }
             return o;
         });

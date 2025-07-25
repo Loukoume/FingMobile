@@ -1,5 +1,6 @@
 package com.credi.fing.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -208,11 +209,21 @@ public class RevuPretActivity extends AppCompatActivity {
                         errorContent = "Impossible de lire le contenu de l’erreur";
                     }
                     // Affiche le message d’erreur et le code HTTP
-                    Dialogue.neutreDialog(
-                            errorContent,
-                            "Code d'erreur : " + response.code(),
-                            context
-                    ).show();
+
+                    if (context instanceof Activity) {
+                        Activity activity = (Activity) context;
+                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                            String finalErrorContent = errorContent;
+                            activity.runOnUiThread(() -> {
+                                Dialogue.neutreDialog(
+                                        finalErrorContent,
+                                        "Code d'erreur : " + response.code(),
+                                        context
+                                ).show();
+                           });
+                        }
+                    }
+
                 }
                 hidePb();
             }
@@ -228,7 +239,15 @@ public class RevuPretActivity extends AppCompatActivity {
                 // 2) Récupérez la stack trace complète
                 String stackTrace = Log.getStackTraceString(t);
 
-                Dialogue.neutreDialog(stackTrace, "Echec", context).show();
+                if (context instanceof Activity) {
+                    Activity activity = (Activity) context;
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        activity.runOnUiThread(() -> {
+                            Dialogue.neutreDialog(stackTrace, "Echec", context).show();
+                        });
+                    }
+                }
+
             }
         });
     }
@@ -266,7 +285,14 @@ public class RevuPretActivity extends AppCompatActivity {
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 } else {
-                    Dialogue.neutreDialog(response.message()+" "+response.code(),response.errorBody()+"",context).show();
+                    if (context instanceof Activity) {
+                        Activity activity = (Activity) context;
+                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                            activity.runOnUiThread(() -> {
+                                Dialogue.neutreDialog(response.message()+" "+response.code(),response.errorBody()+"",context).show();
+                            });
+                        }
+                    }
 
                 }
                 hidePb();

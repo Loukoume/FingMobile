@@ -22,7 +22,7 @@
             app:hintEnabled="true"
             app:boxBackgroundMode="outline"
             android:layout_marginTop="@dimen/fab_margin"
-            android:hint="Nom complet"
+            android:hint="Nom du client"
             app:boxBackgroundColor="@color/white"
             android:layout_height="wrap_content">
 

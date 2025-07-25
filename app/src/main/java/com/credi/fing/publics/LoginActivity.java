@@ -1,6 +1,7 @@
 package com.credi.fing.publics;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -147,11 +148,27 @@ public class LoginActivity extends AppCompatActivity {
                                 break;
                         }
                     } else {
-                        Dialogue.neutreDialog("Echèc d'autentification", "Alerte", context).show();
+                        if (context instanceof Activity) {
+                            Activity activity = (Activity) context;
+                            if (!activity.isFinishing() && !activity.isDestroyed()) {
+                                activity.runOnUiThread(() -> {
+                                    Dialogue.neutreDialog("Echèc d'autentification", "Alerte", context).show();
+                                });
+                            }
+                        }
+
                     }
 
                 } else {
-                    Dialogue.neutreDialog("Problème technique", "Alerte", context).show();
+                    if (context instanceof Activity) {
+                        Activity activity = (Activity) context;
+                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                            activity.runOnUiThread(() -> {
+                                Dialogue.neutreDialog("Problème technique", "Alerte", context).show();
+                            });
+                        }
+                    }
+
                 }
             }
 
@@ -160,9 +177,27 @@ public class LoginActivity extends AppCompatActivity {
                 pb.setVisibility(View.GONE);
                 String st = t + "";
                 if (st.contains("java.io.EOFException: End of")) {
-                    Dialogue.neutreDialog("Mot de passe ou Numéro erroné "+st, "Alerte", context).show();
+                    if (context instanceof Activity) {
+                        Activity activity = (Activity) context;
+                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                            activity.runOnUiThread(() -> {
+                                Dialogue.neutreDialog("Mot de passe ou Numéro erroné "+st, "Alerte", context).show();
+                            });
+                        }
+                    }
+
                 } else
-                    Dialogue.neutreDialog(t + "", "Alerte", context).show();
+                {
+                    if (context instanceof Activity) {
+                        Activity activity = (Activity) context;
+                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                            activity.runOnUiThread(() -> {
+                                Dialogue.neutreDialog(t + "", "Alerte", context).show();
+                            });
+                        }
+                    }
+
+                }
             }
         });
     }

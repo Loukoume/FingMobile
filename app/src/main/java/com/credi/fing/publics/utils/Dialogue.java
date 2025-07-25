@@ -83,4 +83,16 @@ public class Dialogue {
 
 
 
+    public static void showDialog(Context context,AlertDialog alertDialog){
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            if (!activity.isFinishing() && !activity.isDestroyed()) {
+                activity.runOnUiThread(alertDialog::show);
+            }
+        }
+
+    }
+
+
+
 }

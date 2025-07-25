@@ -118,7 +118,7 @@ public class PdfViewer extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(context,
-                recyclerView, new Interface() {
+                recyclerView, new RecyclerTouchListener.SwipeClickListener() {
             @Override
             public void onClick(View view, final int position) {
 
@@ -126,6 +126,16 @@ public class PdfViewer extends AppCompatActivity {
 
             @Override
             public void onLongClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onSwipeLeft(View view, int position) {
+
+            }
+
+            @Override
+            public void onSwipeRight(View view, int position) {
 
             }
         }));

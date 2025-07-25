@@ -1,16 +1,20 @@
 package com.credi.fing.activity;
 
 import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,6 +24,7 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.credi.fing.R;
+import com.credi.fing.activity.pagerBeneficiaireAdd.AddBeneciaireActivity;
 import com.credi.fing.binder.BeneficiaryBinder;
 import com.credi.fing.binder.OperationBinder;
 import com.credi.fing.entity.AccountTypeOption;
@@ -42,6 +47,7 @@ import com.credi.fing.publics.utils.S;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,6 +66,8 @@ public class Beneficiaire extends AppCompatActivity {
     Object obj;
     EditeObject editeObject;
     View vide;
+    EditText editTextSearch;
+    ImageView clear;
     List<AccountTypeOption> typeAcounts;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +89,8 @@ public class Beneficiaire extends AppCompatActivity {
         String extra=getIntent().getStringExtra("titre");
         tx.setText(extra.toUpperCase());
         text.setText(extra+" s'affichent ici");
-
+        editTextSearch=findViewById(R.id.search_bar);
+        clear=findViewById(R.id.clear_search_icon);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,10 +100,12 @@ public class Beneficiaire extends AppCompatActivity {
         });
 
         String js=MonFichier.lire(context,"beneficiaries");
+
         if(!js.isEmpty()){
             try {
-                List<Object> list=Ut.listFromJs(js);
-                displayBeneficiaires(list);
+                MonFichier.ecrire(context,"beneficiaries","");
+                //List<Object> list=Ut.listFromJs(js);
+                //displayBeneficiaires(list);
             } catch (Exception e) {
                 MonFichier.ecrire(context,"beneficiaries","");
             }
@@ -121,6 +132,40 @@ public class Beneficiaire extends AppCompatActivity {
                 }
             });
         }
+
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                  String search=s.toString();
+                  if(search.isEmpty()){
+                      clear.setVisibility(INVISIBLE);
+                      if(listBeneficiaires!=null){
+                          recyclierViewCp.updateList(listBeneficiaires);
+                      }
+                  }else {
+                      clear.setVisibility(VISIBLE);
+                      recyclierViewCp.updateList(filter(search));
+                  }
+            }
+        });
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editTextSearch.setText("");
+            }
+        });
+
+
     }
 
     @Override
@@ -129,13 +174,29 @@ public class Beneficiaire extends AppCompatActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
+    private String getInitiale(String nom){
+        String s="";
+       if(!(nom.replace(" ","")).isEmpty()){
+           String[] t=nom.split(" ");
+           if(t.length!=0){
+             s=t[0].substring(0,1).toUpperCase();
+           }
+           if(t.length>1){
+               s=s+(t[t.length-1].charAt(0)+"").toUpperCase();
+           }
+       }
+       return s;
+    }
+
     void setText(Object object, AdapterViewHolder holder, int k) {
         TextView title = holder.title, second = holder.secondre,
-                title2 = holder.title2, secondre2 = holder.secondre2, date = holder.date, value = holder.textePourcentage;
-        Object productN_ob = Ut.getValue(object, "accountNo");
-        Object productName_ob = Ut.getValue(object, "productName");
-        Object loanBalance_ob = Ut.getValue(object, "accountBalance");
-        Object currency_ob = Ut.getValue(object, "currency");
+                symbole = holder.symbole, secondre2 = holder.secondre2, date = holder.date, value = holder.textePourcentage;
+        Object productN_ob = Ut.getValue(object, "accountNumber");
+        Object accountType = Ut.getValue(object, "accountType:value");
+        //Object loanBalance_ob = Ut.getValue(object, "accountBalance");
+        Object clientName = Ut.getValue(object, "clientName");
+
+        //Dialogue.neutreDialog(Ut.js(object),"vc",context).show();
 
         View view = holder.view;
         ImageView plus = view.findViewById(R.id.plus),
@@ -143,23 +204,20 @@ public class Beneficiaire extends AppCompatActivity {
 
         if (productN_ob != null) {
             String productName = productN_ob.toString();
-            title.setText(productName);
+            second.setText(productName);
         }
-        if (productName_ob != null) {
-            second.setText(productName_ob.toString());
-        }
-        //Object loanBalance_ob=Ut.getValue(v,"loanBalance");
-        if (k == 2) {
-            //System.out.println(" values v = "+Ut.js(v));
-            loanBalance_ob = Ut.getValue(object, "loanBalance");
-            Object initial = Ut.getValue(object, "originalLoan");
-            if (loanBalance_ob != null) {
-                title2.setText("CFA "+Ut.formatMontant(Double.parseDouble(loanBalance_ob.toString())));
-            }
-            if (initial != null) {
-                value.setText("CFA "+Ut.formatMontant(Double.parseDouble(initial.toString())));
+        if (clientName != null) {
+            title.setText(clientName.toString());
+            symbole.setText(getInitiale(clientName.toString()));
+            if(symbole.getText().toString().length()>1){
+               // symbole.setTextSize(12);
             }
         }
+        if(accountType!=null){
+            secondre2.setVisibility(VISIBLE);
+            secondre2.setText(accountType.toString());
+        }
+
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,6 +228,7 @@ public class Beneficiaire extends AppCompatActivity {
 
     }
 
+    List<Object> listBeneficiaires;
     // 3. La méthode getBeneficiare() dans votre Activity/Repository
     void getBeneficiare() {
         // 1. Spécifiez vos identifiants Basic Auth
@@ -194,22 +253,36 @@ public class Beneficiaire extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Beneficiary> list = response.body();
                     if(list.isEmpty()){
+                        list=new ArrayList<>();
+                        list.add(Beneficiary.generate());
+                        list.add(Beneficiary.generate());
+                        list.add(Beneficiary.generate());
+                    }
+                    if(list.isEmpty()){
                         nodata.setVisibility(VISIBLE);
                     }else {
-                        displayBeneficiaires(list
-                                .stream().map(x->x).collect(Collectors.toList()));
+                        nodata.setVisibility(GONE);
+                        displayBeneficiaires(list);
                         // Par ex., écrire la liste en JSON dans un fichier ou l'afficher
-                        String js = Ut.listJs(list.stream().map(x->x).collect(Collectors.toList()));
-                        MonFichier.ecrire(context, "beneficiaries", js);
+                       // String js = Ut.listJs(list);
+                       // MonFichier.ecrire(context, "beneficiaries", js);
                         //Log.d("Beneficiaires", json);
                     }
                 } else {
                     // Erreur côté serveur ou parsing
-                    Dialogue.neutreDialog(
-                            response.message() + " " + response.errorBody(),
-                            "null",
-                            context
-                    ).show();
+                    if (context instanceof Activity) {
+                        Activity activity = (Activity) context;
+                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                            activity.runOnUiThread(() -> {
+                                Dialogue.neutreDialog(
+                                        response.message() + " " + response.errorBody(),
+                                        "null",
+                                        context
+                                ).show();
+                            });
+                        }
+                    }
+
                 }
                 waite.setVisibility(GONE);
             }
@@ -217,16 +290,31 @@ public class Beneficiaire extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Beneficiary>> call, Throwable t) {
                 // Problème réseau ou exception
-               // Dialogue.neutreDialog(t.toString(), "", context).show();
+                Dialogue.neutreDialog(t.toString(), "ecc", context).show();
                 waite.setVisibility(GONE);
+                nodata.setVisibility(GONE);
+                List<Beneficiary> list = new ArrayList<>();
+                if(list.isEmpty()){
+                    list=new ArrayList<>();
+                    list.add(Beneficiary.generate());
+                    list.add(Beneficiary.generate());
+                    list.add(Beneficiary.generate());
+                }
+                displayBeneficiaires(list);
             }
         });
     }
-
-    void displayBeneficiaires(List<Object> list){
-        RecyclierViewCp recyclierViewCp = new RecyclierViewCp(context, R.layout.card_simple_row, list, (h, o, i) -> {
+    RecyclierViewCp recyclierViewCp;
+    void displayBeneficiaires(Object object){
+        List<Object> list= (List<Object>) object;
+        listBeneficiaires=list;
+         recyclierViewCp = new RecyclierViewCp(context, R.layout.card_image_horiz_row, list, (h, o, i) -> {
             setText(o, h, 1);
-        }).setNumberItems(1).setBackground(R.color.colorSendre);
+        }).setNumberItems(1).setBackground(R.color.white);
+
+        recyclierViewCp.setOnSwipeRight((p,v)->{
+
+        });
 
         recyclierViewCp.view(recyclerView);
     }
@@ -270,7 +358,15 @@ public class Beneficiaire extends AppCompatActivity {
             @Override
             public void onFailure(Call<BeneficiaryTemplate> call, Throwable t) {
                 // Problème réseau ou exception
-                Dialogue.neutreDialog(t.toString(), "", context).show();
+                if (context instanceof Activity) {
+                    Activity activity = (Activity) context;
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        activity.runOnUiThread(() -> {
+                            Dialogue.neutreDialog(t.toString(), "", context).show();
+                        });
+                    }
+                }
+
             }
         });
     }
@@ -304,7 +400,7 @@ public class Beneficiaire extends AppCompatActivity {
                     attributs.get(3).setValuess(typeAcounts.stream().map(x->x).collect(Collectors.toList()));
                     //Dialogue.neutreDialog(attributs.get().size()+"","",context).show();
                     editeObject.setObject(new Beneficiary());
-                    startActivity(new Intent(context, AddActivity.class)
+                    startActivity(new Intent(context, AddBeneciaireActivity.class)
                             .putExtra("object", editeObject));
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 }
@@ -338,4 +434,39 @@ public class Beneficiaire extends AppCompatActivity {
         sheet.setAnimation(Anim.getAnimeBH(context));
     }
 
+  private  List<Object> filter(String searche) {
+      List<Object> list=new ArrayList<>();
+      if(listBeneficiaires!=null){
+            for (Object object:listBeneficiaires){
+                boolean ok=false;
+                Object productN_ob = Ut.getValue(object, "accountNumber");
+                Object accountType = Ut.getValue(object, "accountType:value");
+                Object clientName = Ut.getValue(object, "clientName");
+                if (productN_ob != null) {
+                    String productName = productN_ob.toString();
+                    if((productName.toLowerCase()).contains(searche.toLowerCase())){
+                        list.add(object);
+                        ok=true;
+                    }
+                }
+                if (clientName != null&&!ok) {
+                    String productName = clientName.toString();
+                    if((productName.toLowerCase()).contains(searche.toLowerCase())){
+                        list.add(object);
+                        ok=true;
+                    }
+                }
+                if(accountType!=null&&!ok){
+                    String productName = accountType.toString();
+                    if((productName.toLowerCase()).contains(searche.toLowerCase())){
+                        list.add(object);
+                       // ok=true;
+                    }
+                }
+            }
+        }
+
+       return list;
+
+    }
 }

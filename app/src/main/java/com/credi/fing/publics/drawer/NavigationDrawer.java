@@ -160,7 +160,7 @@ public class NavigationDrawer {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(album_adapter);
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(context,
-                recyclerView, new Interface() {
+                recyclerView, new RecyclerTouchListener.SwipeClickListener() {
             @Override
             public void onClick(View view, final int position) {
                 p=position;
@@ -173,6 +173,17 @@ public class NavigationDrawer {
             public void onLongClick(View view, int position) {
                 //Pths=paths.get(position);p=position;
 
+            }
+            @Override
+            public void onSwipeLeft(View view, int position) {
+                // Optionnel : gérer le swipe gauche ici
+                // Ex : Toast.makeText(context, "Swiped Left: " + position, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSwipeRight(View view, int position) {
+                // Optionnel : gérer le swipe droite ici
+                // Ex : Toast.makeText(context, "Swiped Right: " + position, Toast.LENGTH_SHORT).show();
             }
         }));
         // swip(liste);

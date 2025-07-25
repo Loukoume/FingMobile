@@ -12,7 +12,7 @@
         android:id="@+id/tv_step_header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Émetteur"
+        android:text="Infos générals"
         android:textSize="20sp"
         android:layout_marginStart="8dp"
         android:textStyle="bold"

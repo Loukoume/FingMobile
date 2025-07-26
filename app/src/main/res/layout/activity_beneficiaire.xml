@@ -41,7 +41,7 @@
             android:background="@drawable/custom_search_bar"
             android:paddingVertical="8dp"
             android:drawablePadding="8dp"
-            android:paddingStart="25dp"
+            android:paddingStart="40dp"
             android:hint="Rechercher un bénéficiaire"
             android:paddingEnd="2dp"
             android:textColor="@android:color/black"
@@ -60,6 +60,19 @@
             android:padding="8dp" />
 
     </LinearLayout>
+    <TextView
+        android:layout_width="35dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:background="@drawable/chip_background_left"
+        android:backgroundTint="@color/colorSendre"
+        android:paddingTop="8dp"
+        android:paddingBottom="14dp"
+        android:layout_marginTop="138dp"
+        android:paddingStart="35dp"
+        >
+
+    </TextView>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_gravity="top"

@@ -146,16 +146,18 @@ public class Beneficiaire extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                  String search=s.toString();
-                  if(search.isEmpty()){
-                      clear.setVisibility(INVISIBLE);
-                      if(listBeneficiaires!=null){
-                          recyclierViewCp.updateList(listBeneficiaires);
-                      }
-                  }else {
-                      clear.setVisibility(VISIBLE);
-                      recyclierViewCp.updateList(filter(search));
-                  }
+                if(recyclierViewCp!=null){
+                    String search=s.toString();
+                    if(search.isEmpty()){
+                        clear.setVisibility(INVISIBLE);
+                        if(listBeneficiaires!=null){
+                            recyclierViewCp.updateList(listBeneficiaires);
+                        }
+                    }else {
+                        clear.setVisibility(VISIBLE);
+                        recyclierViewCp.updateList(filter(search));
+                    }
+                }
             }
         });
         clear.setOnClickListener(new View.OnClickListener() {

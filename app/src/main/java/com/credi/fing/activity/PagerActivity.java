@@ -151,7 +151,7 @@ public class PagerActivity extends AppCompatActivity {
         sheet.setVisibility(View.VISIBLE);
         sheet.removeAllViews();
         SheetCp sheetCp=new SheetCp(context)
-                .setTitle("Action sur compte");
+                .setTitle("Action sur le compte");
         View vv=sheetCp.view();
         ImageView close=vv.findViewById(R.id.close);
         LinearLayout content=vv.findViewById(R.id.content);
@@ -162,7 +162,7 @@ public class PagerActivity extends AppCompatActivity {
          content.addView(tm);
 
         View fz= lignView("Effectuer une opération",R.drawable.operations,
-                R.color.green,R.color.black);
+                R.color.colorAccent,R.color.black);
         content.addView(fz);
 
         View tz= lignView("Les transactions",R.drawable.baseline_add_card_24,

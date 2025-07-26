@@ -3,6 +3,7 @@ package com.credi.fing.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -13,16 +14,22 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.credi.fing.R;
+import com.credi.fing.entity.Beneficiary;
+import com.credi.fing.publics.composant.BoutonCp;
+import com.credi.fing.publics.utils.Dialogue;
 import com.credi.fing.publics.utils.S;
 import com.credi.fing.utils.QRCodeUtil;
 
 public class ViewQrCodeReadActivity extends AppCompatActivity {
 
+    LinearLayout lbouton;
+    BoutonCp boutonCp;
+    Beneficiary beneficiary;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_qr_code_read);
-
+        lbouton=findViewById(R.id.lbouton);
         Intent intent = getIntent();
         String action = intent.getAction();
         String type   = intent.getType();
@@ -33,6 +40,12 @@ public class ViewQrCodeReadActivity extends AppCompatActivity {
                 processQrImage(imageUri);
             }
         }
+        boutonCp=new BoutonCp(this)
+                .setView(lbouton)
+                .setTitle("Valider")
+                .setOnClickView((c,i)->{
+
+                });
         pickImageFromGallery();
     }
 
@@ -63,11 +76,28 @@ public class ViewQrCodeReadActivity extends AppCompatActivity {
         if (qrText != null) {
             // Affiche le texte dans un TextView
             TextView tvResult = findViewById(R.id.tv_account_number);
-            tvResult.setText(qrText);
-            S.toast(this, "QR décodé : " + qrText);
+            TextView tvTitulaire = findViewById(R.id.tv_account_holder);
+            TextView tvType = findViewById(R.id.tv_type_compte);
+            if(!qrText.isEmpty()){
+                try {
+                    String js=toJson(qrText);
+                    beneficiary=new Beneficiary().fromJs(js);
+                    tvResult.setText(beneficiary.getAccountNumber());
+                    tvTitulaire.setText(beneficiary.getClientName());
+                    tvType.setText(beneficiary.getAccountType().getValue());
+                }catch (Exception e){
+                    Dialogue.showDialog(this,
+                            Dialogue.neutreDialog(e.getMessage()+"","Alerte",this));
+                }
+            }
         } else {
             S.toast(this, "Impossible de décoder le QR Code.");
         }
+    }
+
+    private String toJson(String text) throws Exception{
+        //decoder
+        return text;
     }
 
 }

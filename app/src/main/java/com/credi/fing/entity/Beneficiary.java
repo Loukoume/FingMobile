@@ -3,6 +3,7 @@ package com.credi.fing.entity;
 import android.os.Parcelable;
 
 import com.credi.fing.publics.utils.S;
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -87,9 +88,13 @@ public class Beneficiary implements Serializable {
 
     public static Beneficiary generate(){
         Beneficiary beneficiary=new Beneficiary();
-        beneficiary.setName("Nom client");
+        beneficiary.setClientName("Nom client");
         beneficiary.setAccountNumber("0214501278");
          return beneficiary;
+    }
+
+    public Beneficiary fromJs(String js){
+        return new Gson().fromJson(js,Beneficiary.class);
     }
 
 }

@@ -230,7 +230,7 @@ public class Beneficiaire extends AppCompatActivity {
 
     }
 
-    List<Object> listBeneficiaires;
+     static List<Object> listBeneficiaires;
     // 3. La méthode getBeneficiare() dans votre Activity/Repository
     void getBeneficiare() {
         // 1. Spécifiez vos identifiants Basic Auth
@@ -436,7 +436,7 @@ public class Beneficiaire extends AppCompatActivity {
         sheet.setAnimation(Anim.getAnimeBH(context));
     }
 
-  private  List<Object> filter(String searche) {
+    private  List<Object> filter(String searche) {
       List<Object> list=new ArrayList<>();
       if(listBeneficiaires!=null){
             for (Object object:listBeneficiaires){
@@ -471,4 +471,6 @@ public class Beneficiaire extends AppCompatActivity {
        return list;
 
     }
+
+
 }

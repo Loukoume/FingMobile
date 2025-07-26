@@ -96,5 +96,7 @@ public class Beneficiary implements Serializable {
     public Beneficiary fromJs(String js){
         return new Gson().fromJson(js,Beneficiary.class);
     }
-
+    public String js(){
+        return new Gson().toJson(this);
+    }
 }

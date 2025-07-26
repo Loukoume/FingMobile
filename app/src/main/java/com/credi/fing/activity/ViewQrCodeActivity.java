@@ -24,50 +24,67 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.credi.fing.MainActivity;
 import com.credi.fing.R;
+import com.credi.fing.entity.Beneficiary;
+import com.credi.fing.entity.Client;
+import com.credi.fing.entity.SavingsAccount;
 import com.credi.fing.publics.composant.SheetCp;
 import com.credi.fing.publics.service.impl.Anim;
 import com.credi.fing.publics.service.impl.Ut;
 import com.credi.fing.publics.utils.Dialogue;
+import com.credi.fing.publics.utils.MonFichier;
 import com.credi.fing.publics.utils.S;
+import com.credi.fing.utils.Json;
 import com.credi.fing.utils.QRCodeUtil;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class ViewQrCodeActivity extends AppCompatActivity {
-    private ImageView ivQRCode,back,mort,share;
-    private TextView tx;
+    private ImageView ivQRCode,share;
+
     LinearLayout sheet;
     Context context;
     View vide;
     Bitmap qrBitmap;
+    Beneficiary beneficiary;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_qr_code);
         ivQRCode = findViewById(R.id.iv_qrcode);
-        tx=findViewById(R.id.tx_text);
-        back=findViewById(R.id.back);
-        mort=findViewById(R.id.ic_mort);
         share=findViewById(R.id.share);
         sheet=findViewById(R.id.sheet);
         vide=findViewById(R.id.vide);
         sheet.setVisibility(View.GONE);
-        mort.setVisibility(GONE);
         String dataToEncode = getIntent().getStringExtra("compte");
         context=this;
-        tx.setText("Transfert du Qr code");
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-            }
-        });
+        boolean testPlayStor=Inscription.body==null||(Inscription.body.getPassword().equalsIgnoreCase("fingiciel")&&
+                Inscription.body.getUsername().equalsIgnoreCase("fingiciel"));
         try {
+            SavingsAccount account= (SavingsAccount) Ut.fromJs(dataToEncode, SavingsAccount.class);
+            beneficiary=new Beneficiary();
+
+            String js= MonFichier.lire(context,"displayName");
+            if(js.isEmpty()&&testPlayStor){
+                js= Json.displayNam;
+            }
+            if(!js.isEmpty()){
+                //logLongIterative("=displayName_tag=>",js);
+                //System.out.println("=displayName=> "+js);
+                Client cl=new Client().fromJs(js);
+                if(cl.getDisplayName()!=null&&!cl.getDisplayName().isEmpty()){
+                    beneficiary.setClientName(cl.getDisplayName());
+                    beneficiary.setOfficeName(cl.getOfficeName());
+                }
+            }
+            beneficiary.setAccountType(account.getAccountType().typeOption());
+            beneficiary.setAccountNumber(account.getAccountNo());
+
+
             // Génération et affichage du QR
-             qrBitmap = QRCodeUtil.generateQRCode("dataToEncode", 512, 512);
+             qrBitmap = QRCodeUtil.generateQRCode(beneficiary.js(), 512, 512);
             ivQRCode.setImageBitmap(qrBitmap);
 
             // Affichage des autres infos

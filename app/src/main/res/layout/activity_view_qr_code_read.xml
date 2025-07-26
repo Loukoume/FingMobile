@@ -102,7 +102,7 @@
                 android:id="@+id/lbouton"
                 android:layout_marginTop="@dimen/fab_margin"
                 android:layout_height="match_parent">
-                <include layout="@layout/bouton"/>
+
             </LinearLayout>
 
         </LinearLayout>

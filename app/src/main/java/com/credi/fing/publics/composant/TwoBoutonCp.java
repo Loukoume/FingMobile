@@ -83,8 +83,9 @@ public class TwoBoutonCp {
         return onClickView2;
     }
 
-    public void setOnClickView2(OnClickView onClickView2) {
+    public TwoBoutonCp setOnClickView2(OnClickView onClickView2) {
         this.onClickView2 = onClickView2;
+        return this;
     }
 
     public int getTextColors2() {
@@ -107,8 +108,9 @@ public class TwoBoutonCp {
         return title2;
     }
 
-    public void setTitle2(String title2) {
+    public TwoBoutonCp setTitle2(String title2) {
         this.title2 = title2;
+        return this;
     }
     public View view(){
         if(orientation!=null&&orientation.equalsIgnoreCase("v")){
@@ -119,9 +121,9 @@ public class TwoBoutonCp {
             return view;
         }
         View view= Ut.getView(context, R.layout.two_view);
-        TableRow r1=view.findViewById(R.id.view1);
+        LinearLayout r1=view.findViewById(R.id.view1);
         r1.addView(bouton1());
-        TableRow r2=view.findViewById(R.id.view2);
+        LinearLayout r2=view.findViewById(R.id.view2);
         r2.addView(bouton2());
         return view;
     }

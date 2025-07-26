@@ -11,8 +11,8 @@ import java.io.Serializable;
 public class AccountType implements Serializable {
     private String idLocal;
     @Expose
-    @SerializedName("idAccountType")
-    private String idServeur;
+    @SerializedName("id")
+    private Integer idServeur;
     private String code;
     private String value;
 
@@ -26,12 +26,12 @@ public class AccountType implements Serializable {
     }
 
 
-    public String getIdServeur() {
+    public Integer getIdServeur() {
         return this.idServeur;
     }
 
 
-    public void setIdServeur(String idServeur) {
+    public void setIdServeur(Integer idServeur) {
         this.idServeur = idServeur;
     }
 
@@ -62,6 +62,15 @@ public class AccountType implements Serializable {
 
     public AccountType fromJs(String js) {
         return new Gson().fromJson(js, AccountType.class);
+    }
+
+
+    public AccountTypeOption typeOption(){
+        AccountTypeOption accountTypeOption=new AccountTypeOption();
+        accountTypeOption.setCode(code);
+        accountTypeOption.setId(idServeur);
+        accountTypeOption.setValue(value);
+        return accountTypeOption;
     }
 }
 

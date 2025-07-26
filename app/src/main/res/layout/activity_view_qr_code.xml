@@ -11,8 +11,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
+        android:background="@color/backgrund2"
         android:layout_height="match_parent">
-        <include layout="@layout/tool_bar"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:textSize="23dp"
+            android:gravity="center"
+            android:layout_marginHorizontal="@dimen/fab_margin"
+            android:text="Transferez votre compte par code Qr"
+            android:layout_height="wrap_content">
+
+        </TextView>
         <LinearLayout
             android:layout_width="match_parent"
             android:gravity="center"

@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.credi.fing.R;
 import com.credi.fing.entity.Beneficiary;
 import com.credi.fing.publics.composant.BoutonCp;
+import com.credi.fing.publics.composant.TwoBoutonCp;
 import com.credi.fing.publics.utils.Dialogue;
 import com.credi.fing.publics.utils.S;
 import com.credi.fing.utils.QRCodeUtil;
@@ -23,7 +24,7 @@ import com.credi.fing.utils.QRCodeUtil;
 public class ViewQrCodeReadActivity extends AppCompatActivity {
 
     LinearLayout lbouton;
-    BoutonCp boutonCp;
+    TwoBoutonCp boutonCp;
     Beneficiary beneficiary;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +41,20 @@ public class ViewQrCodeReadActivity extends AppCompatActivity {
                 processQrImage(imageUri);
             }
         }
-        boutonCp=new BoutonCp(this)
+        boutonCp=new TwoBoutonCp(this)
                 .setView(lbouton)
-                .setTitle("Valider")
-                .setOnClickView((c,i)->{
+                .setTitle2("Valider")
+                .setOnClickView1((c,i)->{
+                  pickImageFromGallery();
+                })
+                .setOnClickView2((c,i)->{
+                    if(beneficiary!=null){
 
-                });
+                    }
+                })
+                .setTitle1("Code Qr");
+
+        lbouton.addView(boutonCp.view());
         pickImageFromGallery();
     }
 

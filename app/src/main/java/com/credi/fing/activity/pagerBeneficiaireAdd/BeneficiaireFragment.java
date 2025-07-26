@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.credi.fing.R;
 import com.credi.fing.publics.service.impl.Attribut;
+import com.credi.fing.publics.utils.S;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -74,13 +75,16 @@ public class BeneficiaireFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_beneficiaire, container, false);
     }
-
+    TextInputLayout input,fieldNom;
+    TextInputEditText nom,id;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        TextInputLayout input=view.findViewById(R.id.textField);
-        TextInputEditText nom=view.findViewById(R.id.nom);
-        input.setHint("Libelle service");
+         input=view.findViewById(R.id.textField);
+         fieldNom=view.findViewById(R.id.textFieldNom);
+         nom=view.findViewById(R.id.nom);
+        id=view.findViewById(R.id.id);
+        input.setHint("Nom du bureau");
 
         AddBeneciaireActivity activity= (AddBeneciaireActivity) view.getContext();
         if(activity!=null&&activity.editeObject!=null){
@@ -104,6 +108,7 @@ public class BeneficiaireFragment extends Fragment {
                 String value=s.toString();
               if(activity!=null){
                   if(!value.isEmpty()){
+                      fieldNom.setError(null);
                       activity.updateBeneFiciaire("clientName",value);
                   }else {
                       activity.updateBeneFiciaire("clientName",null);
@@ -111,5 +116,42 @@ public class BeneficiaireFragment extends Fragment {
               }
             }
         });
+        id.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String value=s.toString();
+                if(activity!=null){
+                    if(!value.isEmpty()){
+                        input.setError(null);
+                    }else {
+
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AddBeneciaireActivity activity= (AddBeneciaireActivity) getActivity();
+        if(activity!=null&&activity.isClikSubmit()){
+             if(input!=null&&activity.getBeneficiary().getOfficeName()==null){
+                 input.setError("Champ obligatoire");
+             }
+            if(fieldNom!=null&&activity.getBeneficiary().getClientName()==null){
+                fieldNom.setError("Champ obligatoire");
+            }
+        }
     }
 }

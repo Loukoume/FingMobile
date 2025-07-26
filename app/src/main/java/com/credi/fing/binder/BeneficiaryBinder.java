@@ -44,7 +44,8 @@ public class BeneficiaryBinder implements Serializable, BinderInterface {
                 new Attribut("Nom du client","clientName",true),
                 new Attribut("Type de compte","accountType","object",true)
                         .setLabel("value"),
-                new Attribut("Numéro compte","accountNumber",true)
+                new Attribut("Numéro compte","accountNumber",true),
+                new Attribut("Montant maximum","transferLimit",true)
         );
         /*attributs.get(3).setValues(Arrays.asList("TAUX","INTERVAL"));
         Request request=new Request(attributs.get(0),"tmobile_operation/find_by_operateur");

@@ -87,6 +87,13 @@ public interface ApiService {
             @Body LoanPojo loanAccount,
             @Query("tenantIdentifier") String tenantIdentifier
     );
+    //fineract-provider/api/v1/self/beneficiaries/tpt?&tenantIdentifier=default
+    @POST("fineract-provider/api/v1/self/beneficiaries/tpt")
+    Call<Object> saveBeneF(
+            @Header("Authorization") String authHeader,
+            @Body Beneficiary loanAccount,
+            @Query("tenantIdentifier") String tenantIdentifier
+    );
     @GET
     Call<List<Object>> getDataList(@Url String url);
     @GET

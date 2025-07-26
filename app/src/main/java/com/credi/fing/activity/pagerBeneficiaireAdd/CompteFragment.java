@@ -2,13 +2,27 @@ package com.credi.fing.activity.pagerBeneficiaireAdd;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.credi.fing.R;
+import com.credi.fing.publics.service.impl.Attribut;
+import com.credi.fing.publics.service.impl.Ut;
+import com.credi.fing.publics.utils.S;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,5 +76,87 @@ public class CompteFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_compte, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        TextInputLayout input=view.findViewById(R.id.textField);
+        TextInputEditText nom=view.findViewById(R.id.cpte);
+        TextInputEditText typeCpte=view.findViewById(R.id.id);
+        input.setHint("Type de compte");
+
+        TextInputLayout inputMaxe=view.findViewById(R.id.textFieldMaxe);
+        TextInputEditText maxe=view.findViewById(R.id.maxe);
+
+        AddBeneciaireActivity activity= (AddBeneciaireActivity) view.getContext();
+        if(activity!=null&&activity.typeAccounts!=null){
+            String[] m=activity.typeAccounts.stream().filter(o->o!=null).map(o->
+                    Ut.getValue(o,"value")
+            ).collect(Collectors.toList()).toArray(new String[0]);
+           input.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   PopupMenu pop= S.popupMenu(v,m);
+                   pop.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                       @Override
+                       public boolean onMenuItemClick(MenuItem item) {
+                           Object type=activity.typeAccounts.get(item.getItemId()-1);
+                           activity.updateBeneFiciaire("accountType",type);
+                           typeCpte.setText(m[item.getItemId()-1]);
+                           return false;
+                       }
+                   });
+               }
+           });
+        }
+
+        nom.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String value=s.toString();
+                if(activity!=null){
+                    if(!value.isEmpty()){
+                        activity.updateBeneFiciaire("accountNumber",value);
+                    }else {
+                        activity.updateBeneFiciaire("accountNumber",null);
+                    }
+                }
+            }
+        });
+
+        maxe.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String value=s.toString();
+                if(activity!=null){
+                    if(!value.isEmpty()){
+                        activity.updateBeneFiciaire("transferLimit",value);
+                    }else {
+                        activity.updateBeneFiciaire("transferLimit",null);
+                    }
+                }
+            }
+        });
     }
 }

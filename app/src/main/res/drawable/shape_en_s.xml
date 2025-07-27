@@ -23,7 +23,7 @@
             android:endX="360"
             android:endY="0"
             android:startColor="@color/colorPrimary"
-            android:endColor="@color/backgrund2"
+            android:endColor="@color/colorPrimary"
             android:tileMode="clamp"/>
         </aapt:attr>
     </path>

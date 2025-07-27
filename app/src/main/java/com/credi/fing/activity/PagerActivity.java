@@ -159,15 +159,15 @@ public class PagerActivity extends AppCompatActivity {
         sheet.addView(vv);
 
         View tm= lignView("Afficher le Qr code",R.drawable.qr_code,
-                R.color.black,R.color.black);
+                R.color.colorOnPrimary,R.color.colorPrimary);
          content.addView(tm);
 
         /*View fz= lignView("Effectuer une opération",R.drawable.operations,
                 R.color.colorAccent,R.color.black);
         content.addView(fz);*/
 
-        View tz= lignView("Les transactions",R.drawable.transaction,
-                R.color.colorAccent,R.color.black);
+        View tz= lignView("Les transactions",R.drawable.carte_50,
+                R.color.colorAccent,R.color.colorAccent);
         content.addView(tz);
 
         cover.setVisibility(View.VISIBLE);

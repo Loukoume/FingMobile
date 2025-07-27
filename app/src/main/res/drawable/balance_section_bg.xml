@@ -1,16 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="360dp"
-    android:height="300dp"
+    android:height="280dp"
     android:viewportWidth="360"
-    android:viewportHeight="200">
+    android:viewportHeight="190">
 
-    <!-- Fond blanc avec arcs convexes haut et bas -->
+    <!-- Path pour simuler le contour (noir ici) -->
     <path
-        android:fillColor="#FFFFFF"
+        android:fillColor="@color/white"
         android:pathData="
             M0,40
             Q180,0 360,40
+            L360,160
+            Q180,200 0,160
+            Z"
+        android:strokeWidth="1"
+        android:strokeColor="@color/white" />
+
+    <!-- Path blanc au-dessus (plus petit visuellement) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="
+            M1,41
+            Q180,1 359,40
             L360,160
             Q180,200 0,160
             Z"/>

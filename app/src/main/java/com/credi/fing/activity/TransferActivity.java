@@ -20,7 +20,6 @@ import com.credi.fing.entity.TransferPayload;
 import com.credi.fing.enums.TypeAdapter;
 import com.credi.fing.publics.service.ApiService;
 import com.credi.fing.publics.service.RetrofitClient;
-import com.credi.fing.publics.service.impl.EditeObject;
 import com.credi.fing.publics.service.impl.Ut;
 import com.credi.fing.publics.utils.Dialogue;
 import com.google.android.material.button.MaterialButton;

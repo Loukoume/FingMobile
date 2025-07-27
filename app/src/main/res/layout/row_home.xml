@@ -7,14 +7,14 @@
     android:background="@color/colorSendre"
     android:layout_height="wrap_content">
     <androidx.cardview.widget.CardView
-        android:elevation="10dp"
+        android:elevation="1dp"
         android:layout_width="match_parent"
         android:id="@+id/row"
         android:layout_marginVertical="4dp"
         android:gravity="center"
         app:cardCornerRadius="12dp"
         app:cardElevation="5dp"
-        android:layout_height="160dp">
+        android:layout_height="150dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
@@ -26,9 +26,8 @@
                 android:layout_width="match_parent"
                 android:id="@+id/image"
                 android:scaleType="fitXY"
-                android:layout_marginHorizontal="@dimen/fab_margin"
-                android:layout_marginVertical="@dimen/fab_margin"
-                android:layout_marginTop="4px"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="8dp"
                 android:layout_height="match_parent">
             </ImageView>
            <LinearLayout

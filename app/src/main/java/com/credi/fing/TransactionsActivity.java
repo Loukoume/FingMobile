@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.credi.fing.entity.LoanAccount;
 import com.credi.fing.entity.SavingsAccount;
+import com.credi.fing.entity.Transaction;
+import com.credi.fing.publics.adapters.generiqueAdapter.AdapterViewHolder;
 import com.credi.fing.publics.composant.RecyclierViewCp;
 import com.credi.fing.publics.service.impl.Ut;
 
@@ -49,7 +51,7 @@ public class TransactionsActivity extends AppCompatActivity {
             recycler_lineair=findViewById(R.id.recycler_lineair);
             recyclerView=findViewById(R.id.transactionList);
             accountNumber.setText("Compte N° "+compte.getAccountNo());
-            soldeDisponible.setText(Html.fromHtml(compte.getAccountBalance()+"<sup>XOF</sup>"));
+            soldeDisponible.setText(Html.fromHtml(Ut.formatMontant(compte.getAccountBalance().doubleValue())+" <sup>XOF</sup>"));
             type_compte.setText(compte.getAccountType().getValue());
             lexpand.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -72,11 +74,32 @@ public class TransactionsActivity extends AppCompatActivity {
     }
 
     private void displayData(){
-        list=List.of(new Object(),new Object(),new Object());
+        list=List.of(new Transaction("Intérêt postés","Depot","187"),
+                new Transaction("Dépôt","Depot","190000"),
+                new Transaction("Retrait","Retrait","24500"),
+                new Transaction("Intérêt postés","Depot","187"),
+                new Transaction("Dépôt","Depot","190000"),
+                new Transaction("Retrait","Retrait","24500"));
         recyclierViewCp=new RecyclierViewCp(context,R.layout.item_transaction,
                 list,(h,o,i)->{
-
+             setText(h,o);
         }).setRecyclerView(recyclerView);
         recyclierViewCp.view();
+    }
+    private void setText(AdapterViewHolder h,Object o){
+       Transaction t= (Transaction) o;
+       View view=h.view;
+       View statusStripe=view.findViewById(R.id.statusStripe);
+        TextView montantText=view.findViewById(R.id.montantText);
+        TextView labelText=view.findViewById(R.id.labelText);
+        if(t.getType().equals("Depot")){
+           statusStripe.setBackgroundColor(Ut.getColor(context,R.color.green));
+            montantText.setTextColor(Ut.getColor(context,R.color.green));
+       }else {
+           statusStripe.setBackgroundColor(Ut.getColor(context,R.color.red));
+            montantText.setTextColor(Ut.getColor(context,R.color.red));
+       }
+        montantText.setText(Ut.formatMontant(Double.parseDouble(t.getMontant())));
+        labelText.setText(t.getMotif());
     }
 }

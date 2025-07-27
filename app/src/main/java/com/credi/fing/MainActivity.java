@@ -642,9 +642,8 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<Client> call, Response<Client> response) {
                 if (response.isSuccessful() && response.body() != null) {
                      client = response.body();
-
                      MonFichier.ecrire(context,"client",client.js());
-                    System.out.println(" client => "+client.js());
+                    //System.out.println(" client => "+client.js());
                     loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
                     savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
                     setComptesValues();

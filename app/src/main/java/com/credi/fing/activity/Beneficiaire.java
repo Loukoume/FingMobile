@@ -83,21 +83,21 @@ public class Beneficiaire extends AppCompatActivity {
         context=this;
         sheet=findViewById(R.id.sheet);
         sheet.setVisibility(View.GONE);
-        ImageView back=findViewById(R.id.back);
-        ImageView mort=findViewById(R.id.ic_mort);
-        mort.setVisibility(GONE);
+        //ImageView back=findViewById(R.id.back);
+        //ImageView mort=findViewById(R.id.ic_mort);
+       // mort.setVisibility(GONE);
         String extra=getIntent().getStringExtra("titre");
         tx.setText(extra.toUpperCase());
         text.setText(extra+" s'affichent ici");
         editTextSearch=findViewById(R.id.search_bar);
         clear=findViewById(R.id.clear_search_icon);
-        back.setOnClickListener(new View.OnClickListener() {
+        /*back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
-        });
+        });*/
 
         String js=MonFichier.lire(context,"beneficiaries");
 
@@ -276,11 +276,11 @@ public class Beneficiaire extends AppCompatActivity {
                         Activity activity = (Activity) context;
                         if (!activity.isFinishing() && !activity.isDestroyed()) {
                             activity.runOnUiThread(() -> {
-                                Dialogue.neutreDialog(
+                              /*  Dialogue.neutreDialog(
                                         response.message() + " " + response.errorBody(),
                                         "null",
                                         context
-                                ).show();
+                                ).show();*/
                             });
                         }
                     }
@@ -353,7 +353,7 @@ public class Beneficiaire extends AppCompatActivity {
                     // Erreur serveur ou JSON malformé
                     String msg = response.message();
                     String err = response.errorBody() != null ? response.errorBody().toString() : "";
-                    Dialogue.neutreDialog(msg + " " + err, "null", context).show();
+                    //Dialogue.neutreDialog(msg + " " + err, "null", context).show();
                 }
             }
 
@@ -364,7 +364,7 @@ public class Beneficiaire extends AppCompatActivity {
                     Activity activity = (Activity) context;
                     if (!activity.isFinishing() && !activity.isDestroyed()) {
                         activity.runOnUiThread(() -> {
-                            Dialogue.neutreDialog(t.toString(), "", context).show();
+                           // Dialogue.neutreDialog(t.toString(), "", context).show();
                         });
                     }
                 }

@@ -3,6 +3,7 @@ package com.credi.fing.publics.service;
 import com.credi.fing.entity.Beneficiary;
 import com.credi.fing.entity.BeneficiaryTemplate;
 import com.credi.fing.entity.Client;
+import com.credi.fing.entity.TransferPayload;
 import com.credi.fing.pojo.LoanPojo;
 import com.credi.fing.pojo.LoanProductResponse;
 import com.credi.fing.publics.UploadFileResponse;
@@ -92,6 +93,16 @@ public interface ApiService {
     Call<Object> saveBeneF(
             @Header("Authorization") String authHeader,
             @Body Beneficiary loanAccount,
+            @Query("tenantIdentifier") String tenantIdentifier
+    );
+
+    //https://fingiciel.ngrok.io/fineract-provider/api/v1/self/accounttransfers?type=tpt?&tenantIdentifier=default
+    //https://fingiciel.ngrok.io/fineract-provider/api/v1/self/accounttransfers?type=tpt&tenantIdentifier=default
+    @POST("fineract-provider/api/v1/self/accounttransfers")
+    Call<Object> saveTransFert(
+            @Header("Authorization") String authHeader,
+            @Body TransferPayload transferPayload,
+            @Query("type") String type, // par exemple: "tpt"
             @Query("tenantIdentifier") String tenantIdentifier
     );
     @GET

@@ -59,8 +59,9 @@ public class RecyclierViewCp {
         return recyclerView;
     }
 
-    public void setRecyclerView(RecyclerView recyclerView) {
+    public RecyclierViewCp setRecyclerView(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
+        return this;
     }
 
     private OnBindViewHolderAction onBindViewHolderAction;
@@ -119,10 +120,13 @@ public class RecyclierViewCp {
     }
 
     public View view(){
-        View view= Ut.getView(context,R.layout.recyclier_layout);
-        recyclerView=view.findViewById(R.id.recycler_view);
-        if(background>0){
-            recyclerView.setBackgroundResource(background);
+        View view=recyclerView;
+        if(recyclerView==null){
+             view= Ut.getView(context,R.layout.recyclier_layout);
+            recyclerView=view.findViewById(R.id.recycler_view);
+            if(background>0){
+                recyclerView.setBackgroundResource(background);
+            }
         }
         preparerDatas();
         return view;

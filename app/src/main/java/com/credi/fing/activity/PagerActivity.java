@@ -17,6 +17,7 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.viewpager.widget.ViewPager;
 
 import com.credi.fing.R;
+import com.credi.fing.TransactionsActivity;
 import com.credi.fing.entity.Client;
 import com.credi.fing.main.SectionsPagerAdapter;
 import com.credi.fing.publics.composant.SheetCp;
@@ -151,7 +152,7 @@ public class PagerActivity extends AppCompatActivity {
         sheet.setVisibility(View.VISIBLE);
         sheet.removeAllViews();
         SheetCp sheetCp=new SheetCp(context)
-                .setTitle("Action sur le compte");
+                .setTitle("Action sur le compte".toUpperCase());
         View vv=sheetCp.view();
         ImageView close=vv.findViewById(R.id.close);
         LinearLayout content=vv.findViewById(R.id.content);
@@ -161,22 +162,24 @@ public class PagerActivity extends AppCompatActivity {
                 R.color.black,R.color.black);
          content.addView(tm);
 
-        View fz= lignView("Effectuer une opération",R.drawable.operations,
+        /*View fz= lignView("Effectuer une opération",R.drawable.operations,
                 R.color.colorAccent,R.color.black);
-        content.addView(fz);
+        content.addView(fz);*/
 
-        View tz= lignView("Les transactions",R.drawable.baseline_add_card_24,
-                R.color.colorPrimary,R.color.black);
+        View tz= lignView("Les transactions",R.drawable.transaction,
+                R.color.colorAccent,R.color.black);
         content.addView(tz);
 
         cover.setVisibility(View.VISIBLE);
-        fz.setOnClickListener(new View.OnClickListener() {
+        tz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 sheet.setVisibility(View.GONE);
                 cover.setVisibility(View.GONE);
-
+                startActivity(new Intent(context, TransactionsActivity.class)
+                        .putExtra("compte", Ut.js(comte)));
+                ((Activity)context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
         tm.setOnClickListener(new View.OnClickListener() {
@@ -195,9 +198,6 @@ public class PagerActivity extends AppCompatActivity {
             public void onClick(View view) {
                 sheet.setVisibility(View.GONE);
                 cover.setVisibility(View.GONE);
-                startActivity(new Intent(context, ListActivity.class)
-                        .putExtra("compte", Ut.js(comte)));
-                ((Activity)context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
         sheet.setAnimation(Anim.getAnimeBH(context));

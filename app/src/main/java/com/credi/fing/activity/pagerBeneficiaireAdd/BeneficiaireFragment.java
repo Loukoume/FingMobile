@@ -87,6 +87,16 @@ public class BeneficiaireFragment extends Fragment {
         input.setHint("Nom du bureau");
 
         AddBeneciaireActivity activity= (AddBeneciaireActivity) view.getContext();
+
+        if(activity!=null&&activity.beneficiary!=null){
+            if(activity.beneficiary.getOfficeName()!=null)
+                id.setText(activity.beneficiary.getOfficeName());
+
+            if(activity.beneficiary.getClientName()!=null){
+                nom.setText(activity.beneficiary.getClientName());
+            }
+        }
+
         if(activity!=null&&activity.editeObject!=null){
             List<Attribut> attributs=activity.editeObject.getAttribute();
            // Attribut attribut=attributs.stream().filter(a->a.getColonne().equals("officeName")).findFirst().get();
@@ -145,6 +155,16 @@ public class BeneficiaireFragment extends Fragment {
     public void onResume() {
         super.onResume();
         AddBeneciaireActivity activity= (AddBeneciaireActivity) getActivity();
+
+        if(activity!=null&&activity.beneficiary!=null){
+            if(activity.beneficiary.getOfficeName()!=null)
+                id.setText(activity.beneficiary.getOfficeName());
+
+            if(activity.beneficiary.getClientName()!=null){
+                nom.setText(activity.beneficiary.getClientName());
+            }
+        }
+
         if(activity!=null&&activity.isClikSubmit()){
              if(input!=null&&activity.getBeneficiary().getOfficeName()==null){
                  input.setError("Champ obligatoire");

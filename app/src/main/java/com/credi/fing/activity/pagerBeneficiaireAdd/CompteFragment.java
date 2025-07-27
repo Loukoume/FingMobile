@@ -77,19 +77,33 @@ public class CompteFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_compte, container, false);
     }
-
+    TextInputEditText nom;
+    TextInputEditText typeCpte;
+    TextInputEditText maxe;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         TextInputLayout input=view.findViewById(R.id.textField);
-        TextInputEditText nom=view.findViewById(R.id.cpte);
-        TextInputEditText typeCpte=view.findViewById(R.id.id);
-        input.setHint("Type de compte");
+         nom=view.findViewById(R.id.cpte);
+         typeCpte=view.findViewById(R.id.id);
+         input.setHint("Type de compte");
 
-        TextInputLayout inputMaxe=view.findViewById(R.id.textFieldMaxe);
-        TextInputEditText maxe=view.findViewById(R.id.maxe);
+        //TextInputLayout inputMaxe=view.findViewById(R.id.textFieldMaxe);
+         maxe=view.findViewById(R.id.maxe);
 
         AddBeneciaireActivity activity= (AddBeneciaireActivity) view.getContext();
+
+        if(activity!=null&&activity.beneficiary!=null){
+            if(activity.beneficiary.getAccountType()!=null)
+              typeCpte.setText(activity.beneficiary.getAccountType().getValue());
+            if(activity.beneficiary.getAccountNumber()!=null){
+                nom.setText(activity.beneficiary.getAccountNumber());
+            }
+            if(activity.beneficiary.getTransferLimit()!=null){
+                maxe.setText(String.format("%s", activity.beneficiary.getTransferLimit()));
+            }
+        }
+
         if(activity!=null&&activity.typeAccounts!=null){
             String[] m=activity.typeAccounts.stream().filter(o->o!=null).map(o->
                     Ut.getValue(o,"value")
@@ -158,5 +172,34 @@ public class CompteFragment extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        AddBeneciaireActivity activity= (AddBeneciaireActivity) getActivity();
+        if(activity!=null&&activity.beneficiary!=null){
+            if(activity.beneficiary.getAccountType()!=null)
+                typeCpte.setText(activity.beneficiary.getAccountType().getValue());
+            if(activity.beneficiary.getAccountNumber()!=null){
+                nom.setText(activity.beneficiary.getAccountNumber());
+            }
+            if(activity.beneficiary.getTransferLimit()!=null){
+                maxe.setText(String.format("%s", activity.beneficiary.getTransferLimit()));
+            }
+        }
+
+        if(activity!=null&&activity.isClikSubmit()){
+            if(nom!=null&&activity.getBeneficiary().getAccountNumber()==null){
+                nom.setError("Champ obligatoire");
+            }
+            if(maxe!=null&&activity.getBeneficiary().getTransferLimit()==null){
+                maxe.setError("Champ obligatoire");
+            }
+            if(typeCpte!=null&&activity.getBeneficiary().getAccountType()==null){
+                typeCpte.setError("Champ obligatoire");
+            }
+        }
     }
 }

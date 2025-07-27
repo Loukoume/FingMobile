@@ -47,7 +47,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-
             android:layout_weight="0.86"
             android:orientation="vertical">
                  <de.hdodenhof.circleimageview.CircleImageView
@@ -71,10 +70,11 @@
                 android:layout_width="match_parent"
                 android:orientation="vertical"
                 android:id="@+id/gradien"
-                android:layout_marginTop="30dp"
+                android:gravity="center_vertical"
+                android:layout_marginTop="0dp"
                 android:layout_marginHorizontal="@dimen/fab_margin"
                 android:elevation="6dp"
-                android:background="@drawable/gradient"
+                android:background="@drawable/balance_section_bg"
                 android:layout_height="wrap_content">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -107,7 +107,7 @@
                             android:layout_width="match_parent"
                             android:text="Bienvenue,"
                             android:textSize="17dp"
-                            android:textColor="@color/arg2"
+                            android:textColor="@color/textColor"
                             android:layout_marginHorizontal="8dp"
                             android:layout_height="wrap_content">
                         </TextView>
@@ -173,7 +173,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:text=""
-                                    android:textColor="@color/arg2"
+                                    android:textColor="@color/colorPrimary"
                                     android:id="@+id/solde_epargne"
                                     android:textSize="18sp"
                                     android:layout_height="wrap_content">

@@ -396,7 +396,7 @@ public class MainActivity extends AppCompatActivity {
                         saveLoan(loan,activity);
                     });*/
                     List<String> comptes=loanAccounts.stream().map(ac->Ut.getValue(ac,"accountNo")+"").collect(Collectors.toList());
-                    System.out.println("comptes == "+comptes);
+                    //System.out.println("comptes == "+comptes);
                     LoanAccountBinder pretBinder=new LoanAccountBinder();
                     EditeObject editeObject=pretBinder.editeObject(loanProductResponse,comptes);
                     editeObject.setObject(loanAccount);

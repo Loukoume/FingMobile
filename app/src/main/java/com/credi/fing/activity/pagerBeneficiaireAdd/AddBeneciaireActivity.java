@@ -65,7 +65,12 @@ public class AddBeneciaireActivity extends AppCompatActivity {
         tx=findViewById(R.id.tx_text);
         pb=findViewById(R.id.prb);
         context=this;
-        editeObject= (EditeObject) getIntent().getSerializableExtra("object");
+        if(getIntent().hasExtra("object")){
+            editeObject= (EditeObject) getIntent().getSerializableExtra("object");
+        }
+        if(getIntent().hasExtra("beneficiary")){
+            beneficiary= (Beneficiary) getIntent().getSerializableExtra("beneficiary");
+        }
         adapter = new TransferPagerAdapter(this,2, TypeAdapter.BENEFICIAIRE);
         viewPager.setAdapter(adapter);
 
@@ -133,7 +138,8 @@ public class AddBeneciaireActivity extends AppCompatActivity {
                &&beneficiary.getTransferLimit()!=null){
                    return true;
                }
-               viewPager.setCurrentItem(1, true);
+               viewPager.setCurrentItem(0, false);
+               viewPager.setCurrentItem(1, false);
            }else {
                viewPager.setCurrentItem(0, true);
            }

@@ -1,5 +1,6 @@
 package com.credi.fing.activity.pagerAdapter;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.credi.fing.R;
+import com.credi.fing.activity.Beneficiaire;
 import com.google.android.material.textfield.TextInputLayout;
 
 /**
@@ -72,5 +74,14 @@ public class BeneficiaryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         TextInputLayout input=view.findViewById(R.id.textField);
         input.setHint("Numéro du compte");
+
+        input.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(getActivity()!=null)
+                 getActivity().startActivity(new Intent(getContext(), Beneficiaire.class)
+                        .putExtra("select","true"));
+            }
+        });
     }
 }

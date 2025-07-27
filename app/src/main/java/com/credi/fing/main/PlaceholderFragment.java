@@ -232,16 +232,18 @@ public class PlaceholderFragment extends Fragment {
                     });
                 }
             });
-        }
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(getActivity() instanceof PagerActivity){
-                    PagerActivity activity=(PagerActivity) getActivity();
-                    activity.showContact(object);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(getActivity() instanceof PagerActivity){
+                        PagerActivity activity=(PagerActivity) getActivity();
+                        activity.showContact(object);
+                    }
                 }
-            }
-        });
+            });
+        }
+
     }
 
     void setOperation() {

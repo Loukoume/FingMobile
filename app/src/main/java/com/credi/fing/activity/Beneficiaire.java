@@ -230,7 +230,7 @@ public class Beneficiaire extends AppCompatActivity {
 
     }
 
-     static List<Object> listBeneficiaires;
+     public static List<Object> listBeneficiaires;
     // 3. La méthode getBeneficiare() dans votre Activity/Repository
     void getBeneficiare() {
         // 1. Spécifiez vos identifiants Basic Auth
@@ -292,7 +292,7 @@ public class Beneficiaire extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Beneficiary>> call, Throwable t) {
                 // Problème réseau ou exception
-                Dialogue.neutreDialog(t.toString(), "ecc", context).show();
+                ;
                 waite.setVisibility(GONE);
                 nodata.setVisibility(GONE);
                 List<Beneficiary> list = new ArrayList<>();
@@ -398,9 +398,10 @@ public class Beneficiaire extends AppCompatActivity {
                 vide.setVisibility(View.GONE);
                 editeObject=new BeneficiaryBinder().editeObject();
                 if (editeObject != null) {
-                    List<Attribut> attributs=editeObject.getAttribute();
-                    attributs.get(3).setValuess(typeAcounts.stream().map(x->x).collect(Collectors.toList()));
-                    //Dialogue.neutreDialog(attributs.get().size()+"","",context).show();
+                    if(typeAcounts!=null){
+                        List<Attribut> attributs=editeObject.getAttribute();
+                        attributs.get(3).setValuess(typeAcounts.stream().map(x->x).collect(Collectors.toList()));
+                    }
                     editeObject.setObject(new Beneficiary());
                     startActivity(new Intent(context, AddBeneciaireActivity.class)
                             .putExtra("object", editeObject));

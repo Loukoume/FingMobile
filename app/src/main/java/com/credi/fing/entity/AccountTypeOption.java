@@ -37,4 +37,11 @@ public class AccountTypeOption implements Serializable {
     public void setValue(String value) {
         this.value = value;
     }
+
+    public AccountTypeOption(String value) {
+        this.value = value;
+    }
+
+    public AccountTypeOption() {
+    }
 }

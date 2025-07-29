@@ -19,6 +19,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             app:boxBackgroundColor="@color/white"
+            android:id="@+id/fieldNom"
             app:hintTextColor="@color/colorAccent"
             android:layout_marginTop="@dimen/fab_margin"
             android:layout_height="wrap_content"

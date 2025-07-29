@@ -75,13 +75,15 @@ public class BeneficiaireFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_beneficiaire, container, false);
     }
-    TextInputLayout input,fieldNom;
-    TextInputEditText nom,id;
+    TextInputLayout input,fieldNom,textFieldCompte;
+    TextInputEditText nom,id,nomComp;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
          input=view.findViewById(R.id.textField);
          fieldNom=view.findViewById(R.id.textFieldNom);
+        textFieldCompte=view.findViewById(R.id.textFieldCompte);
+        nomComp=view.findViewById(R.id.cpte);
          nom=view.findViewById(R.id.nom);
         id=view.findViewById(R.id.id);
         input.setHint("Nom du bureau");
@@ -95,12 +97,11 @@ public class BeneficiaireFragment extends Fragment {
             if(activity.beneficiary.getClientName()!=null){
                 nom.setText(activity.beneficiary.getClientName());
             }
+            if(activity.beneficiary.getAccountNumber()!=null){
+                nomComp.setText(activity.beneficiary.getAccountNumber());
+            }
         }
 
-        if(activity!=null&&activity.editeObject!=null){
-            List<Attribut> attributs=activity.editeObject.getAttribute();
-           // Attribut attribut=attributs.stream().filter(a->a.getColonne().equals("officeName")).findFirst().get();
-        }
 
         nom.addTextChangedListener(new TextWatcher() {
             @Override
@@ -143,8 +144,34 @@ public class BeneficiaireFragment extends Fragment {
                 if(activity!=null){
                     if(!value.isEmpty()){
                         input.setError(null);
+                        activity.updateBeneFiciaire("officeName",value);
                     }else {
+                        activity.updateBeneFiciaire("officeName",null);
+                    }
+                }
+            }
+        });
 
+        nomComp.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String value=s.toString();
+                if(activity!=null){
+                    if(!value.isEmpty()){
+                        textFieldCompte.setError(null);
+                        activity.updateBeneFiciaire("accountNumber",value);
+                    }else {
+                        activity.updateBeneFiciaire("accountNumber",null);
                     }
                 }
             }
@@ -163,6 +190,9 @@ public class BeneficiaireFragment extends Fragment {
             if(activity.beneficiary.getClientName()!=null){
                 nom.setText(activity.beneficiary.getClientName());
             }
+            if(activity.beneficiary.getAccountNumber()!=null){
+                nomComp.setText(activity.beneficiary.getAccountNumber());
+            }
         }
 
         if(activity!=null&&activity.isClikSubmit()){
@@ -171,6 +201,9 @@ public class BeneficiaireFragment extends Fragment {
              }
             if(fieldNom!=null&&activity.getBeneficiary().getClientName()==null){
                 fieldNom.setError("Champ obligatoire");
+            }
+            if(textFieldCompte!=null&&activity.getBeneficiary().getAccountNumber()==null){
+                textFieldCompte.setError("Champ obligatoire");
             }
         }
     }

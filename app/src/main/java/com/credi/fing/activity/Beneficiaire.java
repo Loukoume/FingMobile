@@ -31,6 +31,8 @@ import com.credi.fing.entity.AccountTypeOption;
 import com.credi.fing.entity.Beneficiary;
 import com.credi.fing.entity.BeneficiaryTemplate;
 import com.credi.fing.entity.Client;
+import com.credi.fing.pojo.err.ApiErrorResponse;
+import com.credi.fing.pojo.err.ErrorUtils;
 import com.credi.fing.publics.AddActivity;
 import com.credi.fing.publics.adapters.generiqueAdapter.AdapterViewHolder;
 import com.credi.fing.publics.composant.RecyclierViewCp;
@@ -47,6 +49,7 @@ import com.credi.fing.publics.utils.S;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -190,6 +193,8 @@ public class Beneficiaire extends AppCompatActivity {
        return s;
     }
 
+    int[] colos={R.color.blue,R.color.colorAccent,R.color.colorPrimary,R.color.colorPrimaryDark
+    ,R.color.purple_500,R.color.purple_700};
     void setText(Object object, AdapterViewHolder holder, int k) {
         TextView title = holder.title, second = holder.secondre,
                 symbole = holder.symbole, secondre2 = holder.secondre2, date = holder.date, value = holder.textePourcentage;
@@ -211,9 +216,8 @@ public class Beneficiaire extends AppCompatActivity {
         if (clientName != null) {
             title.setText(clientName.toString());
             symbole.setText(getInitiale(clientName.toString()));
-            if(symbole.getText().toString().length()>1){
-               // symbole.setTextSize(12);
-            }
+            int j=k%6;
+            Ut.setBackgroundTint(context,symbole,colos[j]);
         }
         if(accountType!=null){
             secondre2.setVisibility(VISIBLE);
@@ -272,15 +276,36 @@ public class Beneficiaire extends AppCompatActivity {
                     }
                 } else {
                     // Erreur côté serveur ou parsing
+                    String errorContent;
+                    try {
+                        // Lit le corps de la réponse d’erreur en String
+                        errorContent = response.errorBody() != null
+                                ? response.errorBody().string()
+                                : "Corps de l’erreur vide";
+                    } catch (IOException e) {
+                        // En cas de problème de lecture
+                        e.printStackTrace();
+                        errorContent = "Impossible de lire le contenu de l’erreur";
+                    }
+
                     if (context instanceof Activity) {
                         Activity activity = (Activity) context;
                         if (!activity.isFinishing() && !activity.isDestroyed()) {
+
+                            String finalErrorContent = errorContent;
+                            if(finalErrorContent.contains("{")){
+                                ApiErrorResponse apiErrorResponse=
+                                        new ApiErrorResponse().fromJs(finalErrorContent);
+                                finalErrorContent= ErrorUtils.buildErrorMessage(apiErrorResponse);
+                            }
+                            String finalErrorContent1 = finalErrorContent;
+
                             activity.runOnUiThread(() -> {
-                              /*  Dialogue.neutreDialog(
-                                        response.message() + " " + response.errorBody(),
-                                        "null",
+                                Dialogue.neutreDialog(
+                                        finalErrorContent1,
+                                        "Erreur technique",
                                         context
-                                ).show();*/
+                                ).show();
                             });
                         }
                     }
@@ -298,8 +323,8 @@ public class Beneficiaire extends AppCompatActivity {
                 List<Beneficiary> list = new ArrayList<>();
                 if(list.isEmpty()){
                     list=new ArrayList<>();
-                    list.add(Beneficiary.generate());
-                    list.add(Beneficiary.generate());
+                    list.add(Beneficiary.generate("Epargne","ALIMA Kalim"));
+                    list.add(Beneficiary.generate("Individuel","KOUFILGA Wassiou"));
                     list.add(Beneficiary.generate());
                 }
                 displayBeneficiaires(list);
@@ -309,9 +334,10 @@ public class Beneficiaire extends AppCompatActivity {
     RecyclierViewCp recyclierViewCp;
     void displayBeneficiaires(Object object){
         List<Object> list= (List<Object>) object;
+        list.addAll(list);list.addAll(list);
         listBeneficiaires=list;
          recyclierViewCp = new RecyclierViewCp(context, R.layout.card_image_horiz_row, list, (h, o, i) -> {
-            setText(o, h, 1);
+            setText(o, h, i);
         }).setNumberItems(1).setBackground(R.color.white);
 
         recyclierViewCp.setOnSwipeRight((p,v)->{
@@ -319,6 +345,7 @@ public class Beneficiaire extends AppCompatActivity {
         });
 
         recyclierViewCp.view(recyclerView);
+        recyclierViewCp.fixedScrol(fab);
     }
 
 

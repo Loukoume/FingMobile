@@ -90,7 +90,15 @@ public class Beneficiary implements Serializable {
         Beneficiary beneficiary=new Beneficiary();
         beneficiary.setClientName("Nom client");
         beneficiary.setAccountNumber("0214501278");
+        beneficiary.setAccountType(new AccountTypeOption("Individuel"));
          return beneficiary;
+    }
+    public static Beneficiary generate(String tp,String nom){
+        Beneficiary beneficiary=new Beneficiary();
+        beneficiary.setClientName(nom);
+        beneficiary.setAccountNumber("0214501278");
+        beneficiary.setAccountType(new AccountTypeOption(tp));
+        return beneficiary;
     }
 
     public Beneficiary fromJs(String js){

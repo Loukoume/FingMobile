@@ -18,7 +18,20 @@
         android:layout_marginTop="@dimen/fab_margin"
         android:layout_marginHorizontal="8dp"
         android:layout_height="match_parent">
-        <include layout="@layout/input_drop_mt_outlin"/>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textField"
+            android:layout_width="match_parent"
+            app:boxBackgroundColor="@color/white"
+            app:boxBackgroundMode="outline"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:id="@+id/id"
+                android:layout_height="wrap_content"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textFieldNom"
@@ -34,6 +47,24 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:id="@+id/nom"
+                android:layout_height="wrap_content"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textFieldCompte"
+            android:layout_width="match_parent"
+            app:hintTextColor="@color/colorAccent"
+            app:hintEnabled="true"
+            app:boxBackgroundMode="outline"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:hint="Numéro du compte"
+            app:boxBackgroundColor="@color/white"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:id="@+id/cpte"
                 android:layout_height="wrap_content"
                 />
         </com.google.android.material.textfield.TextInputLayout>

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.ViewCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -929,6 +930,11 @@ public class Ut {
     }
     public static int getColor(Context context,int color){
         return ContextCompat.getColor(context,color);
+    }
+
+    public static void setBackgroundTint(Context context,View view,int color){
+        ColorStateList colorStateList = ColorStateList.valueOf(ContextCompat.getColor(context, color));
+        ViewCompat.setBackgroundTintList(view, colorStateList);
     }
 
     public static void setImageTint(ImageView icone,int color,Context context){

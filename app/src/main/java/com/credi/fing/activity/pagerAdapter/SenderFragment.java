@@ -4,14 +4,25 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.credi.fing.R;
+import com.credi.fing.activity.TransferActivity;
+import com.credi.fing.activity.pagerBeneficiaireAdd.AddBeneciaireActivity;
+import com.credi.fing.pojo.AccountOption;
+import com.credi.fing.publics.service.impl.Ut;
+import com.credi.fing.publics.utils.S;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,10 +78,48 @@ public class SenderFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_sender, container, false);
     }
 
+    TextInputLayout input,fieldNom;
+    TextInputEditText nom,id;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        TextInputLayout input=view.findViewById(R.id.textField);
+         input=view.findViewById(R.id.textField);
         input.setHint("Numéro du compte");
+        fieldNom=view.findViewById(R.id.textFieldNom);
+        id=view.findViewById(R.id.id);
+        nom=view.findViewById(R.id.et_full_name);
+
+        TransferActivity activity= (TransferActivity) view.getContext();
+
+        if(activity!=null&&activity.getTransferPayload()!=null){
+            S.toast(getContext(),"input -v");
+            id.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String m[]=activity.getFromAccountOptions().stream().filter(o->o!=null).map(o->
+                            o.getAccountNo()
+                    ).collect(Collectors.toList()).toArray(new String[0]);
+
+                    PopupMenu pop= S.popupMenu(v,m);
+                    pop.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            AccountOption accountOption=activity.getFromAccountOptions().get(item.getItemId()-1);
+                            id.setText(accountOption.getAccountNo());
+                            nom.setText(accountOption.getClientName());
+                            activity.updateTransferPayload("fromOfficeId",accountOption.getOfficeId());
+                            activity.updateTransferPayload("fromClientId",accountOption.getClientId());
+                            activity.updateTransferPayload("fromAccountType",accountOption.getAccountType().getIdServeur());
+                            activity.updateTransferPayload("fromAccountId",accountOption.getAccountId());
+                            activity.setCurrentePage(1);
+                            return false;
+                        }
+                    });
+                }
+            });
+        }
+
+
+         List<AccountOption> fromAccountOptions;
     }
 }

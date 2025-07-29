@@ -5,15 +5,23 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.credi.fing.R;
 import com.credi.fing.activity.Beneficiaire;
+import com.credi.fing.activity.TransferActivity;
+import com.credi.fing.pojo.AccountOption;
+import com.credi.fing.publics.utils.S;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.stream.Collectors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,19 +77,45 @@ public class BeneficiaryFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_beneficiary, container, false);
     }
 
+    TextInputLayout input,fieldNom;
+    TextInputEditText nom,id;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        TextInputLayout input=view.findViewById(R.id.textField);
+        input=view.findViewById(R.id.textField);
         input.setHint("Numéro du compte");
+        fieldNom=view.findViewById(R.id.textFieldNom);
+        id=view.findViewById(R.id.id);
+        nom=view.findViewById(R.id.nom);
 
-        input.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(getActivity()!=null)
-                 getActivity().startActivity(new Intent(getContext(), Beneficiaire.class)
-                        .putExtra("select","true"));
-            }
-        });
+        TransferActivity activity= (TransferActivity) view.getContext();
+
+        if(activity!=null&&activity.getTransferPayload()!=null){
+           // S.toast(getContext(),"input -v");
+            id.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String m[]=activity.getToAccountOptions().stream().filter(o->o!=null).map(o->
+                            o.getAccountNo()
+                    ).collect(Collectors.toList()).toArray(new String[0]);
+
+                    PopupMenu pop= S.popupMenu(v,m);
+                    pop.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            AccountOption accountOption=activity.getToAccountOptions().get(item.getItemId()-1);
+                            id.setText(accountOption.getAccountNo());
+                            nom.setText(accountOption.getClientName());
+                            activity.updateTransferPayload("toOfficeId",accountOption.getOfficeId());
+                            activity.updateTransferPayload("toClientId",accountOption.getClientId());
+                            activity.updateTransferPayload("toAccountType",accountOption.getAccountType().getIdServeur());
+                            activity.updateTransferPayload("toAccountId",accountOption.getAccountId());
+                            activity.setCurrentePage(2);
+                            return false;
+                        }
+                    });
+                }
+            });
+        }
     }
 }

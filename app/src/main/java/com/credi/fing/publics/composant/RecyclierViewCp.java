@@ -198,5 +198,74 @@ public class RecyclierViewCp {
         }
     }
 
+    public void fixedScrol(View fab){
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                // Faire quelque chose pendant le défilement
+                if (dy > 0) {
+                    // Le défilement vers le bas
+                    // Fais quelque chose ici
+                    fab.setVisibility(View.GONE);
+                } else {
+                    // Le défilement vers le haut
+                    // Fais quelque chose ici
+                    fab.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                // État du défilement a changé
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    // Le défilement s'est arrêté
+                    // Fais quelque chose ici
+                } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    // Le défilement est en cours
+                    // Fais quelque chose ici
+                }
+            }
+        });
+    }
+    public void fixedScrol(View fab,View top){
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                // Faire quelque chose pendant le défilement
+                if (dy > 0) {
+                    // Le défilement vers le bas
+                    // Fais quelque chose ici
+                    fab.setVisibility(View.GONE);
+                    top.setVisibility(View.VISIBLE);
+                } else {
+                    // Le défilement vers le haut
+                    // Fais quelque chose ici
+                    fab.setVisibility(View.VISIBLE);
+                    top.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                // État du défilement a changé
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    // Le défilement s'est arrêté
+                    // Fais quelque chose ici
+                } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    // Le défilement est en cours
+                    // Fais quelque chose ici
+                }
+            }
+        });
+    }
+
 
 }

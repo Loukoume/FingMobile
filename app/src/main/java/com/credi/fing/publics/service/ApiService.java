@@ -4,6 +4,7 @@ import com.credi.fing.entity.Beneficiary;
 import com.credi.fing.entity.BeneficiaryTemplate;
 import com.credi.fing.entity.Client;
 import com.credi.fing.entity.TransferPayload;
+import com.credi.fing.pojo.AccountOptionsResponse;
 import com.credi.fing.pojo.LoanPojo;
 import com.credi.fing.pojo.LoanProductResponse;
 import com.credi.fing.publics.UploadFileResponse;
@@ -105,6 +106,16 @@ public interface ApiService {
             @Query("type") String type, // par exemple: "tpt"
             @Query("tenantIdentifier") String tenantIdentifier
     );
+    //fineract-provider/api/v1/self/accounttransfers/template?type=tpt?&tenantIdentifier=default
+
+    @GET("fineract-provider/api/v1/self/accounttransfers/template")
+    Call<AccountOptionsResponse> getTemplateTransfert(
+            @Header("Authorization") String authHeader,
+            @Query("type") String type, // le bon nom du paramètre est "type", pas "templateType"
+            @Query("tenantIdentifier") String tenantIdentifier
+    );
+
+
     @GET
     Call<List<Object>> getDataList(@Url String url);
     @GET

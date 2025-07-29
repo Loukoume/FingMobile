@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.credi.fing.R;
@@ -23,13 +24,18 @@ import com.credi.fing.activity.pagerAdapter.TransferPagerAdapter;
 import com.credi.fing.entity.Beneficiary;
 import com.credi.fing.enums.TypeAdapter;
 import com.credi.fing.pojo.LoanPojo;
+import com.credi.fing.pojo.err.ApiErrorResponse;
+import com.credi.fing.pojo.err.ErrorUtils;
 import com.credi.fing.publics.service.ApiService;
 import com.credi.fing.publics.service.RetrofitClient;
 import com.credi.fing.publics.service.impl.Attribut;
 import com.credi.fing.publics.service.impl.EditeObject;
 import com.credi.fing.publics.service.impl.Ut;
 import com.credi.fing.publics.utils.Dialogue;
+import com.credi.fing.publics.utils.S;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -46,7 +52,7 @@ public class AddBeneciaireActivity extends AppCompatActivity {
     private TransferPagerAdapter adapter;
     private TextView tvStepHeader;
     private final List<String> steps = Arrays.asList(
-            "Infos générales", "Compte"
+            "Infos générales"
     );
     Beneficiary beneficiary;
     EditeObject editeObject;
@@ -71,7 +77,7 @@ public class AddBeneciaireActivity extends AppCompatActivity {
         if(getIntent().hasExtra("beneficiary")){
             beneficiary= (Beneficiary) getIntent().getSerializableExtra("beneficiary");
         }
-        adapter = new TransferPagerAdapter(this,2, TypeAdapter.BENEFICIAIRE);
+        adapter = new TransferPagerAdapter(this,1, TypeAdapter.BENEFICIAIRE);
         viewPager.setAdapter(adapter);
 
         if(editeObject!=null){
@@ -132,19 +138,37 @@ public class AddBeneciaireActivity extends AppCompatActivity {
 
     private boolean ok(){
         updatClikSubmit(true);
-        if(beneficiary!=null){
+        if(getBeneficiary()!=null){
            if(beneficiary.getClientName()!=null&&beneficiary.getOfficeName()!=null){
-               if(beneficiary.getAccountNumber()!=null&&beneficiary.getAccountType()!=null
-               &&beneficiary.getTransferLimit()!=null){
+               if(beneficiary.getAccountNumber()!=null){
                    return true;
                }
-               viewPager.setCurrentItem(0, false);
-               viewPager.setCurrentItem(1, false);
+              er();
            }else {
-               viewPager.setCurrentItem(0, true);
+
+               er();
+              // viewPager.setCurrentItem(0, true);
            }
         }
         return false;
+    }
+
+    private void er(){
+        int position = 0; // position du fragment à récupérer
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentByTag("f" + position);
+        if (fragment instanceof BeneficiaireFragment) {
+            BeneficiaireFragment myFragment = (BeneficiaireFragment) fragment;
+            if (myFragment.getView() != null) {
+                TextInputLayout nom;
+                TextInputLayout id;
+                TextInputLayout nomComp;
+                nomComp=myFragment.getView().findViewById(R.id.textFieldCompte);
+                nom=myFragment.getView().findViewById(R.id.textFieldNom);
+                id=myFragment.getView().findViewById(R.id.textField);
+                putError(nom,id,nomComp);
+            }
+        }
     }
 
     public Beneficiary getBeneficiary() {
@@ -179,6 +203,7 @@ public class AddBeneciaireActivity extends AppCompatActivity {
         // 1. Spécifiez vos identifiants Basic Auth
         String username = Inscription.body.getUsername();
 
+        System.out.println("Beneficiary "+loanAccount.js());
         // 2. Obtenez l'instance de RetrofitClient
         RetrofitClient retrofitClient = RetrofitClient.getInstance(username, Inscription.body.getPassword());
         ApiService api = retrofitClient.getFineractApi();
@@ -213,9 +238,15 @@ public class AddBeneciaireActivity extends AppCompatActivity {
                         Activity activity = (Activity) context;
                         if (!activity.isFinishing() && !activity.isDestroyed()) {
                             String finalErrorContent = errorContent;
+                            if(finalErrorContent.contains("{")){
+                                ApiErrorResponse apiErrorResponse=
+                                        new ApiErrorResponse().fromJs(finalErrorContent);
+                              finalErrorContent= ErrorUtils.buildErrorMessage(apiErrorResponse);
+                            }
+                            String finalErrorContent1 = finalErrorContent;
                             activity.runOnUiThread(() -> {
                                 Dialogue.neutreDialog(
-                                        finalErrorContent,
+                                        finalErrorContent1,
                                         "Code d'erreur : " + response.code(),
                                         context
                                 ).show();
@@ -257,5 +288,17 @@ public class AddBeneciaireActivity extends AppCompatActivity {
     void hidePb(){
         pb.setVisibility(View.GONE);
         //vide.setVisibility(View.GONE);
+    }
+    
+    private void putError(TextInputLayout nom,TextInputLayout id,TextInputLayout nomComp){
+        if(beneficiary.getOfficeName()==null)
+            id.setError("Champ obligatoir");
+
+        if(beneficiary.getClientName()==null){
+            nom.setError("Champ obligatoir");
+        }
+        if(beneficiary.getAccountNumber()==null){
+            nomComp.setError("Champ obligatoir");
+        } 
     }
 }

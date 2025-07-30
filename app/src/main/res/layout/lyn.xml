@@ -19,7 +19,7 @@
             android:focusableInTouchMode="true"
             android:layout_width="match_parent"
             android:padding="8dp"
-            android:background="@drawable/shap_arc_convex"
+            android:background="@drawable/sharp_edite"
             android:textColor="@color/white"
             android:id="@+id/id"
             android:textSize="17sp"

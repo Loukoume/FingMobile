@@ -88,6 +88,7 @@ public class BeneficiaryFragment extends Fragment {
     TransferActivity activity;
     TextInputLayout input,fieldNom;
     TextInputEditText nom,id;
+    Attribut attribut;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -96,7 +97,8 @@ public class BeneficiaryFragment extends Fragment {
         fieldNom=view.findViewById(R.id.textFieldNom);
         id=view.findViewById(R.id.id);
         nom=view.findViewById(R.id.nom);
-
+        attribut=new Attribut();
+        attribut.setSubLabel("accountNo");
          activity= (TransferActivity) view.getContext();
 
         if(activity!=null&&activity.getTransferPayload()!=null){
@@ -104,7 +106,7 @@ public class BeneficiaryFragment extends Fragment {
             id.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showSelectDialogue(activity.getToAccountOptions(), null, "accountType:value", "accountType:value", id, null);
+                    showSelectDialogue(activity.getToAccountOptions(), null, "accountType:value", "accountType:value", id, attribut);
 
                    /* String m[]=activity.getToAccountOptions().stream().filter(o->o!=null).map(o->
                             o.getAccountNo()

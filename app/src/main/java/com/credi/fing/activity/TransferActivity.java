@@ -148,9 +148,10 @@ public class TransferActivity extends AppCompatActivity {
     private void submitAllData() {
         if(ok()){
             transferPayload.setTransferDate(S.dateToString(new Date(),
-                    transferPayload.getDateFormat()));
-            Dialogue.neutreDialog(Ut.js(transferPayload),S.dateToString(new Date(),
-                    transferPayload.getDateFormat()),context).show();
+                    transferPayload.getDateFormat(),transferPayload.getLocale()));
+            /*Dialogue.neutreDialog(Ut.js(transferPayload),S.dateToString(new Date(),
+                    transferPayload.getDateFormat()),context).show();*/
+            System.out.println(" -transferPayload- "+transferPayload.js());
             saveTransfert(transferPayload);
         }
     }
@@ -189,6 +190,8 @@ public class TransferActivity extends AppCompatActivity {
     public TransferPayload getTransferPayload() {
         if(transferPayload==null){
             transferPayload=new TransferPayload();
+            transferPayload.setTransferDate(S.dateToString(new Date(),
+                    transferPayload.getDateFormat(),transferPayload.getLocale()));
         }
         return transferPayload;
     }
@@ -210,6 +213,7 @@ public class TransferActivity extends AppCompatActivity {
     }
 
     void saveTransfert(TransferPayload loanAccount){
+        MonFichier.ecrire(context,"transmis","");
         showPb();
         // 1. Spécifiez vos identifiants Basic Auth
         String username = Inscription.body.getUsername();
@@ -230,7 +234,8 @@ public class TransferActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    finish();
+                    MonFichier.ecrire(context,"transmis","ok");
+                   finish();
                 } else {
                     String errorContent;
                     try {
@@ -250,9 +255,13 @@ public class TransferActivity extends AppCompatActivity {
                         if (!activity.isFinishing() && !activity.isDestroyed()) {
                             String finalErrorContent = errorContent;
                             if(finalErrorContent.contains("{")){
-                                ApiErrorResponse apiErrorResponse=
-                                        new ApiErrorResponse().fromJs(finalErrorContent);
-                                finalErrorContent= ErrorUtils.buildErrorMessage(apiErrorResponse);
+                               try {
+                                   ApiErrorResponse apiErrorResponse=
+                                           new ApiErrorResponse().fromJs(finalErrorContent);
+                                   finalErrorContent= ErrorUtils.buildErrorMessage(apiErrorResponse);
+                               }catch (Exception e){
+
+                               }
                             }
                             String finalErrorContent1 = finalErrorContent;
                             activity.runOnUiThread(() -> {

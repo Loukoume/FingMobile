@@ -124,11 +124,11 @@ public class Inscription extends AppCompatActivity {
                 if(checkBox.isChecked()){
                     String mdp=motDePasse.getText().toString();
                     String login=etPhoneNumber.getText().toString();
-                    if(mdp.equalsIgnoreCase("fingiciel")
+                   /* if(mdp.equalsIgnoreCase("fingiciel")
                             &&login.equalsIgnoreCase("fingiciel")){
                         body = new LoginRequest("fingiciel", "fingiciel");
                         go((User) Ut.fromJs(Json.inscriptionUser,User.class),"fingiciel");
-                    }else {
+                    }else {*/
                         if(login.isEmpty()||mdp.isEmpty()){
                           // motDePasse.setError("Champ obligatoir");
                           // etPhoneNumber.setError("Champ obligatoir");
@@ -137,7 +137,7 @@ public class Inscription extends AppCompatActivity {
                         }else {
                             authenticateUser(login,mdp);
                         }
-                    }
+                    //}
                 }else {
 
                     if (context instanceof Activity) {

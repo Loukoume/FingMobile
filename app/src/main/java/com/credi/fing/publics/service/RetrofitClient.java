@@ -56,9 +56,9 @@ public class RetrofitClient {
      * Retourne l’instance unique de RetrofitClient. Si elle n’existe pas, on la crée avec les identifiants passés.
      */
     public static RetrofitClient getInstance(String username, String password) {
-        if (instance == null) {
+       // if (instance == null) {
             instance = new RetrofitClient(username, password);
-        }
+       // }
         return instance;
     }
 

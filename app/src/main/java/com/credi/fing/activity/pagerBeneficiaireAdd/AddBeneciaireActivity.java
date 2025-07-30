@@ -21,8 +21,11 @@ import com.credi.fing.R;
 import com.credi.fing.activity.Inscription;
 import com.credi.fing.activity.pagerAdapter.SenderFragment;
 import com.credi.fing.activity.pagerAdapter.TransferPagerAdapter;
+import com.credi.fing.entity.AccountTypeOption;
 import com.credi.fing.entity.Beneficiary;
+import com.credi.fing.entity.BeneficiaryTemplate;
 import com.credi.fing.enums.TypeAdapter;
+import com.credi.fing.pojo.AccountInfo;
 import com.credi.fing.pojo.LoanPojo;
 import com.credi.fing.pojo.err.ApiErrorResponse;
 import com.credi.fing.pojo.err.ErrorUtils;
@@ -32,12 +35,14 @@ import com.credi.fing.publics.service.impl.Attribut;
 import com.credi.fing.publics.service.impl.EditeObject;
 import com.credi.fing.publics.service.impl.Ut;
 import com.credi.fing.publics.utils.Dialogue;
+import com.credi.fing.publics.utils.MonFichier;
 import com.credi.fing.publics.utils.S;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,7 +59,7 @@ public class AddBeneciaireActivity extends AppCompatActivity {
     private final List<String> steps = Arrays.asList(
             "Infos générales"
     );
-    Beneficiary beneficiary;
+    AccountInfo beneficiary;
     EditeObject editeObject;
     List<Attribut> attributs;
     public List<Object> typeAccounts;
@@ -75,7 +80,7 @@ public class AddBeneciaireActivity extends AppCompatActivity {
             editeObject= (EditeObject) getIntent().getSerializableExtra("object");
         }
         if(getIntent().hasExtra("beneficiary")){
-            beneficiary= (Beneficiary) getIntent().getSerializableExtra("beneficiary");
+            beneficiary= (AccountInfo) getIntent().getSerializableExtra("beneficiary");
         }
         adapter = new TransferPagerAdapter(this,1, TypeAdapter.BENEFICIAIRE);
         viewPager.setAdapter(adapter);
@@ -112,6 +117,8 @@ public class AddBeneciaireActivity extends AppCompatActivity {
                 btnNext.setText(pos < steps.size() - 1 ? "Suivant" : "Terminer");
             }
         });
+
+        getBeneficiareTemplate();
     }
 
     @Override
@@ -122,6 +129,10 @@ public class AddBeneciaireActivity extends AppCompatActivity {
 
     private void submitAllData() {
         if(ok()){
+            beneficiary.setTransferLimit(4000);
+            if(beneficiary.getType()!=null){
+                beneficiary.setType(null);
+            }
             saveBeneficiaire(beneficiary);
         }
     }
@@ -139,7 +150,7 @@ public class AddBeneciaireActivity extends AppCompatActivity {
     private boolean ok(){
         updatClikSubmit(true);
         if(getBeneficiary()!=null){
-           if(beneficiary.getClientName()!=null&&beneficiary.getOfficeName()!=null){
+           if(beneficiary.getName()!=null&&beneficiary.getOfficeName()!=null){
                if(beneficiary.getAccountNumber()!=null){
                    return true;
                }
@@ -162,23 +173,24 @@ public class AddBeneciaireActivity extends AppCompatActivity {
             if (myFragment.getView() != null) {
                 TextInputLayout nom;
                 TextInputLayout id;
-                TextInputLayout nomComp;
+                TextInputLayout nomComp,type;
                 nomComp=myFragment.getView().findViewById(R.id.textFieldCompte);
+                type=myFragment.getView().findViewById(R.id.textFieldType);
                 nom=myFragment.getView().findViewById(R.id.textFieldNom);
                 id=myFragment.getView().findViewById(R.id.textField);
-                putError(nom,id,nomComp);
+                putError(nom,id,nomComp,type);
             }
         }
     }
 
-    public Beneficiary getBeneficiary() {
+    public AccountInfo getBeneficiary() {
         if(beneficiary==null){
-            beneficiary=new Beneficiary();
+            beneficiary=new AccountInfo();
         }
         return beneficiary;
     }
 
-    public void setBeneficiary(Beneficiary beneficiary) {
+    public void setBeneficiary(AccountInfo beneficiary) {
         this.beneficiary = beneficiary;
     }
 
@@ -192,13 +204,13 @@ public class AddBeneciaireActivity extends AppCompatActivity {
 
     public void updateBeneFiciaire(String key, Object value){
         if(beneficiary==null){
-            beneficiary=new Beneficiary();
+            beneficiary=new AccountInfo();
         }
         Object object= Ut.setField(key,beneficiary,value);
-        this.beneficiary= (Beneficiary) Ut.creatObject(object, Beneficiary.class);
+        this.beneficiary= (AccountInfo) Ut.creatObject(object, AccountInfo.class);
     }
 
-    void saveBeneficiaire(Beneficiary loanAccount){
+    void saveBeneficiaire(AccountInfo loanAccount){
         showPb();
         // 1. Spécifiez vos identifiants Basic Auth
         String username = Inscription.body.getUsername();
@@ -219,7 +231,8 @@ public class AddBeneciaireActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    finish();
+                    Dialogue.neutreDialog(Ut.js(response.body()),"Information",context).show();
+                   // finish();
                 } else {
                     String errorContent;
                     try {
@@ -290,15 +303,79 @@ public class AddBeneciaireActivity extends AppCompatActivity {
         //vide.setVisibility(View.GONE);
     }
     
-    private void putError(TextInputLayout nom,TextInputLayout id,TextInputLayout nomComp){
+    private void putError(TextInputLayout nom,TextInputLayout id,TextInputLayout nomComp
+            ,TextInputLayout type){
         if(beneficiary.getOfficeName()==null)
             id.setError("Champ obligatoir");
 
-        if(beneficiary.getClientName()==null){
+        if(beneficiary.getName()==null){
             nom.setError("Champ obligatoir");
         }
         if(beneficiary.getAccountNumber()==null){
             nomComp.setError("Champ obligatoir");
-        } 
+        }
+        if(beneficiary.getAccountType()==null){
+            type.setError("Champ obligatoir");
+        }
     }
+    List<AccountTypeOption> typeAcounts;
+
+    public List<AccountTypeOption> getTypeAcounts() {
+        return typeAcounts==null?new ArrayList<>():typeAcounts;
+    }
+
+    public void setTypeAcounts(List<AccountTypeOption> typeAcounts) {
+        this.typeAcounts = typeAcounts;
+    }
+
+    void getBeneficiareTemplate() {
+        // 1. Récupérez vos identifiants
+        String username = Inscription.user.getUsername();
+        String password = Inscription.body.getPassword();
+
+        // 2. Instanciez RetrofitClient (préconfiguré avec Basic Auth dans le constructor)
+        RetrofitClient retrofitClient = RetrofitClient.getInstance(username, password);
+        ApiService api = retrofitClient.getFineractApi();
+
+        // 3. Préparez l’appel
+        String authHeader = "Basic " + okhttp3.Credentials.basic(username, password);
+        String tenant     = "default";
+
+        Call<BeneficiaryTemplate> call = api.getBeneficiariesTemplate(authHeader, tenant);
+
+        // 4. Exécutez l’appel asynchrone
+        call.enqueue(new Callback<BeneficiaryTemplate>() {
+            @Override
+            public void onResponse(Call<BeneficiaryTemplate> call, Response<BeneficiaryTemplate> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    BeneficiaryTemplate template = response.body();
+                    typeAcounts=template.getAccountTypeOptions();
+                    // Exemple : stocker le JSON brut dans un fichier
+                    MonFichier.ecrire(context, "beneficiaries_template", template.js());
+                    Log.d("Template", template.toString());
+
+                } else {
+                    // Erreur serveur ou JSON malformé
+                    String msg = response.message();
+                    String err = response.errorBody() != null ? response.errorBody().toString() : "";
+                    //Dialogue.neutreDialog(msg + " " + err, "null", context).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BeneficiaryTemplate> call, Throwable t) {
+                // Problème réseau ou exception
+                if (context instanceof Activity) {
+                    Activity activity = (Activity) context;
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        activity.runOnUiThread(() -> {
+                            // Dialogue.neutreDialog(t.toString(), "", context).show();
+                        });
+                    }
+                }
+
+            }
+        });
+    }
+
 }

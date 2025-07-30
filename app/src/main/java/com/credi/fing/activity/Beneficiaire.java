@@ -334,7 +334,7 @@ public class Beneficiaire extends AppCompatActivity {
     RecyclierViewCp recyclierViewCp;
     void displayBeneficiaires(Object object){
         List<Object> list= (List<Object>) object;
-        list.addAll(list);list.addAll(list);
+        //list.addAll(list);list.addAll(list);
         listBeneficiaires=list;
          recyclierViewCp = new RecyclierViewCp(context, R.layout.card_image_horiz_row, list, (h, o, i) -> {
             setText(o, h, i);

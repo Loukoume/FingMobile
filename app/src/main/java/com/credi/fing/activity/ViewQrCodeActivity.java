@@ -14,6 +14,7 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,7 +43,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class ViewQrCodeActivity extends AppCompatActivity {
-    private ImageView ivQRCode,share;
+    private ImageView ivQRCode;
+    MaterialButton share;
 
     LinearLayout sheet;
     Context context;

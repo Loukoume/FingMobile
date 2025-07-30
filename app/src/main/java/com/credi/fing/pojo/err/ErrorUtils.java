@@ -15,26 +15,41 @@ public class ErrorUtils {
             message.append("Code HTTP : ").append(errorResponse.getHttpStatusCode()).append("\n");
         }
 
-        // Détails supplémentaires
+        // Détail technique
         if (errorResponse.getDeveloperMessage() != null) {
             message.append("Détail technique : ").append(errorResponse.getDeveloperMessage()).append("\n");
         }
 
-        // Boucle sur les erreurs individuelles
+        // Détails spécifiques
         if (errorResponse.getErrors() != null && !errorResponse.getErrors().isEmpty()) {
             message.append("Détails des erreurs :\n");
             for (ApiErrorDetail detail : errorResponse.getErrors()) {
+                // Message utilisateur
                 if (detail.getDefaultUserMessage() != null) {
                     message.append("• ").append(detail.getDefaultUserMessage());
                 }
+
+                // Paramètre concerné s'il existe
                 if (detail.getParameterName() != null) {
                     message.append(" (paramètre : ").append(detail.getParameterName()).append(")");
                 }
+
+                // Vérification des args pour afficher des messages utiles
+                if (detail.getArgs() != null && !detail.getArgs().isEmpty()) {
+                    for (ApiErrorArgument arg : detail.getArgs()) {
+                        String valueStr = arg.getValueAsString();
+                        if (valueStr != null && !valueStr.equals("null")) {
+                            message.append("\n    → Détail : ").append(valueStr);
+                        }
+                    }
+                }
+
                 message.append("\n");
             }
         }
 
         return message.toString().trim();
     }
+
 }
 

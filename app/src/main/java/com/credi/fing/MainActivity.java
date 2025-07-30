@@ -228,6 +228,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         bottomNav.setSelectedItemId(R.id.navigation_home);
+        //MonFichier.ecrire(context,"transmis","");
+        String transmis=MonFichier.lire(context,"transmis");
+        if(transmis.equals("ok")){
+            MonFichier.ecrire(context,"transmis","");
+            getClientAcount();
+        }
     }
 
     @Override
@@ -320,6 +326,7 @@ public class MainActivity extends AppCompatActivity {
                     //startActivity(new Intent(context, ViewQrCodeReadActivity.class));
                     startActivity(new Intent(context, TransferActivity.class));
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
                     break;
                 case 1:
                     LoanPojo loanAccount=new LoanPojo();
@@ -688,7 +695,6 @@ public class MainActivity extends AppCompatActivity {
         return v==null||v.isEmpty()?0:Double.parseDouble(v);
     }
     private void setComptesValues(){
-
         if(loanAccounts!=null){
             Double prets=loanAccounts.stream().mapToDouble(x->value(Ut.getAllValues(x,"loanBalance"))).sum();
             Double eprgne=savingsAccounts.stream().mapToDouble(x->value(Ut.getAllValues(x,"accountBalance"))).sum();

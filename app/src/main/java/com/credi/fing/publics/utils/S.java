@@ -55,6 +55,7 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import okhttp3.ResponseBody;
@@ -902,9 +903,22 @@ public class S {
     }
     public static String dateToString(Date date,String format) {
         if(date==null)date=new Date();
-        //Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+         SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        String dateString = dateFormat.format(date);
+        return dateString;
+    }
+    public static String dateToString(Date date,String format,String local) {
+        if(date==null)date=new Date();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        // Si la locale n'est pas fournie ou invalide, on utilise la locale par défaut
+        Locale locale;
+        try {
+            locale = new Locale(local);
+        } catch (Exception e) {
+            locale = Locale.getDefault();
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format,locale);
         String dateString = dateFormat.format(date);
         return dateString;
     }

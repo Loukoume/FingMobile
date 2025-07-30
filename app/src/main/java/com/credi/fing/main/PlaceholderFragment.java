@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.credi.fing.R;
 import com.credi.fing.activity.PagerActivity;
+import com.credi.fing.activity.RemboursementActivity;
 import com.credi.fing.activity.ViewQrCodeActivity;
 import com.credi.fing.binder.OperationBinder;
 import com.credi.fing.publics.AddActivity;
@@ -161,6 +162,13 @@ public class PlaceholderFragment extends Fragment {
             if (initial != null) {
                 value.setText("CFA "+Ut.formatMontant(Double.parseDouble(initial.toString())));
             }
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(context, RemboursementActivity.class)
+                            .putExtra("compte",Ut.js(object)));
+                }
+            });
             /*Object last_ob = Ut.getValue(v, "timeline:expectedDisbursementDate");
             if (last_ob != null) {
                 List<Object> obs = (List<Object>) last_ob;

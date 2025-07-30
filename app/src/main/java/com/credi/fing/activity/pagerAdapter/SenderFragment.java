@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 
@@ -11,16 +12,21 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.credi.fing.R;
 import com.credi.fing.activity.TransferActivity;
 import com.credi.fing.activity.pagerBeneficiaireAdd.AddBeneciaireActivity;
 import com.credi.fing.pojo.AccountOption;
+import com.credi.fing.publics.service.impl.Attribut;
+import com.credi.fing.publics.service.impl.SelectService;
 import com.credi.fing.publics.service.impl.Ut;
 import com.credi.fing.publics.utils.S;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,6 +86,8 @@ public class SenderFragment extends Fragment {
 
     TextInputLayout input,fieldNom;
     TextInputEditText nom,id;
+    TransferActivity activity;
+    Attribut attribut;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -88,18 +96,17 @@ public class SenderFragment extends Fragment {
         fieldNom=view.findViewById(R.id.textFieldNom);
         id=view.findViewById(R.id.id);
         nom=view.findViewById(R.id.et_full_name);
-
-        TransferActivity activity= (TransferActivity) view.getContext();
+        attribut=new Attribut();
+        attribut.setSubLabel("accountNo");
+         activity= (TransferActivity) view.getContext();
 
         if(activity!=null&&activity.getTransferPayload()!=null){
-            S.toast(getContext(),"input -v");
             id.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String m[]=activity.getFromAccountOptions().stream().filter(o->o!=null).map(o->
+                    /*String m[]=activity.getFromAccountOptions().stream().filter(o->o!=null).map(o->
                             o.getAccountNo()
                     ).collect(Collectors.toList()).toArray(new String[0]);
-
                     PopupMenu pop= S.popupMenu(v,m);
                     pop.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
@@ -112,14 +119,73 @@ public class SenderFragment extends Fragment {
                             activity.updateTransferPayload("fromAccountType",accountOption.getAccountType().getIdServeur());
                             activity.updateTransferPayload("fromAccountId",accountOption.getAccountId());
                             activity.setCurrentePage(1);
+
                             return false;
                         }
-                    });
+                    });*/
+                    showSelectDialogue(activity.getFromAccountOptions(), null, "accountType:value", "accountType:value", id, attribut);
+
+
                 }
             });
         }
 
 
          List<AccountOption> fromAccountOptions;
+    }
+
+    private void showSelectDialogue(final List<AccountOption> data, Object sec, String label, String field, TextInputEditText editText,
+                                    Attribut attribut) {
+        View dialogView = Ut.getView(getContext(), R.layout.add_layout);
+        LinearLayout lm = dialogView.findViewById(R.id.lmain);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(dialogView.getContext());
+        builder.setView(dialogView);
+
+        final AlertDialog alertDialog = builder.create();
+
+        List<Object> selection;
+        if (sec == null) selection = new ArrayList<>();
+        else selection = (List<Object>) sec;
+
+        SelectService selectService = new SelectService(getContext(), new ArrayList<>(data), label, attribut,
+                (d, v, k) -> {
+                    d.cancel();
+                    // String fs=field.contains(":")?field.substring(0,field.indexOf(":")):field;
+                    AccountOption accountOption=data.get(Integer.parseInt(k + ""));;
+                    id.setText(accountOption.getAccountNo());
+                    nom.setText(accountOption.getClientName());
+                    activity.updateTransferPayload("fromOfficeId",accountOption.getOfficeId());
+                    activity.updateTransferPayload("fromClientId",accountOption.getClientId());
+                    activity.updateTransferPayload("fromAccountType",accountOption.getAccountType().getIdServeur());
+                    activity.updateTransferPayload("fromAccountId",accountOption.getAccountId());
+                    activity.setCurrentePage(1);
+
+                })
+                .setTitle("Sélectionnez un compte".toUpperCase())
+                .setMultiselect(false)
+                .setSelect(selection);
+
+        View view = selectService.view(alertDialog);
+
+        View btn1 = Ut.getView(getContext(), R.layout.outline_bouton);
+        MaterialButton mtbt1 = btn1.findViewById(R.id.outlinedButton);
+        mtbt1.setText("Valider la sélection");
+        lm.addView(view);
+        //  lm.addView(btn1);
+
+
+        alertDialog.show();
+        mtbt1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.cancel();
+                String fs = field.contains(":") ? field.substring(0, field.indexOf(":")) : field;
+                // object=Ut.setField(fs,object,selectService.getSelect());
+                editText.setText(selectService.getStringSelect());
+                //Dialogue.neutreDialog(Ut.js(object),selectService.getSelect().size()+"",context).show();
+            }
+        });
+
     }
 }

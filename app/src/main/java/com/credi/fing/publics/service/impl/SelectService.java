@@ -91,8 +91,7 @@ public class SelectService {
             int j=Ut.indexOf(select,x,field);
             if(j!=-1){
                 this.select.remove(j);
-            }
-            else this.select.add(x);
+            }else this.select.add(x);
         }
     }
     public View view(AlertDialog alertDialog){
@@ -118,15 +117,15 @@ public class SelectService {
                 radioButton.setChecked(Ut.contient(select,data.get(i),label));
                 radioButton.setVisibility(View.GONE);
             }
-            if(!attribut.isIcone()){
+            if(attribut!=null&&!attribut.isIcone()){
                 chex.setVisibility(View.GONE);
                 radioButton.setVisibility(View.GONE);
                 vw.findViewById(R.id.icone).setVisibility(View.GONE);
             }
             String affo=label!=null?Ut.getAllValues(data.get(i),label):data.get(i)+"";
-            String txtscd=attribut.getSubLabel()!=null?Ut.getAllValues(data.get(i),attribut.getSubLabel()):"";
+            String txtscd=attribut!=null&&attribut.getSubLabel()!=null?Ut.getAllValues(data.get(i),attribut.getSubLabel()):"";
             tv.setText(affo);
-            if(attribut.getSubLabel()!=null){
+            if(attribut!=null&&attribut.getSubLabel()!=null){
                 scd.setVisibility(View.VISIBLE);
                 scd.setText(txtscd);
             }

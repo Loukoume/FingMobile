@@ -1,5 +1,6 @@
 package com.credi.fing.entity;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -143,5 +144,9 @@ public class TransferPayload implements Serializable {
 
     public void setLocale(String locale) {
         this.locale = locale;
+    }
+
+    public String js(){
+        return new Gson().toJson(this);
     }
 }

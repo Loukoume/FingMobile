@@ -4,9 +4,11 @@ import com.credi.fing.entity.Beneficiary;
 import com.credi.fing.entity.BeneficiaryTemplate;
 import com.credi.fing.entity.Client;
 import com.credi.fing.entity.TransferPayload;
+import com.credi.fing.pojo.AccountInfo;
 import com.credi.fing.pojo.AccountOptionsResponse;
 import com.credi.fing.pojo.LoanPojo;
 import com.credi.fing.pojo.LoanProductResponse;
+import com.credi.fing.pojo.transaction.TransactionsResponse;
 import com.credi.fing.publics.UploadFileResponse;
 
 import java.util.List;
@@ -93,7 +95,7 @@ public interface ApiService {
     @POST("fineract-provider/api/v1/self/beneficiaries/tpt")
     Call<Object> saveBeneF(
             @Header("Authorization") String authHeader,
-            @Body Beneficiary loanAccount,
+            @Body AccountInfo loanAccount,
             @Query("tenantIdentifier") String tenantIdentifier
     );
 
@@ -172,5 +174,12 @@ public interface ApiService {
     );
 
     //https://fingiciel.ngrok.io/fineract-provider/api/v1/self/beneficiaries/tpt/template?&tenantIdentifier=default
+
+    @GET("fineract-provider/api/v1/self/savingsaccounts/{accountId}/transactions")
+    Call<TransactionsResponse> getSavingsTransactions(
+            @Header("Authorization") String authorization,
+            @Path("accountId") long accountId,
+            @Query("tenantIdentifier") String tenantIdentifier
+    );
 
 }

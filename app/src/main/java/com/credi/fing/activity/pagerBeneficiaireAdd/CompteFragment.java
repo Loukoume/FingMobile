@@ -94,8 +94,8 @@ public class CompteFragment extends Fragment {
         AddBeneciaireActivity activity= (AddBeneciaireActivity) view.getContext();
 
         if(activity!=null&&activity.beneficiary!=null){
-            if(activity.beneficiary.getAccountType()!=null)
-              typeCpte.setText(activity.beneficiary.getAccountType().getValue());
+            if(activity.beneficiary.getType()!=null)
+              typeCpte.setText(activity.beneficiary.getType().getValue());
             if(activity.beneficiary.getAccountNumber()!=null){
                 nom.setText(activity.beneficiary.getAccountNumber());
             }
@@ -181,7 +181,7 @@ public class CompteFragment extends Fragment {
         AddBeneciaireActivity activity= (AddBeneciaireActivity) getActivity();
         if(activity!=null&&activity.beneficiary!=null){
             if(activity.beneficiary.getAccountType()!=null)
-                typeCpte.setText(activity.beneficiary.getAccountType().getValue());
+                typeCpte.setText(activity.beneficiary.getType().getValue());
             if(activity.beneficiary.getAccountNumber()!=null){
                 nom.setText(activity.beneficiary.getAccountNumber());
             }

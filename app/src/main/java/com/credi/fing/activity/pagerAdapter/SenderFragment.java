@@ -160,6 +160,7 @@ public class SenderFragment extends Fragment {
                     activity.updateTransferPayload("fromAccountType",accountOption.getAccountType().getIdServeur());
                     activity.updateTransferPayload("fromAccountId",accountOption.getAccountId());
                     activity.setCurrentePage(1);
+                    activity.setFromAccountOption(accountOption);
 
                 })
                 .setTitle("Compte émetteur".toUpperCase())

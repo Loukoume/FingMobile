@@ -159,6 +159,7 @@ public class BeneficiaryFragment extends Fragment {
                     activity.updateTransferPayload("toAccountType",accountOption.getAccountType().getIdServeur());
                     activity.updateTransferPayload("toAccountId",accountOption.getAccountId());
                     activity.setCurrentePage(2);
+                    activity.setToAccountOption(accountOption);
 
                 })
                 .setTitle("Compte bénéficiaire".toUpperCase())

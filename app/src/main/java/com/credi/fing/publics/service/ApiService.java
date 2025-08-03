@@ -222,10 +222,10 @@ public interface ApiService {
 
 
     @PUT("self/beneficiaries/tpt/{beneficiaryId}")
-    Call<Beneficiary> updateBeneficiary(
+    Call<Object> updateBeneficiary(
             @Path("beneficiaryId") long beneficiaryId,
             @Query("tenantIdentifier") String tenantIdentifier,
-            @Body Object body
+            @Body AccountInfo body
     );
 
 }

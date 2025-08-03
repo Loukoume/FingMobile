@@ -29,13 +29,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Informations Émetteur"
-                    android:textColor="@color/gray_dark"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="14sp" />
                 <View
                     android:layout_width="match_parent"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="8dp"
-                    android:background="@color/colorSendre2"
+                    android:background="@color/colorPrimary"
                     android:layout_height="1dp">
                 </View>
 
@@ -51,7 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="000000074"
+                    android:text=""
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -68,7 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="Jean Dupont"
+                    android:text=""
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -84,7 +84,7 @@
                     android:id="@+id/tv_value_emitter_office"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Agence centrale siège"
+                    android:text=""
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -102,13 +102,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Informations Bénéficiaire"
-                    android:textColor="@color/gray_dark"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="14sp" />
                 <View
                     android:layout_width="match_parent"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="8dp"
-                    android:background="@color/colorSendre2"
+                    android:background="@color/colorPrimary"
                     android:layout_height="1dp">
                 </View>
                 <TextView
@@ -123,7 +123,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="000000077"
+                    android:text=""
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -140,7 +140,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="Madjey MENSAH"
+                    android:text=""
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -156,7 +156,7 @@
                     android:id="@+id/tv_value_beneficiary_office"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Agence Dantokpa"
+                    android:text=""
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -168,7 +168,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginHorizontal="12dp"
-                android:background="@color/colorSendre2"
+                android:background="@color/colorPrimary"
                 android:layout_height="1dp">
             </View>
             <LinearLayout
@@ -189,7 +189,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:text="500.00 $"
+                    android:text=""
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -206,7 +206,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:text="01 août 2025"
+                    android:text=""
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -223,7 +223,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:text="Envoi à Monsieur X"
+                    android:text=""
                     android:textSize="18sp"
                     android:textStyle="bold" />
             </LinearLayout>

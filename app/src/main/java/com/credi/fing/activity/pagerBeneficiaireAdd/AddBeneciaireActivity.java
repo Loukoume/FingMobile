@@ -69,6 +69,7 @@ public class AddBeneciaireActivity extends AppCompatActivity {
     LinearLayout network;
     ProgressBar pb;
     View vide;
+    boolean update;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +85,13 @@ public class AddBeneciaireActivity extends AppCompatActivity {
         context=this;
         if(getIntent().hasExtra("object")){
             editeObject= (EditeObject) getIntent().getSerializableExtra("object");
+            Object object=editeObject.getObject();
+            Beneficiary bn= (Beneficiary) Ut.creatObject(object, Beneficiary.class);
+            if(bn!=null){
+                Object ids=Ut.getValue(object,"id");
+                update=ids!=null&&!ids.toString().isEmpty();
+                beneficiary=new AccountInfo().toAccountInfo(bn);
+            }
         }
         if(getIntent().hasExtra("beneficiary")){
             Beneficiary bn= (Beneficiary) getIntent().getSerializableExtra("beneficiary");
@@ -143,7 +151,16 @@ public class AddBeneciaireActivity extends AppCompatActivity {
             if(beneficiary.getType()!=null){
                 beneficiary.setType(null);
             }
-            saveBeneficiaire(beneficiary);
+            //Dialogue.neutreDialog(Ut.getValue(beneficiary,"id")+"",update+"",context).show();
+            if(update){
+                Object object=editeObject.getObject();
+                Object ids=Ut.getValue(object,"id");
+                if(ids!=null){
+                   modifierBeneficiaire(Long.parseLong(ids.toString()),beneficiary);
+                }
+            }else {
+                saveBeneficiaire(beneficiary);
+            }
         }
     }
 
@@ -440,5 +457,67 @@ public class AddBeneciaireActivity extends AppCompatActivity {
                 });
             }
         }
+
     }
+
+    void modifierBeneficiaire(long beneficiaryId, AccountInfo updateRequest) {
+        String tenant = "default";
+        showPb();
+
+        String username = Inscription.user.getUsername();
+        String password = Inscription.body.getPassword();
+
+        RetrofitClient retrofitClient = RetrofitClient.getInstance(username, password);
+        ApiService api = retrofitClient.getFineractApi();
+
+        Call<Object> call = api.updateBeneficiary(beneficiaryId, tenant, updateRequest);
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                hidePb();
+                if (response.isSuccessful() && response.body() != null) {
+                    // mise à jour OK
+                    S.toast(context,"Enregistré avec succès");
+                    MonFichier.ecrire(context,"refresh","ok");
+                    finish();
+                } else {
+                    // erreur côté serveur
+                    String errorContent;
+                    try {
+                        errorContent = response.errorBody() != null && !response.errorBody().string().isEmpty()
+                                ? response.errorBody().string()
+                                : "Corps de l’erreur vide";
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        errorContent = "Impossible de lire le contenu de l’erreur";
+                    }
+                    System.out.println("Erreur updateBeneficiaire: " + errorContent);
+                    erreurTechnique(errorContent, "Erreur de modification",1);
+                    // Si besoin, réinsérez l’ancien objet dans la liste
+                    // recyclierViewCp.inserer(indexCourant, objetCourant);
+                    // list = recyclierViewCp.getObjects();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                hidePb();
+                if (context instanceof Activity) {
+                    Activity activity = (Activity) context;
+                    final String[] message = {t.getMessage()};
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        activity.runOnUiThread(() -> {
+                            if (message[0] != null && (message[0].contains("java.net") || message[0].contains("javax.net"))) {
+                                message[0] = "Vérifier votre connexion internet et réessayer";
+                                showNetWork("Problème de connexion", message[0], R.drawable.wifi_100,1);
+                            } else {
+                                showNetWork("Erreur technique", message[0] != null ? message[0] : "Erreur inconnue", R.drawable.erreur_tech_100,1);
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
+
 }

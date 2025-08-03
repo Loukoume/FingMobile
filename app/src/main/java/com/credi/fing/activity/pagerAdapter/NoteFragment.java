@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.credi.fing.R;
 import com.credi.fing.activity.TransferActivity;
 import com.credi.fing.entity.TransferPayload;
+import com.credi.fing.pojo.AccountOption;
+import com.credi.fing.publics.service.impl.Ut;
 
 import java.util.Locale;
 
@@ -136,28 +138,28 @@ public class NoteFragment extends Fragment {
 
             if (payload != null) {
                 // 3. Remplissage des blocs Émetteur / Bénéficiaire
-                if (payload.getEmitter() != null) {
-                    Emitter em = payload.getEmitter();
-                    if (em.getAccountNumber() != null)
-                        tvValueEmitterAccount.setText(em.getAccountNumber());
-                    if (em.getName() != null)
-                        tvValueEmitterName.setText(em.getName());
+                if (transferActivity.getFromAccountOption() != null) {
+                    AccountOption em = transferActivity.getFromAccountOption();
+                    if (em.getAccountNo() != null)
+                        tvValueEmitterAccount.setText(em.getAccountNo());
+                    if (em.getClientName() != null)
+                        tvValueEmitterName.setText(em.getClientName());
                     if (em.getOfficeName() != null)
                         tvValueEmitterOffice.setText(em.getOfficeName());
                 }
-                if (payload.getBeneficiary() != null) {
-                    Beneficiary ben = payload.getBeneficiary();
-                    if (ben.getAccountNumber() != null)
-                        tvValueBeneficiaryAccount.setText(ben.getAccountNumber());
-                    if (ben.getName() != null)
-                        tvValueBeneficiaryName.setText(ben.getName());
+                if (transferActivity.getToAccountOption() != null) {
+                    AccountOption ben = transferActivity.getToAccountOption();
+                    if (ben.getAccountNo() != null)
+                        tvValueBeneficiaryAccount.setText(ben.getAccountNo());
+                    if (ben.getClientName() != null)
+                        tvValueBeneficiaryName.setText(ben.getClientName());
                     if (ben.getOfficeName() != null)
                         tvValueBeneficiaryOffice.setText(ben.getOfficeName());
                 }
                 // 4. Remplissage des détails additionnels
                 // Montant
                 tvValueAmount.setText(
-                       ""
+                        Ut.formatMontant(payload.getTransferAmount())
                 );
                 // Date
                 if (payload.getTransferDate() != null)

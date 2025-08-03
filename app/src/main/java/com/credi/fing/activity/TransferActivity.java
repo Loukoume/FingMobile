@@ -65,6 +65,8 @@ public class TransferActivity extends AppCompatActivity {
             "Émetteur", "Bénéficiaire", "Montant","Détail du transfert"
     );
     public TransferPayload transferPayload;
+    public AccountOption fromAccountOption;
+    public AccountOption toAccountOption;
     Context context;
     ProgressBar pb;
     View vide;
@@ -279,7 +281,21 @@ public class TransferActivity extends AppCompatActivity {
         this.transferPayload = transferPayload;
     }
 
+    public AccountOption getFromAccountOption() {
+        return fromAccountOption;
+    }
 
+    public void setFromAccountOption(AccountOption fromAccountOption) {
+        this.fromAccountOption = fromAccountOption;
+    }
+
+    public AccountOption getToAccountOption() {
+        return toAccountOption;
+    }
+
+    public void setToAccountOption(AccountOption toAccountOption) {
+        this.toAccountOption = toAccountOption;
+    }
 
     public void updateTransferPayload(String key, Object value){
         if(transferPayload==null){

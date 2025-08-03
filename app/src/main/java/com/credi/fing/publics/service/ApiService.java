@@ -220,4 +220,12 @@ public interface ApiService {
             @Query("tenantIdentifier") String tenantIdentifier
     );
 
+
+    @PUT("self/beneficiaries/tpt/{beneficiaryId}")
+    Call<Beneficiary> updateBeneficiary(
+            @Path("beneficiaryId") long beneficiaryId,
+            @Query("tenantIdentifier") String tenantIdentifier,
+            @Body Object body
+    );
+
 }

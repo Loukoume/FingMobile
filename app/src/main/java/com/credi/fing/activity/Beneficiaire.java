@@ -701,4 +701,69 @@ public class Beneficiaire extends AppCompatActivity {
             }
         }
     }
+
+
+    void updateBeneficiaire(long beneficiaryId, Beneficiary updateRequest) {
+        String tenant = "default";
+        showPb();
+
+        String username = Inscription.user.getUsername();
+        String password = Inscription.body.getPassword();
+
+        RetrofitClient retrofitClient = RetrofitClient.getInstance(username, password);
+        ApiService api = retrofitClient.getFineractApi();
+
+        Call<Beneficiary> call = api.updateBeneficiary(beneficiaryId, tenant, updateRequest);
+        call.enqueue(new Callback<Beneficiary>() {
+            @Override
+            public void onResponse(Call<Beneficiary> call, Response<Beneficiary> response) {
+                hidePb();
+                if (response.isSuccessful() && response.body() != null) {
+                    // mise à jour OK
+                    Beneficiary updated = response.body();
+                    Toast.makeText(context,
+                            "Bénéficiaire modifié : " + updated.getName(),
+                            Toast.LENGTH_SHORT).show();
+                    // Mettez à jour votre liste ou UI si nécessaire
+                    // recyclierViewCp.update(indexCourant, updated);
+                } else {
+                    // erreur côté serveur
+                    String errorContent;
+                    try {
+                        errorContent = response.errorBody() != null && !response.errorBody().string().isEmpty()
+                                ? response.errorBody().string()
+                                : "Corps de l’erreur vide";
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        errorContent = "Impossible de lire le contenu de l’erreur";
+                    }
+                    System.out.println("Erreur updateBeneficiaire: " + errorContent);
+                    erreurTechnique(errorContent, "Erreur de modification");
+                    // Si besoin, réinsérez l’ancien objet dans la liste
+                    // recyclierViewCp.inserer(indexCourant, objetCourant);
+                    // list = recyclierViewCp.getObjects();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Beneficiary> call, Throwable t) {
+                hidePb();
+                if (context instanceof Activity) {
+                    Activity activity = (Activity) context;
+                    final String[] message = {t.getMessage()};
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        activity.runOnUiThread(() -> {
+                            if (message[0] != null && (message[0].contains("java.net") || message[0].contains("javax.net"))) {
+                                message[0] = "Vérifier votre connexion internet et réessayer";
+                                showNetWork("Problème de connexion", message[0], R.drawable.wifi_100);
+                            } else {
+                                showNetWork("Erreur technique", message[0] != null ? message[0] : "Erreur inconnue", R.drawable.erreur_tech_100);
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
+
 }

@@ -82,13 +82,11 @@ public class AmountFragment extends Fragment {
         textInputEditText=view.findViewById(R.id.textInputEditText);
         id=view.findViewById(R.id.id);
 
-
         TransferActivity activity= (TransferActivity) view.getContext();
 
         if(activity!=null&&activity.transferPayload!=null){
 
         }
-
 
         textInputEditText.addTextChangedListener(new TextWatcher() {
             @Override

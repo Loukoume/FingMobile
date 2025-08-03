@@ -1,57 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="12dp"
     android:background="@color/white">
 
-    <!-- Contenu principal -->
-    <LinearLayout
-        android:id="@+id/contentLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_toEndOf="@id/statusStripe">
+    <!-- Icône du type (retrait/dépôt/intérêts) -->
+    <ImageView
+        android:id="@+id/iconType"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/black" />
 
-        <TextView
-            android:id="@+id/dateText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="24/07/2025"
-            android:textStyle="bold"
-            android:textSize="14sp"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/labelText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="RETRAIT GAB ONUS"
-            android:textSize="14sp"
-            android:textColor="@color/black" />
-    </LinearLayout>
-
-    <!-- Bande verticale colorée, hauteur égale au contenu -->
+    <!-- Stripe de couleur -->
     <View
         android:id="@+id/statusStripe"
-        android:layout_width="6dp"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/contentLayout"
-        android:layout_alignBottom="@id/contentLayout"
-        android:layout_alignParentStart="true"
-        android:layout_marginEnd="8dp"
-        android:background="@color/red" /> <!-- vert pour dépôt, rouge pour retrait -->
+        android:layout_width="4dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/iconType"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="10dp"/>
 
-    <!-- Montant aligné en haut à droite -->
+    <!-- Date et heure -->
+    <TextView
+        android:id="@+id/dateText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="24/07/2025 14:30"
+        android:textSize="12sp"
+        android:textColor="@color/gray_dark"
+        app:layout_constraintStart_toEndOf="@id/iconType"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/montantText"
+        android:layout_marginStart="8dp"/>
+
+    <!-- Montant -->
     <TextView
         android:id="@+id/montantText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:text="-20 000 XOF"
+        android:text="– 20 000 XOF"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="@color/red" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-</RelativeLayout>
+    <!-- Libellé principal / description -->
+    <TextView
+        android:id="@+id/labelText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Envoi à Mensah"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="@id/dateText"
+        app:layout_constraintTop_toBottomOf="@id/dateText"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Solde courant -->
+    <TextView
+        android:id="@+id/balanceText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="12sp"
+        android:textColor="@color/gray_dark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/labelText"
+        android:layout_marginTop="4dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

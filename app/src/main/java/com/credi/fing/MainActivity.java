@@ -35,11 +35,15 @@ import com.credi.fing.activity.ViewQrCodeReadActivity;
 import com.credi.fing.binder.LoanAccountBinder;
 import com.credi.fing.entity.Client;
 import com.credi.fing.entity.LoanType;
+import com.credi.fing.entity.SavingsAccount;
 import com.credi.fing.pojo.LoanPojo;
 import com.credi.fing.pojo.LoanProductResponse;
+import com.credi.fing.pojo.err.ApiErrorResponse;
+import com.credi.fing.pojo.err.ErrorUtils;
 import com.credi.fing.publics.AddActivity;
 import com.credi.fing.publics.carousel.CarouselAdapter;
 import com.credi.fing.publics.carousel.CarouselItem;
+import com.credi.fing.publics.composant.NetworkCp;
 import com.credi.fing.publics.composant.RecyclierViewCp;
 import com.credi.fing.publics.composant.SheetCp;
 import com.credi.fing.publics.drawer.NavigationDrawer;
@@ -61,6 +65,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -82,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
     ProgressBar pb;
     ImageView eye_pret,eye_epargne,mort,drawer;
     View vide;
-    LinearLayout lservice,sheet,drawer_lineair,gradien;
-    FloatingActionButton add;
+    LinearLayout lservice,sheet,drawer_lineair,gradien,network;
+    //FloatingActionButton add;
     Context context;
     TextView solde_pret,solde_epargne,symbole,name;
 
@@ -101,10 +106,10 @@ public class MainActivity extends AppCompatActivity {
         eye_pret=findViewById(R.id.eye_pret);
         lservice=findViewById(R.id.lservice);
         sheet=findViewById(R.id.sheet);
-        add=findViewById(R.id.add);
+       // add=findViewById(R.id.add);
         drawer=findViewById(R.id.drawer);
         drawer_lineair=findViewById(R.id.drawer_lineair);
-        vide=findViewById(R.id.vide);
+        vide=findViewById(R.id.vde);
         pb=findViewById(R.id.pb);
         gradien=findViewById(R.id.gradien);
         context=this;
@@ -112,21 +117,18 @@ public class MainActivity extends AppCompatActivity {
         mort=findViewById(R.id.mort);
         symbole=findViewById(R.id.symbole);
         name=findViewById(R.id.name);
+        network=findViewById(R.id.network);
         //carousel();
         //gradien.setBackground(gradien());
-        services();clickBotom();
+
         vide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                S.toast(context,"Veuillez patienter");
             }
         });
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
+        services();clickBotom();
         pret="";
         epargne="";
         closEyes();
@@ -167,11 +169,10 @@ public class MainActivity extends AppCompatActivity {
                     name.setText(cl.getDisplayName());
                 }
             }
-            if(!testPlayStor){
+           // if(!testPlayStor){
                 getClientAcount();
-                getClient();
-                getTemplate();
-            }
+
+           // }
         }else {
             finish();
         }
@@ -310,6 +311,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         lservice.addView(recyclierViewCp.view());
+
         recyclierViewCp.setOnClick((o,i)->{
             if(loanAccounts==null){
                 loanAccounts=new ArrayList<>();
@@ -324,8 +326,7 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                    // S.toast(context,"Module en cours de developpement");
                     //startActivity(new Intent(context, ViewQrCodeReadActivity.class));
-                    startActivity(new Intent(context, TransferActivity.class));
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    showTypeTransfert();
 
                     break;
                 case 1:
@@ -555,6 +556,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void getClient(){
+        showPb();
         // 1. Spécifiez vos identifiants Basic Auth
         String username = Inscription.user.getUsername();
         String password = Inscription.body.getPassword();
@@ -584,32 +586,52 @@ public class MainActivity extends AppCompatActivity {
                         symbole.setText(sy);
                         name.setText(client.getDisplayName());
                     }
+                    getTemplate();
                 } else {
                     // Erreur côté serveur ou JSON non parsable
-                    if (context instanceof Activity) {
-                        Activity activity = (Activity) context;
-                        if (!activity.isFinishing() && !activity.isDestroyed()) {
-                            activity.runOnUiThread(() -> {
-                                Dialogue.neutreDialog(response.message()+" "+response.errorBody(),"null",context).show();
-                            });
-                        }
+                    String errorContent;
+                    try {
+                        // Lit le corps de la réponse d’erreur en String
+                        errorContent = response.errorBody() != null
+                                ? response.errorBody().string()
+                                : "Corps de l’erreur vide";
+                    } catch (IOException e) {
+                        // En cas de problème de lecture
+                        e.printStackTrace();
+                        errorContent = "Impossible de lire le contenu de l’erreur";
                     }
 
+                    erreurTechnique(errorContent,"Erreur technique");
+
                 }
+                hidePb();
             }
 
             @Override
             public void onFailure(Call<Client> call, Throwable t) {
                 // Problème réseau ou exception
                 if (context instanceof Activity) {
+                    final String[] titre = {t.getMessage()};
                     Activity activity = (Activity) context;
                     if (!activity.isFinishing() && !activity.isDestroyed()) {
                         activity.runOnUiThread(() -> {
-                            Dialogue.neutreDialog(t.toString(),"",context).show();
+                            if(titre[0].contains("java.net")|| titre[0].contains("javax.net")
+                                    || titre[0].contains("failed")|| titre[0].contains("Unable to resolve host"))
+                            {
+                                titre[0] ="Vérifier votre connexion internet et réessayer";
+                                showNetWork("Problème de connexion",titre[0],
+                                        R.drawable.wifi_100);
+                            }else {
+                                showNetWork("Erreur technique",t.getMessage(),
+                                        R.drawable.erreur_tech_100);
+                            }
+
+                            Dialogue.neutreDialog(t.getMessage()+"","Echec",context).show();
                         });
                     }
-                }
 
+                }
+                hidePb();
             }
         });
     }
@@ -650,25 +672,38 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                      client = response.body();
                      MonFichier.ecrire(context,"client",client.js());
-                    //System.out.println(" client => "+client.js());
                     loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
                     savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
-                    setComptesValues();
-                } else {
-                     //client= (Client) Ut.fromJs(Json.json,Client.class);
-                    //loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
-                   // savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
-                   // setComptesValues();
-                    // Erreur côté serveur ou JSON non parsable
+                   // System.out.println(" clien_t => "+Ut.listJs(savingsAccounts));
+                    for (Object sav:savingsAccounts){
+                        SavingsAccount vac= (SavingsAccount) Ut.creatObject(sav, SavingsAccount.class);
 
-                    if (context instanceof Activity) {
-                        Activity activity = (Activity) context;
-                        if (!activity.isFinishing() && !activity.isDestroyed()) {
-                            activity.runOnUiThread(() -> {
-                                Dialogue.neutreDialog(response.message()+" "+response.code(),response.errorBody()+"",context).show();
-                            });
+                        int code = vac.checkSavingsAccountStatus();
+                        String msg;
+                        switch (code) {
+                            case 0:  msg = "Clôturé"; break;
+                            case -1: msg = "En attente d’approbation"; break;
+                            case 2:  msg = "Bloqué"; break;
+                            default: msg = "OK"; break;
                         }
+                        System.out.println("Compte " + vac.getAccountNo() + " : " + msg);
                     }
+                    setComptesValues();
+                    getClient();
+                } else {
+                    String errorContent;
+                    try {
+                        // Lit le corps de la réponse d’erreur en String
+                        errorContent = response.errorBody() != null
+                                ? response.errorBody().string()
+                                : "Corps de l’erreur vide";
+                    } catch (IOException e) {
+                        // En cas de problème de lecture
+                        e.printStackTrace();
+                        errorContent = "Impossible de lire le contenu de l’erreur";
+                    }
+
+                    erreurTechnique(errorContent,"Erreur technique");
 
                 }
                 hidePb();
@@ -679,12 +714,25 @@ public class MainActivity extends AppCompatActivity {
                 // Problème réseau ou exception
                 hidePb();
                 if (context instanceof Activity) {
+                    final String[] titre = {t.getMessage()};
                     Activity activity = (Activity) context;
                     if (!activity.isFinishing() && !activity.isDestroyed()) {
                         activity.runOnUiThread(() -> {
-                            Dialogue.neutreDialog(t.getMessage()+"","Echec",context).show();
+                            if(titre[0].contains("java.net")|| titre[0].contains("javax.net")
+                                    || titre[0].contains("failed")|| titre[0].contains("Unable to resolve host"))
+                            {
+                                titre[0] ="Vérifier votre connexion internet et réessayer";
+                                showNetWork("Problème de connexion",titre[0],
+                                        R.drawable.wifi_100);
+                            }else {
+                                showNetWork("Erreur technique",t.getMessage(),
+                                        R.drawable.erreur_tech_100);
+                            }
+
+                            //Dialogue.neutreDialog(t.getMessage()+"","Echec",context).show();
                         });
                     }
+
                 }
 
             }
@@ -734,19 +782,19 @@ public class MainActivity extends AppCompatActivity {
                    // setComptesValues();
 
                 } else {
-                    //client= (Client) Ut.fromJs(Json.json,Client.class);
-                    //loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
-                    // savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
-                    // setComptesValues();
-                    // Erreur côté serveur ou JSON non parsable
-                    if (context instanceof Activity) {
-                        Activity activity = (Activity) context;
-                        if (!activity.isFinishing() && !activity.isDestroyed()) {
-                            activity.runOnUiThread(() -> {
-                                Dialogue.neutreDialog(response.message()+" "+response.code(),response.errorBody()+"",context).show();
-                            });
-                        }
+                    String errorContent;
+                    try {
+                        // Lit le corps de la réponse d’erreur en String
+                        errorContent = response.errorBody() != null
+                                ? response.errorBody().string()
+                                : "Corps de l’erreur vide";
+                    } catch (IOException e) {
+                        // En cas de problème de lecture
+                        e.printStackTrace();
+                        errorContent = "Impossible de lire le contenu de l’erreur";
                     }
+
+                    erreurTechnique(errorContent,"Erreur technique");
 
                 }
                 hidePb();
@@ -756,11 +804,27 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<LoanProductResponse> call, Throwable t) {
                 // Problème réseau ou exception
                 hidePb();
-                /*client= (Client) Ut.fromJs(Json.json,Client.class);
-                Dialogue.neutreDialog(t+"","",context).show();
-                loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
-                savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
-                setComptesValues();*/
+                if (context instanceof Activity) {
+                    final String[] titre = {t.getMessage()};
+                    Activity activity = (Activity) context;
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        activity.runOnUiThread(() -> {
+                            if(titre[0].contains("java.net")|| titre[0].contains("javax.net")
+                                    || titre[0].contains("failed")|| titre[0].contains("Unable to resolve host"))
+                            {
+                                titre[0] ="Vérifier votre connexion internet et réessayer";
+                                showNetWork("Problème de connexion",titre[0],
+                                        R.drawable.wifi_100);
+                            }else {
+                                showNetWork("Erreur technique",t.getMessage(),
+                                        R.drawable.erreur_tech_100);
+                            }
+
+                            //Dialogue.neutreDialog(t.getMessage()+"","Echec",context).show();
+                        });
+                    }
+
+                }
             }
         });
     }
@@ -859,6 +923,67 @@ public class MainActivity extends AppCompatActivity {
         sheet.setAnimation(Anim.getAnimeBH(context));
     }
 
+    void showTypeTransfert(){
+        sheet.setVisibility(View.VISIBLE);
+        sheet.removeAllViews();
+        //  String[] typs={"Transfert entre mes comptes","Transfert vers un tiers"};
+        SheetCp sheetCp=new SheetCp(context)
+                .setTitle("Type de transfert".toUpperCase());
+        View vv=sheetCp.view();
+        LinearLayout content=vv.findViewById(R.id.content);
+        sheet.addView(vv);
+        View tm= Ut.getView(context,R.layout.row_jrs);
+        ImageView im1=tm.findViewById(R.id.icone);
+        ImageView close=vv.findViewById(R.id.close);
+        CheckBox checkbox=tm.findViewById(R.id.checkbox);
+        checkbox.setVisibility(View.GONE);
+        im1.setImageResource(R.drawable.ic_transfert_interne);
+        Ut.setImageTint(im1,R.color.colorPrimary,context);
+        TextView til=tm.findViewById(R.id.title);
+        til.setText("Transfert entre mes comptes");
+        til.setTextColor(Ut.getColor(context,R.color.colorPrimary));
+        content.addView(tm);
+
+        View fz= Ut.getView(context,R.layout.row_jrs);
+        ImageView im2=fz.findViewById(R.id.icone);
+        CheckBox ch=fz.findViewById(R.id.checkbox);
+        ch.setVisibility(View.GONE);
+        im2.setImageResource(R.drawable.ic_transfert_tiers);
+        Ut.setImageTint(im2,R.color.colorAccent,context);
+        TextView ti=fz.findViewById(R.id.title);
+        ti.setText("Transfert vers un tiers");
+        ti.setTextColor(Ut.getColor(context,R.color.colorAccent));
+        content.addView(fz);
+        vide.setVisibility(View.VISIBLE);
+        fz.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                close.performClick();
+                startActivity(new Intent(context, TransferActivity.class)
+                        .putExtra("type","tiers"));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            }
+        });
+        tm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                close.performClick();
+                startActivity(new Intent(context, TransferActivity.class)
+                        .putExtra("type","interne"));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            }
+        });
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sheet.setVisibility(View.GONE);
+                vide.setVisibility(View.GONE);
+                bottomNav.setSelectedItemId(R.id.navigation_home);
+            }
+        });
+        sheet.setAnimation(Anim.getAnimeBH(context));
+    }
+
     private void email() {
         try {
             Intent email = new Intent(Intent.ACTION_SEND);
@@ -923,5 +1048,41 @@ public class MainActivity extends AppCompatActivity {
 // 3. Définissez la forme (rectangle par défaut, c’est optionnel)
         gradientDrawable.setShape(GradientDrawable.RECTANGLE);
         return gradientDrawable;
+    }
+
+    private void showNetWork(String title,String msg,int icone){
+        NetworkCp networkCp=new NetworkCp(context,network,(o,k)->{
+            if(k==1){
+                getClientAcount();
+                network.setVisibility(View.GONE);
+            }else {
+                finish();
+            }
+        });
+        networkCp.parametrer(title,msg,icone);
+    }
+
+    private void erreurTechnique(String errorContent,String title){
+        // Affiche le message d’erreur et le code HTTP
+
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            if (!activity.isFinishing() && !activity.isDestroyed()) {
+                String finalErrorContent = errorContent;
+                if(finalErrorContent.contains("{")){
+                    try {
+                        ApiErrorResponse apiErrorResponse=
+                                new ApiErrorResponse().fromJs(finalErrorContent);
+                        finalErrorContent= ErrorUtils.buildErrorMessage(apiErrorResponse);
+                    }catch (Exception e){
+
+                    }
+                }
+                String finalErrorContent1 = finalErrorContent;
+                activity.runOnUiThread(() -> {
+                  showNetWork(title,finalErrorContent1,R.drawable.erreur_tech_100);
+                });
+            }
+        }
     }
 }

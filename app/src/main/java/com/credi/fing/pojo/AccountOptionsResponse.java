@@ -6,6 +6,7 @@ import java.util.List;
 public class AccountOptionsResponse implements Serializable {
     private List<AccountOption> fromAccountOptions;
     private List<AccountOption> toAccountOptions;
+    private List<AccountOption> toTiersAccountOptions;
 
     public List<AccountOption> getFromAccountOptions() {
         return fromAccountOptions;
@@ -21,6 +22,14 @@ public class AccountOptionsResponse implements Serializable {
 
     public void setToAccountOptions(List<AccountOption> toAccountOptions) {
         this.toAccountOptions = toAccountOptions;
+    }
+
+    public List<AccountOption> getToTiersAccountOptions() {
+        return toTiersAccountOptions;
+    }
+
+    public void setToTiersAccountOptions(List<AccountOption> toTiersAccountOptions) {
+        this.toTiersAccountOptions = toTiersAccountOptions;
     }
 }
 

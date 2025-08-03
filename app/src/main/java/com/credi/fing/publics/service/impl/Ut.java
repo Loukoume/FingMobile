@@ -1,5 +1,7 @@
 package com.credi.fing.publics.service.impl;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -56,6 +58,25 @@ import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 public class Ut {
+    /**
+     * Renvoie la vue correspondant à son nom de ressource.
+     *
+     * @param context La vue racine (ou une Activity) où chercher.
+     * @param viewIdString Le nom de l’ID (par exemple "id_view", sans le "@+id/").
+     * @return La View trouvée, ou null si non trouvée.
+     */
+    public static View findViewByString(Context context, String viewIdString) {
+        // 1. Récupérer l’identifiant numérique à partir du nom
+        @SuppressLint("DiscouragedApi") int resId = context.getResources()
+                .getIdentifier(viewIdString, "id", context.getPackageName());
+        if (resId == 0) {
+            // pas de telle ressource
+            return null;
+        }
+        // 2. Retourner la vue
+        return ((Activity)context).findViewById(resId);
+    }
+
     private static Object setObjectFieldValue(String at, Object objet, Object nouvelleValeur) {
         if(objet==null)return objet;
         String[] segments = at.split(":");
@@ -1003,6 +1024,14 @@ public class Ut {
         }
        return viewList;
     }
+    public static void sleep(int duration,OnClickView onClickView,View view){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(onClickView!=null)  onClickView.onClick(view,0);
+            }
+        }, duration);
+    }
     public static void plier(List<View> views,int delay) {
         for (int i = 0; i < views.size(); i++) {
             final View view = views.get(i);
@@ -1040,29 +1069,29 @@ public class Ut {
             }, delay * (size - 1 - i));
         }
     }
-    public static void swip(View view,int k, OnClickView onClickView) {
+    public static void swip(View view, OnClickView onClickView) {
         view.setOnTouchListener(new OnSwipeTouchListener(view.getContext()) {
             public void onSwipeTop() {
-                if (onClickView!=null&&k==0){
-                    onClickView.onClick(view,k);
+                if (onClickView!=null){
+                    onClickView.onClick(view,0);
                 }
             }
 
             public void onSwipeRight() {
-                if (onClickView!=null&&k==1){
-                    onClickView.onClick(view,k);
+                if (onClickView!=null){
+                    onClickView.onClick(view,1);
                 }
             }
 
             public void onSwipeLeft() {
-                if (onClickView!=null&&k==2){
-                    onClickView.onClick(view,k);
+                if (onClickView!=null){
+                    onClickView.onClick(view,2);
                 }
             }
 
             public void onSwipeBottom() {
-                if (onClickView!=null&&k==3){
-                    onClickView.onClick(view,k);
+                if (onClickView!=null){
+                    onClickView.onClick(view,3);
                 }
             }
 

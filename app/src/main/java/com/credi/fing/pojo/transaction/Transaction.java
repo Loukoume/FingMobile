@@ -6,55 +6,44 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Transaction implements Serializable {
-    @SerializedName("id")
-    private Long id;
-
-    @SerializedName("transactionType")
+    private int id;
     private TransactionType transactionType;
-
-    @SerializedName("accountId")
-    private Long accountId;
-
-    @SerializedName("accountNo")
+    private int accountId;
     private String accountNo;
-
-    /** format [year, month, day] **/
-    @SerializedName("date")
-    private List<Integer> date;
-
-    @SerializedName("currency")
+    private List<Integer> date;              // [YYYY, M, D]
     private Currency currency;
-
-    @SerializedName("amount")
-    private Double amount;
-
-    @SerializedName("runningBalance")
-    private Double runningBalance;
-
-    @SerializedName("reversed")
+    private double amount;
+    private double runningBalance;
     private boolean reversed;
-
-    @SerializedName("transfer")
-    private Transfer transfer;
-
-    /** format [year, month, day] **/
-    @SerializedName("submittedOnDate")
-    private List<Integer> submittedOnDate;
-
-    @SerializedName("interestedPostedAsOn")
+    private Transfer transfer;              // peut être null pour certains types
+    private List<Integer> submittedOnDate;   // [YYYY, M, D]
     private boolean interestedPostedAsOn;
-
-    @SerializedName("submittedByUsername")
     private String submittedByUsername;
 
     public Transaction() { }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+    public int getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setRunningBalance(double runningBalance) {
+        this.runningBalance = runningBalance;
     }
 
     public TransactionType getTransactionType() {
@@ -65,13 +54,6 @@ public class Transaction implements Serializable {
         this.transactionType = transactionType;
     }
 
-    public Long getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
-    }
 
     public String getAccountNo() {
         return accountNo;

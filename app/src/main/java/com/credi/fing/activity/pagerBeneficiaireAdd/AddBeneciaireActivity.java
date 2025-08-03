@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +30,7 @@ import com.credi.fing.pojo.AccountInfo;
 import com.credi.fing.pojo.LoanPojo;
 import com.credi.fing.pojo.err.ApiErrorResponse;
 import com.credi.fing.pojo.err.ErrorUtils;
+import com.credi.fing.publics.composant.NetworkCp;
 import com.credi.fing.publics.service.ApiService;
 import com.credi.fing.publics.service.RetrofitClient;
 import com.credi.fing.publics.service.impl.Attribut;
@@ -64,7 +66,9 @@ public class AddBeneciaireActivity extends AppCompatActivity {
     List<Attribut> attributs;
     public List<Object> typeAccounts;
     Context context;
+    LinearLayout network;
     ProgressBar pb;
+    View vide;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,12 +79,17 @@ public class AddBeneciaireActivity extends AppCompatActivity {
         btnNext   = findViewById(R.id.btn_next);
         tx=findViewById(R.id.tx_text);
         pb=findViewById(R.id.prb);
+        vide=findViewById(R.id.vide);
+        network=findViewById(R.id.network);
         context=this;
         if(getIntent().hasExtra("object")){
             editeObject= (EditeObject) getIntent().getSerializableExtra("object");
         }
         if(getIntent().hasExtra("beneficiary")){
-            beneficiary= (AccountInfo) getIntent().getSerializableExtra("beneficiary");
+            Beneficiary bn= (Beneficiary) getIntent().getSerializableExtra("beneficiary");
+            if(bn!=null){
+                beneficiary=new AccountInfo().toAccountInfo(bn);
+            }
         }
         adapter = new TransferPagerAdapter(this,1, TypeAdapter.BENEFICIAIRE);
         viewPager.setAdapter(adapter);
@@ -130,6 +139,7 @@ public class AddBeneciaireActivity extends AppCompatActivity {
     private void submitAllData() {
         if(ok()){
             beneficiary.setTransferLimit(4000);
+            beneficiary.setLocale("en_GB");
             if(beneficiary.getType()!=null){
                 beneficiary.setType(null);
             }
@@ -211,6 +221,9 @@ public class AddBeneciaireActivity extends AppCompatActivity {
     }
 
     void saveBeneficiaire(AccountInfo loanAccount){
+        if(loanAccount==null){
+            return;
+        }
         showPb();
         // 1. Spécifiez vos identifiants Basic Auth
         String username = Inscription.body.getUsername();
@@ -231,8 +244,9 @@ public class AddBeneciaireActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Dialogue.neutreDialog(Ut.js(response.body()),"Information",context).show();
-                   // finish();
+                    S.toast(context,"Enregistré avec succès");
+                    MonFichier.ecrire(context,"refresh","ok");
+                    finish();
                 } else {
                     String errorContent;
                     try {
@@ -245,27 +259,8 @@ public class AddBeneciaireActivity extends AppCompatActivity {
                         e.printStackTrace();
                         errorContent = "Impossible de lire le contenu de l’erreur";
                     }
-                    // Affiche le message d’erreur et le code HTTP
 
-                    if (context instanceof Activity) {
-                        Activity activity = (Activity) context;
-                        if (!activity.isFinishing() && !activity.isDestroyed()) {
-                            String finalErrorContent = errorContent;
-                            if(finalErrorContent.contains("{")){
-                                ApiErrorResponse apiErrorResponse=
-                                        new ApiErrorResponse().fromJs(finalErrorContent);
-                              finalErrorContent= ErrorUtils.buildErrorMessage(apiErrorResponse);
-                            }
-                            String finalErrorContent1 = finalErrorContent;
-                            activity.runOnUiThread(() -> {
-                                Dialogue.neutreDialog(
-                                        finalErrorContent1,
-                                        "Code d'erreur : " + response.code(),
-                                        context
-                                ).show();
-                            });
-                        }
-                    }
+                    erreurTechnique(errorContent,"Erreur technique",1);
 
                 }
                 hidePb();
@@ -275,17 +270,22 @@ public class AddBeneciaireActivity extends AppCompatActivity {
             public void onFailure(Call<Object> call, Throwable t) {
                 // Problème réseau ou exception
                 hidePb();
-                // 1) Loggez la stack trace dans Logcat
-                Log.e("LoanSave", "Erreur onFailure", t);
-
-                // 2) Récupérez la stack trace complète
-                String stackTrace = Log.getStackTraceString(t);
-
+                hidePb();
                 if (context instanceof Activity) {
                     Activity activity = (Activity) context;
+                    final String[] titre = {t.getMessage()};
                     if (!activity.isFinishing() && !activity.isDestroyed()) {
                         activity.runOnUiThread(() -> {
-                            Dialogue.neutreDialog(stackTrace, "Echec", context).show();
+                            if(titre[0].contains("java.net")|| titre[0].contains("javax.net")
+                                    || titre[0].contains("failed")|| titre[0].contains("Unable to resolve host"))
+                            {
+                                titre[0] ="Vérifier votre connexion internet et réessayer";
+                                showNetWork("Problème de connexion",titre[0],
+                                        R.drawable.wifi_100,1);
+                            }else {
+                                showNetWork("Erreur technique",t.getMessage(),
+                                        R.drawable.erreur_tech_100,1);
+                            }
                         });
                     }
                 }
@@ -296,11 +296,11 @@ public class AddBeneciaireActivity extends AppCompatActivity {
 
     void showPb(){
         pb.setVisibility(View.VISIBLE);
-       // vide.setVisibility(View.VISIBLE);
+        vide.setVisibility(View.VISIBLE);
     }
     void hidePb(){
         pb.setVisibility(View.GONE);
-        //vide.setVisibility(View.GONE);
+        vide.setVisibility(View.GONE);
     }
     
     private void putError(TextInputLayout nom,TextInputLayout id,TextInputLayout nomComp
@@ -329,6 +329,7 @@ public class AddBeneciaireActivity extends AppCompatActivity {
     }
 
     void getBeneficiareTemplate() {
+        showPb();
         // 1. Récupérez vos identifiants
         String username = Inscription.user.getUsername();
         String password = Inscription.body.getPassword();
@@ -355,21 +356,42 @@ public class AddBeneciaireActivity extends AppCompatActivity {
                     Log.d("Template", template.toString());
 
                 } else {
-                    // Erreur serveur ou JSON malformé
-                    String msg = response.message();
-                    String err = response.errorBody() != null ? response.errorBody().toString() : "";
-                    //Dialogue.neutreDialog(msg + " " + err, "null", context).show();
+                    String errorContent;
+                    try {
+                        // Lit le corps de la réponse d’erreur en String
+                        errorContent = response.errorBody() != null
+                                ? response.errorBody().string()
+                                : "Corps de l’erreur vide";
+                    } catch (IOException e) {
+                        // En cas de problème de lecture
+                        e.printStackTrace();
+                        errorContent = "Impossible de lire le contenu de l’erreur";
+                    }
+
+                    erreurTechnique(errorContent,"Erreur technique",0);
                 }
+                hidePb();
             }
 
             @Override
             public void onFailure(Call<BeneficiaryTemplate> call, Throwable t) {
                 // Problème réseau ou exception
+                hidePb();
                 if (context instanceof Activity) {
                     Activity activity = (Activity) context;
+                    final String[] titre = {t.getMessage()};
                     if (!activity.isFinishing() && !activity.isDestroyed()) {
                         activity.runOnUiThread(() -> {
-                            // Dialogue.neutreDialog(t.toString(), "", context).show();
+                            if(titre[0].contains("java.net")|| titre[0].contains("javax.net")
+                                    || titre[0].contains("failed")|| titre[0].contains("Unable to resolve host"))
+                            {
+                                titre[0] ="Vérifier votre connexion internet et réessayer";
+                                showNetWork("Problème de connexion",titre[0],
+                                        R.drawable.wifi_100,1);
+                            }else {
+                                showNetWork("Erreur technique",t.getMessage(),
+                                        R.drawable.erreur_tech_100,1);
+                            }
                         });
                     }
                 }
@@ -378,4 +400,45 @@ public class AddBeneciaireActivity extends AppCompatActivity {
         });
     }
 
+    private void showNetWork(String title,String msg,int icone,int p){
+        NetworkCp networkCp=new NetworkCp(context,network,(o, k)->{
+            if(k==1){
+                if(p==1){
+                    saveBeneficiaire(beneficiary);
+                }else {
+                    getBeneficiareTemplate();
+                }
+                network.setVisibility(View.GONE);
+            }else {
+                finish();
+            }
+        });
+        networkCp.parametrer(title,msg,icone);
+    }
+
+    private void erreurTechnique(String errorContent,String title,int p){
+        // Affiche le message d’erreur et le code HTTP
+        if(errorContent.contains("offline")||errorContent.contains("404")){
+            errorContent="Service indisponible pour le moment, veuillez réessayer ultérieurement.";
+        }
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            if (!activity.isFinishing() && !activity.isDestroyed()) {
+                String finalErrorContent = errorContent;
+                if(finalErrorContent.contains("{")){
+                    try {
+                        ApiErrorResponse apiErrorResponse=
+                                new ApiErrorResponse().fromJs(finalErrorContent);
+                        finalErrorContent= ErrorUtils.buildErrorMessage(apiErrorResponse);
+                    }catch (Exception e){
+
+                    }
+                }
+                String finalErrorContent1 = finalErrorContent;
+                activity.runOnUiThread(() -> {
+                    showNetWork(title,finalErrorContent1,R.drawable.erreur_tech_100,p);
+                });
+            }
+        }
+    }
 }

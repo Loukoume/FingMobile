@@ -753,7 +753,7 @@ public class Adapter extends RecyclerView.Adapter<AdapterViewHolder> {
     }
 
     public void setList(List<Object> list) {
-        this.liste = list; // ou le nom exact de la variable contenant les données
+        this.liste = list;
     }
 
 

@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +31,9 @@ import com.credi.fing.activity.PagerActivity;
 import com.credi.fing.activity.RemboursementActivity;
 import com.credi.fing.activity.ViewQrCodeActivity;
 import com.credi.fing.binder.OperationBinder;
+import com.credi.fing.entity.LoanAccount;
+import com.credi.fing.entity.SavingsAccount;
+import com.credi.fing.entity.Status;
 import com.credi.fing.publics.AddActivity;
 import com.credi.fing.publics.adapters.generiqueAdapter.AdapterViewHolder;
 import com.credi.fing.publics.composant.RecyclierViewCp;
@@ -99,6 +104,7 @@ public class PlaceholderFragment extends Fragment {
                 main.addView(recyclierViewCp.view());
                 break;
             case 2:
+
                 recyclierViewCp = new RecyclierViewCp(context, R.layout.row_epargne, PagerActivity.loanAccounts, (h, o, i) -> {
                     setText(o, h, 2);
                 }).setNumberItems(1).setBackground(R.color.colorSendre);
@@ -153,7 +159,26 @@ public class PlaceholderFragment extends Fragment {
         }
         //Object loanBalance_ob=Ut.getValue(v,"loanBalance");
         if (k == 2) {
+            CoordinatorLayout cordi=view.findViewById(R.id.coordi);
             //System.out.println(" values v = "+Ut.js(v));
+            LoanAccount loanAccount= (LoanAccount) Ut.creatObject(object, LoanAccount.class);
+            //System.out.println((loanAccount!=null?loanAccount.checkLoanAccountStatus():" -k")+" check "+loanAccount);
+            int ki=-5;
+            if(loanAccount!=null){
+                ki=loanAccount.checkLoanAccountStatus();
+                switch (ki){
+                    case -1:
+                        cordi.setBackgroundResource(R.drawable.shap_credi_attente);
+                        break;
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                }
+            }
+
             loanBalance_ob = Ut.getValue(object, "loanBalance");
             Object initial = Ut.getValue(object, "originalLoan");
             if (loanBalance_ob != null) {
@@ -162,20 +187,26 @@ public class PlaceholderFragment extends Fragment {
             if (initial != null) {
                 value.setText("CFA "+Ut.formatMontant(Double.parseDouble(initial.toString())));
             }
+            if(ki<=0){
+                title2.setText("Inactif");
+                if(ki==0){
+                   value.setText("Le compte est clôturé");
+                }else {
+                    value.setText("En attente d’approbation");
+                    value.setTextColor(Ut.getColor(context,R.color.colorPrimary));
+                }
+            }
+            int finalKi = ki;
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(context, RemboursementActivity.class)
-                            .putExtra("compte",Ut.js(object)));
+                    if(finalKi >0){
+                        startActivity(new Intent(context, RemboursementActivity.class)
+                                .putExtra("compte",Ut.js(object)));
+                    }
                 }
             });
-            /*Object last_ob = Ut.getValue(v, "timeline:expectedDisbursementDate");
-            if (last_ob != null) {
-                List<Object> obs = (List<Object>) last_ob;
-                String sdate = obs.get(2) + " " + S.en2(Integer.parseInt(obs.get(1).toString())) + " " + obs.get(0);
-                String dat = S.date(sdate, "dd MM yyyy", "dd MMM yyyy");
-                date.setText(dat);
-            }*/
+
         } else if (loanBalance_ob != null && currency_ob != null) {
             mort.setVisibility(GONE);
             Object symb = Ut.getValue(currency_ob, "displaySymbol");
@@ -186,6 +217,8 @@ public class PlaceholderFragment extends Fragment {
             String displsb = displ == null ? "" : displ.toString();
             secondre2.setText(displsb);
 
+            System.out.println(" compte_js "+Ut.js(object));
+
             Object last_ob = Ut.getValue(object, "lastActiveTransactionDate");
             if (last_ob != null) {
                 List<Object> obs = (List<Object>) last_ob;
@@ -193,7 +226,7 @@ public class PlaceholderFragment extends Fragment {
                 String dat = S.date(sdate, "dd MM yyyy", "dd MMM yyyy");
                 date.setText(dat);
             }
-            Object type = Ut.getValue(object, "depositType");
+            /*Object type = Ut.getValue(object, "depositType");
             if (type != null) {
                 Object vl = Ut.getValue(type, "value");
                 if (vl != null) {
@@ -205,7 +238,7 @@ public class PlaceholderFragment extends Fragment {
                         value.setTextColor(Ut.getColor(context, R.color.rouge));
                     }
                 }
-            }
+            }*/
             plus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -317,45 +350,60 @@ public class PlaceholderFragment extends Fragment {
 
     }
 
-    private int dpToPx(int dp) {
-        Resources r = getActivity().getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-    }
-
-    public static class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-
-        private int spanCount;
-        private int spacing;
-        private boolean includeEdge;
-
-        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-            this.spanCount = spanCount;
-            this.spacing = spacing;
-            this.includeEdge = includeEdge;
+    public int checkLoanAccountStatus(LoanAccount loanAccount) {
+        if (loanAccount == null || loanAccount.getStatus() == null) {
+            throw new IllegalArgumentException("loanAccount et son status ne doivent pas être null");
         }
 
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view); // item position
-            int column = position % spanCount; // item column
+        Status status = loanAccount.getStatus();
 
-            if (includeEdge) {
-                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
-
-                if (position < spanCount) { // top edge
-                    outRect.top = spacing;
-                }
-                outRect.bottom = spacing; // item bottom
-            } else {
-                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-                if (position >= spanCount) {
-                    outRect.top = spacing; // item top
-                }
-            }
+        // 0 si le compte est clôturé (plus actif)
+        if (!status.getActive()) {
+            return 0;
         }
+
+        // -1 si le compte n’est pas encore utilisable
+        // (en attente d’approbation ou en attente de décaissement)
+        if (status.getPendingApproval() || status.getWaitingForDisbursal()) {
+            return -1;
+        }
+
+        // 2 si le compte est en défaut de paiement (en retard)
+        if (loanAccount.getInArrears()) {
+            return 2;
+        }
+
+        // Sinon, tout est OK
+        return 1;
     }
+
+    public int checkSavingsAccountStatus(SavingsAccount savingsAccount) {
+        if (savingsAccount == null || savingsAccount.getStatus() == null) {
+            throw new IllegalArgumentException("savingsAccount et son status ne doivent pas être null");
+        }
+
+        Status status = savingsAccount.getStatus();
+
+        // 0 si le compte est clôturé ou inactif
+       /* if (!status.getActive() || status.getClosed() || status.isInactive()) {
+            return 0;
+        }
+
+        // -1 si le compte n’est pas encore utilisable
+        // (en attente d’approbation)
+        if (status.getPendingApproval() || status.isWaitingForActivation()) {
+            return -1;
+        }
+
+        // 2 si le compte est bloqué (en “hold” ou locked)
+        if (status.isLocked() || savingsAccount.isOnHold()) {
+            return 2;
+        }*/
+
+        // Sinon, tout est OK
+        return 1;
+    }
+
 
     @Override
     public void onDestroyView() {

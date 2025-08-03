@@ -20,6 +20,9 @@ import com.credi.fing.R;
 import com.credi.fing.TransactionsActivity;
 import com.credi.fing.entity.Client;
 import com.credi.fing.main.SectionsPagerAdapter;
+import com.credi.fing.pojo.err.ApiErrorResponse;
+import com.credi.fing.pojo.err.ErrorUtils;
+import com.credi.fing.publics.composant.NetworkCp;
 import com.credi.fing.publics.composant.SheetCp;
 import com.credi.fing.publics.service.impl.Anim;
 import com.credi.fing.publics.service.impl.ListActivity;
@@ -48,6 +51,8 @@ public class PagerActivity extends AppCompatActivity {
     ViewPager viewPager;
     TabLayout tabs;
     ImageView mort;
+    LinearLayout network;
+    View vide;
     SectionsPagerAdapter sectionsPagerAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +70,14 @@ public class PagerActivity extends AppCompatActivity {
         client= (Client) getIntent().getSerializableExtra("client");
         loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
         savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
+        network=findViewById(R.id.network);
+        vide=findViewById(R.id.vde);
+        vide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
         sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
@@ -201,5 +213,41 @@ public class PagerActivity extends AppCompatActivity {
             }
         });
         sheet.setAnimation(Anim.getAnimeBH(context));
+    }
+
+    private void showNetWork(String title,String msg,int icone){
+        NetworkCp networkCp=new NetworkCp(context,network,(o, k)->{
+            if(k==1){
+              //  saveLoan(loan);
+                network.setVisibility(View.GONE);
+            }else {
+                finish();
+            }
+        });
+        networkCp.parametrer(title,msg,icone);
+    }
+
+    private void erreurTechnique(String errorContent,String title){
+        // Affiche le message d’erreur et le code HTTP
+
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            if (!activity.isFinishing() && !activity.isDestroyed()) {
+                String finalErrorContent = errorContent;
+                if(finalErrorContent.contains("{")){
+                    try {
+                        ApiErrorResponse apiErrorResponse=
+                                new ApiErrorResponse().fromJs(finalErrorContent);
+                        finalErrorContent= ErrorUtils.buildErrorMessage(apiErrorResponse);
+                    }catch (Exception e){
+
+                    }
+                }
+                String finalErrorContent1 = finalErrorContent;
+                activity.runOnUiThread(() -> {
+                    showNetWork(title,finalErrorContent1,R.drawable.erreur_tech_100);
+                });
+            }
+        }
     }
 }

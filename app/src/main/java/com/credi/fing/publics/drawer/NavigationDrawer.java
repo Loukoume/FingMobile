@@ -71,9 +71,9 @@ public class NavigationDrawer {
         vide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                drawer.setVisibility(View.GONE);
+               /* drawer.setVisibility(View.GONE);
                 vide.setVisibility(View.GONE);
-                sheet.setVisibility(View.GONE);
+                sheet.setVisibility(View.GONE);*/
             }
         });
         drawer.setOnClickListener(new View.OnClickListener() {

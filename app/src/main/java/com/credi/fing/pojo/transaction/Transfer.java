@@ -6,32 +6,25 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Transfer implements Serializable {
-    @SerializedName("id")
-    private Long id;
-
-    @SerializedName("reversed")
+    private int id;
     private boolean reversed;
-
-    @SerializedName("currency")
     private Currency currency;
-
-    @SerializedName("transferAmount")
-    private Double transferAmount;
-
-    @SerializedName("transferDate")
-    private List<Integer> transferDate;
-
-    @SerializedName("transferDescription")
+    private double transferAmount;
+    private List<Integer> transferDate;    // [YYYY, M, D]
     private String transferDescription;
 
     public Transfer() { }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+    public void setTransferAmount(double transferAmount) {
+        this.transferAmount = transferAmount;
     }
 
     public boolean isReversed() {

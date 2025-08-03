@@ -11,6 +11,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:paddingHorizontal="8dp"
+        android:id="@+id/coordi"
         android:background="@drawable/shap_credit"
         android:layout_height="wrap_content">
         <LinearLayout

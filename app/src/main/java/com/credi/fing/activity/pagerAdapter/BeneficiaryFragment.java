@@ -98,7 +98,7 @@ public class BeneficiaryFragment extends Fragment {
         id=view.findViewById(R.id.id);
         nom=view.findViewById(R.id.nom);
         attribut=new Attribut();
-        attribut.setSubLabel("accountNo");
+        attribut.setSubLabel("accountType:value");
          activity= (TransferActivity) view.getContext();
 
         if(activity!=null&&activity.getTransferPayload()!=null){
@@ -106,7 +106,7 @@ public class BeneficiaryFragment extends Fragment {
             id.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showSelectDialogue(activity.getToAccountOptions(), null, "accountType:value", "accountType:value", id, attribut);
+                    showSelectDialogue(activity.getToAccountOptions(), null, "accountNo", "acountNo", id, attribut);
 
                    /* String m[]=activity.getToAccountOptions().stream().filter(o->o!=null).map(o->
                             o.getAccountNo()
@@ -161,7 +161,7 @@ public class BeneficiaryFragment extends Fragment {
                     activity.setCurrentePage(2);
 
                 })
-                .setTitle("Sélectionnez un compte".toUpperCase())
+                .setTitle("Compte bénéficiaire".toUpperCase())
                 .setMultiselect(false)
                 .setSelect(selection);
 

@@ -92,8 +92,9 @@ public class DataTableActivity extends AppCompatActivity {
     private  void preparerDatas() {
         dataTable=new DataTable(context).setObjects(data).setHead(attribut.getHeads());
         View view=dataTable.view();
-        if(lmain.getChildCount()==2)lmain.removeViewAt(1);
-           lmain.addView(view);
+        if(lmain.getChildCount()==2)
+            lmain.removeViewAt(1);
+        lmain.addView(view);
     }
 
     private void back(){

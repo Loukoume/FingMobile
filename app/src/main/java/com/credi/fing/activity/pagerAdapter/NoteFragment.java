@@ -1,14 +1,22 @@
 package com.credi.fing.activity.pagerAdapter;
 
+import android.app.Activity;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.credi.fing.R;
+import com.credi.fing.activity.TransferActivity;
+import com.credi.fing.entity.TransferPayload;
+
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,5 +70,103 @@ public class NoteFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_note, container, false);
+    }
+
+    // Déclaration des vues
+    private TextView tvLabelEmitter;
+    private TextView tvLabelEmitterCompte;
+    private TextView tvValueEmitterAccount;
+    private TextView tvLabelEmitterName;
+    private TextView tvValueEmitterName;
+    private TextView tvLabelEmitterOffice;
+    private TextView tvValueEmitterOffice;
+
+    private TextView tvLabelBeneficiary;
+    private TextView tvLabelBeneficiaryCompte;
+    private TextView tvValueBeneficiaryAccount;
+    private TextView tvLabelBeneficiaryName;
+    private TextView tvValueBeneficiaryName;
+    private TextView tvLabelBeneficiaryOffice;
+    private TextView tvValueBeneficiaryOffice;
+
+    private TextView tvLabelAmount;
+    private TextView tvValueAmount;
+    private TextView tvLabelDate;
+    private TextView tvValueDate;
+    private TextView tvLabelDescription;
+    private TextView tvValueDescription;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Bloc Émetteur
+        tvLabelEmitter             = view.findViewById(R.id.tv_label_emitter);
+        tvLabelEmitterCompte       = view.findViewById(R.id.tv_label_emitter_compte);
+        tvValueEmitterAccount      = view.findViewById(R.id.tv_value_emitter_account);
+        tvLabelEmitterName         = view.findViewById(R.id.tv_label_emitter_name);
+        tvValueEmitterName         = view.findViewById(R.id.tv_value_emitter_name);
+        tvLabelEmitterOffice       = view.findViewById(R.id.tv_label_emitter_office);
+        tvValueEmitterOffice       = view.findViewById(R.id.tv_value_emitter_office);
+
+        // Bloc Bénéficiaire
+        tvLabelBeneficiary             = view.findViewById(R.id.tv_label_beneficiary);
+        tvLabelBeneficiaryCompte       = view.findViewById(R.id.tv_label_beneficiary_compte);
+        tvValueBeneficiaryAccount      = view.findViewById(R.id.tv_value_beneficiary_account);
+        tvLabelBeneficiaryName         = view.findViewById(R.id.tv_label_beneficiary_name);
+        tvValueBeneficiaryName         = view.findViewById(R.id.tv_value_beneficiary_name);
+        tvLabelBeneficiaryOffice       = view.findViewById(R.id.tv_label_beneficiary_office);
+        tvValueBeneficiaryOffice       = view.findViewById(R.id.tv_value_beneficiary_office);
+
+        // Détails additionnels
+        tvLabelAmount       = view.findViewById(R.id.tv_label_amount);
+        tvValueAmount       = view.findViewById(R.id.tv_value_amount);
+        tvLabelDate         = view.findViewById(R.id.tv_label_date);
+        tvValueDate         = view.findViewById(R.id.tv_value_date);
+        tvLabelDescription  = view.findViewById(R.id.tv_label_description);
+        tvValueDescription  = view.findViewById(R.id.tv_value_description);
+
+
+
+        Activity activity = getActivity();
+        if (activity instanceof TransferActivity) {
+            TransferActivity transferActivity = (TransferActivity) activity;
+            TransferPayload payload = transferActivity.getTransferPayload();
+            // ← Assure-toi que TransferActivity expose un getter :
+            // public TransferPayload getTransferPayload() { return this.transferPayload; }
+
+            if (payload != null) {
+                // 3. Remplissage des blocs Émetteur / Bénéficiaire
+                if (payload.getEmitter() != null) {
+                    Emitter em = payload.getEmitter();
+                    if (em.getAccountNumber() != null)
+                        tvValueEmitterAccount.setText(em.getAccountNumber());
+                    if (em.getName() != null)
+                        tvValueEmitterName.setText(em.getName());
+                    if (em.getOfficeName() != null)
+                        tvValueEmitterOffice.setText(em.getOfficeName());
+                }
+                if (payload.getBeneficiary() != null) {
+                    Beneficiary ben = payload.getBeneficiary();
+                    if (ben.getAccountNumber() != null)
+                        tvValueBeneficiaryAccount.setText(ben.getAccountNumber());
+                    if (ben.getName() != null)
+                        tvValueBeneficiaryName.setText(ben.getName());
+                    if (ben.getOfficeName() != null)
+                        tvValueBeneficiaryOffice.setText(ben.getOfficeName());
+                }
+                // 4. Remplissage des détails additionnels
+                // Montant
+                tvValueAmount.setText(
+                       ""
+                );
+                // Date
+                if (payload.getTransferDate() != null)
+                    tvValueDate.setText(payload.getTransferDate());
+                // Description
+                if (payload.getTransferDescription() != null)
+                    tvValueDescription.setText(payload.getTransferDescription());
+            }
+        }
+
     }
 }

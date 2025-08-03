@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
@@ -35,6 +36,7 @@ import com.credi.fing.pojo.err.ApiErrorResponse;
 import com.credi.fing.pojo.err.ErrorUtils;
 import com.credi.fing.publics.AddActivity;
 import com.credi.fing.publics.adapters.generiqueAdapter.AdapterViewHolder;
+import com.credi.fing.publics.composant.NetworkCp;
 import com.credi.fing.publics.composant.RecyclierViewCp;
 import com.credi.fing.publics.composant.SheetCp;
 import com.credi.fing.publics.service.ApiService;
@@ -46,6 +48,7 @@ import com.credi.fing.publics.service.impl.Ut;
 import com.credi.fing.publics.utils.Dialogue;
 import com.credi.fing.publics.utils.MonFichier;
 import com.credi.fing.publics.utils.S;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
@@ -61,7 +64,7 @@ import retrofit2.Response;
 
 public class Beneficiaire extends AppCompatActivity {
 
-    LinearLayout nodata,waite,sheet;
+    LinearLayout nodata,waite,sheet,network;
     TextView text,tx;
     RecyclerView recyclerView;
     Context context;
@@ -83,6 +86,7 @@ public class Beneficiaire extends AppCompatActivity {
         recyclerView=findViewById(R.id.liste);
         waite=findViewById(R.id.waite);
         vide=findViewById(R.id.vid);
+        network=findViewById(R.id.network);
         context=this;
         sheet=findViewById(R.id.sheet);
         sheet.setVisibility(View.GONE);
@@ -94,13 +98,12 @@ public class Beneficiaire extends AppCompatActivity {
         text.setText(extra+" s'affichent ici");
         editTextSearch=findViewById(R.id.search_bar);
         clear=findViewById(R.id.clear_search_icon);
-        /*back.setOnClickListener(new View.OnClickListener() {
+        vide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
             }
-        });*/
+        });
 
         String js=MonFichier.lire(context,"beneficiaries");
 
@@ -179,6 +182,15 @@ public class Beneficiaire extends AppCompatActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        String js=MonFichier.lire(context,"refresh");
+        if(!js.isEmpty()&&js.equals("ok")){
+            getBeneficiare();
+        }
+    }
+
     private String getInitiale(String nom){
         String s="";
        if(!(nom.replace(" ","")).isEmpty()){
@@ -236,7 +248,16 @@ public class Beneficiaire extends AppCompatActivity {
 
      public static List<Object> listBeneficiaires;
     // 3. La méthode getBeneficiare() dans votre Activity/Repository
+    void showPb(){
+        waite.setVisibility(View.VISIBLE);
+        vide.setVisibility(View.VISIBLE);
+    }
+    void hidePb(){
+        waite.setVisibility(View.GONE);
+        vide.setVisibility(View.GONE);
+    }
     void getBeneficiare() {
+        showPb();
         // 1. Spécifiez vos identifiants Basic Auth
         String username = Inscription.user.getUsername();
         String password = Inscription.body.getPassword();
@@ -258,24 +279,9 @@ public class Beneficiaire extends AppCompatActivity {
                                    Response<List<Beneficiary>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Beneficiary> list = response.body();
-                    if(list.isEmpty()){
-                        list=new ArrayList<>();
-                        list.add(Beneficiary.generate());
-                        list.add(Beneficiary.generate());
-                        list.add(Beneficiary.generate());
-                    }
-                    if(list.isEmpty()){
-                        nodata.setVisibility(VISIBLE);
-                    }else {
-                        nodata.setVisibility(GONE);
-                        displayBeneficiaires(list);
-                        // Par ex., écrire la liste en JSON dans un fichier ou l'afficher
-                       // String js = Ut.listJs(list);
-                       // MonFichier.ecrire(context, "beneficiaries", js);
-                        //Log.d("Beneficiaires", json);
-                    }
+                    nodata.setVisibility(GONE);
+                    displayBeneficiaires(list);
                 } else {
-                    // Erreur côté serveur ou parsing
                     String errorContent;
                     try {
                         // Lit le corps de la réponse d’erreur en String
@@ -288,52 +294,41 @@ public class Beneficiaire extends AppCompatActivity {
                         errorContent = "Impossible de lire le contenu de l’erreur";
                     }
 
-                    if (context instanceof Activity) {
-                        Activity activity = (Activity) context;
-                        if (!activity.isFinishing() && !activity.isDestroyed()) {
-
-                            String finalErrorContent = errorContent;
-                            if(finalErrorContent.contains("{")){
-                                ApiErrorResponse apiErrorResponse=
-                                        new ApiErrorResponse().fromJs(finalErrorContent);
-                                finalErrorContent= ErrorUtils.buildErrorMessage(apiErrorResponse);
-                            }
-                            String finalErrorContent1 = finalErrorContent;
-
-                            activity.runOnUiThread(() -> {
-                                Dialogue.neutreDialog(
-                                        finalErrorContent1,
-                                        "Erreur technique",
-                                        context
-                                ).show();
-                            });
-                        }
-                    }
-
+                    erreurTechnique(errorContent,"Erreur technique");
                 }
-                waite.setVisibility(GONE);
+                hidePb();
             }
 
             @Override
             public void onFailure(Call<List<Beneficiary>> call, Throwable t) {
-                // Problème réseau ou exception
-                ;
-                waite.setVisibility(GONE);
-                nodata.setVisibility(GONE);
-                List<Beneficiary> list = new ArrayList<>();
-                if(list.isEmpty()){
-                    list=new ArrayList<>();
-                    list.add(Beneficiary.generate("Epargne","ALIMA Kalim"));
-                    list.add(Beneficiary.generate("Individuel","KOUFILGA Wassiou"));
-                    list.add(Beneficiary.generate());
+                hidePb();
+                if (context instanceof Activity) {
+                    Activity activity = (Activity) context;
+                    final String[] titre = {t.getMessage()};
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        activity.runOnUiThread(() -> {
+                            if(titre[0].contains("java.net")|| titre[0].contains("javax.net"))
+                            {
+                                titre[0] ="Vérifier votre connexion internet et réessayer";
+                                showNetWork("Problème de connexion",titre[0],
+                                        R.drawable.wifi_100);
+                            }else {
+                                showNetWork("Erreur technique",t.getMessage(),
+                                        R.drawable.erreur_tech_100);
+                            }
+                        });
+                    }
                 }
-                displayBeneficiaires(list);
             }
         });
     }
     RecyclierViewCp recyclierViewCp;
+
+    Object objetCourant;
+    int indexCourant;
+    List<Object> list;
     void displayBeneficiaires(Object object){
-        List<Object> list= (List<Object>) object;
+        list= (List<Object>) object;
         //list.addAll(list);list.addAll(list);
         listBeneficiaires=list;
          recyclierViewCp = new RecyclierViewCp(context, R.layout.card_image_horiz_row, list, (h, o, i) -> {
@@ -341,13 +336,33 @@ public class Beneficiaire extends AppCompatActivity {
         }).setNumberItems(1).setBackground(R.color.white);
 
         recyclierViewCp.setOnSwipeRight((p,v)->{
-
+         if(p<list.size()&&p>=0){
+             objetCourant=list.get(p);
+             indexCourant=p;
+             recyclierViewCp.remove(p);
+             list=recyclierViewCp.getObjects();
+             showContact(0);
+         }
+        });
+        recyclierViewCp.setOnSwipeLeft((int p, View v) ->{
+            if(p<list.size()&&p>=0){
+                objetCourant=list.get(p);
+                indexCourant=p;
+                recyclierViewCp.remove(p);
+                list=recyclierViewCp.getObjects();
+                showContact(0);
+            }
+        });
+        recyclierViewCp.setOnLongClick(( o,i) ->{
+            objetCourant=o;
+            indexCourant=i;
+            recyclierViewCp.remove(i);
+             showContact(1);
         });
 
         recyclierViewCp.view(recyclerView);
         recyclierViewCp.fixedScrol(fab);
     }
-
 
     // 2. Implémentez la méthode dans votre Activity/Repository
     void getBeneficiareTemplate() {
@@ -377,27 +392,111 @@ public class Beneficiaire extends AppCompatActivity {
                     Log.d("Template", template.toString());
 
                 } else {
-                    // Erreur serveur ou JSON malformé
-                    String msg = response.message();
-                    String err = response.errorBody() != null ? response.errorBody().toString() : "";
-                    //Dialogue.neutreDialog(msg + " " + err, "null", context).show();
+                    String errorContent;
+                    try {
+                        // Lit le corps de la réponse d’erreur en String
+                        errorContent = response.errorBody() != null
+                                ? response.errorBody().string()
+                                : "Corps de l’erreur vide";
+                    } catch (IOException e) {
+                        // En cas de problème de lecture
+                        e.printStackTrace();
+                        errorContent = "Impossible de lire le contenu de l’erreur";
+                    }
+
+                    erreurTechnique(errorContent,"Erreur technique");
                 }
             }
 
             @Override
             public void onFailure(Call<BeneficiaryTemplate> call, Throwable t) {
+                hidePb();
                 // Problème réseau ou exception
                 if (context instanceof Activity) {
                     Activity activity = (Activity) context;
+                    final String[] titre = {t.getMessage()};
                     if (!activity.isFinishing() && !activity.isDestroyed()) {
                         activity.runOnUiThread(() -> {
-                           // Dialogue.neutreDialog(t.toString(), "", context).show();
+                            if(titre[0].contains("java.net")|| titre[0].contains("javax.net"))
+                            {
+                                titre[0] ="Vérifier votre connexion internet et réessayer";
+                                showNetWork("Problème de connexion",titre[0],
+                                        R.drawable.wifi_100);
+                            }else {
+                                showNetWork("Erreur technique",t.getMessage(),
+                                        R.drawable.erreur_tech_100);
+                            }
                         });
                     }
                 }
 
             }
         });
+    }
+
+    void deleteBeneFiciaire(long beneficiaryId){
+        String tenant = "default";
+        showPb();
+        String username = Inscription.user.getUsername();
+        String password = Inscription.body.getPassword();
+
+        RetrofitClient retrofitClient = RetrofitClient.getInstance(username, password);
+        ApiService api = retrofitClient.getFineractApi();
+
+        Call<Void> call = api.deleteBeneficiary(beneficiaryId, tenant);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    // suppression OK (204 No Content attendu)
+                    Toast.makeText(context,
+                            "Bénéficiaire supprimé avec succès",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    String errorContent;
+                    try {
+                        // Lit le corps de la réponse d’erreur en String
+                        errorContent = response.errorBody() != null&&!response.errorBody().toString().isEmpty()
+                                ? response.errorBody().string()
+                                : "Corps de l’erreur vide";
+                    } catch (IOException e) {
+                        S.toast(context,"echec writing");
+                        // En cas de problème de lecture
+                        e.printStackTrace();
+                        errorContent = "Impossible de lire le contenu de l’erreur";
+                    }
+                    System.out.println(" aff: "+errorContent);
+                   // Dialogue.neutreDialog(errorContent,"",context).show();
+                    erreurTechnique(errorContent,"Erreur de suppression");
+                    recyclierViewCp.inserer(indexCourant,objetCourant);
+                    list=recyclierViewCp.getObjects();
+                }
+                hidePb();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                hidePb();
+                if (context instanceof Activity) {
+                    Activity activity = (Activity) context;
+                    final String[] titre = {t.getMessage()};
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        activity.runOnUiThread(() -> {
+                            if(titre[0].contains("java.net")|| titre[0].contains("javax.net"))
+                            {
+                                titre[0] ="Vérifier votre connexion internet et réessayer";
+                                showNetWork("Problème de connexion",titre[0],
+                                        R.drawable.wifi_100);
+                            }else {
+                                showNetWork("Erreur technique",t.getMessage(),
+                                        R.drawable.erreur_tech_100);
+                            }
+                        });
+                    }
+                }
+            }
+        });
+
     }
 
     void showContact(){
@@ -464,6 +563,71 @@ public class Beneficiaire extends AppCompatActivity {
         sheet.setAnimation(Anim.getAnimeBH(context));
     }
 
+    void showContact(int action){
+        sheet.setVisibility(View.VISIBLE);
+        sheet.removeAllViews();
+        SheetCp sheetCp=new SheetCp(context)
+                .setTitle(action==0?"Suppression".toUpperCase():"Editez ou supprimez".toUpperCase());
+        View vv=sheetCp.view();
+        LinearLayout content=vv.findViewById(R.id.content);
+        ImageView close=vv.findViewById(R.id.close);
+        sheet.addView(vv);
+        View tm= Ut.getView(context,R.layout.delete_layout);
+        MaterialButton button=tm.findViewById(R.id.outlinedButton);
+        button.setText("Supprimer");
+        MaterialButton supprimer=tm.findViewById(R.id.ajouter);
+        MaterialButton editer=tm.findViewById(R.id.saves);
+         supprimer.setText("Supprimer");
+        LinearLayout ledt=tm.findViewById(R.id.l_edite);
+        LinearLayout ldelete=tm.findViewById(R.id.l_delete);
+
+        if(action==0){
+            ldelete.setVisibility(VISIBLE);
+            ledt.setVisibility(GONE);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sheet.setVisibility(View.GONE);
+                    vide.setVisibility(View.GONE);
+                    Object ids=Ut.getValue(objetCourant,"id");
+                    if(ids!=null){
+                        deleteBeneFiciaire(Long.parseLong(ids.toString()));
+                    }
+                }
+            });
+        }else {
+            ldelete.setVisibility(GONE);
+            ledt.setVisibility(VISIBLE);
+            supprimer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sheet.setVisibility(View.GONE);
+                    vide.setVisibility(View.GONE);
+                }
+            });
+            editer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sheet.setVisibility(View.GONE);
+                    vide.setVisibility(View.GONE);
+                }
+            });
+        }
+
+
+        content.addView(tm);
+        vide.setVisibility(View.VISIBLE);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sheet.setVisibility(View.GONE);
+                vide.setVisibility(View.GONE);
+                recyclierViewCp.inserer(indexCourant,objetCourant);
+            }
+        });
+        sheet.setAnimation(Anim.getAnimeBH(context));
+    }
+
     private  List<Object> filter(String searche) {
       List<Object> list=new ArrayList<>();
       if(listBeneficiaires!=null){
@@ -500,5 +664,41 @@ public class Beneficiaire extends AppCompatActivity {
 
     }
 
+    private void showNetWork(String title,String msg,int icone){
+        NetworkCp networkCp=new NetworkCp(context,network,(o, k)->{
+            if(k==1){
+                getBeneficiare();
+                network.setVisibility(View.GONE);
+            }else {
+                finish();
+            }
+        });
+        networkCp.parametrer(title,msg,icone);
+    }
 
+    private void erreurTechnique(String errorContent,String title){
+        // Affiche le message d’erreur et le code HTTP
+        if(errorContent.contains("offline")||errorContent.contains("404")){
+            errorContent="Service indisponible pour le moment, veuillez réessayer ultérieurement.";
+        }
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            if (!activity.isFinishing() && !activity.isDestroyed()) {
+                String finalErrorContent = errorContent;
+                if(finalErrorContent.contains("{")){
+                    try {
+                        ApiErrorResponse apiErrorResponse=
+                                new ApiErrorResponse().fromJs(finalErrorContent);
+                        finalErrorContent= ErrorUtils.buildErrorMessage(apiErrorResponse);
+                    }catch (Exception e){
+
+                    }
+                }
+                String finalErrorContent1 = finalErrorContent;
+                activity.runOnUiThread(() -> {
+                    showNetWork(title,finalErrorContent1,R.drawable.server_100);
+                });
+            }
+        }
+    }
 }

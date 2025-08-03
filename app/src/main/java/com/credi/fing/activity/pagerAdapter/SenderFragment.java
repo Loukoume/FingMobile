@@ -97,7 +97,7 @@ public class SenderFragment extends Fragment {
         id=view.findViewById(R.id.id);
         nom=view.findViewById(R.id.et_full_name);
         attribut=new Attribut();
-        attribut.setSubLabel("accountNo");
+        attribut.setSubLabel("accountType:value");
          activity= (TransferActivity) view.getContext();
 
         if(activity!=null&&activity.getTransferPayload()!=null){
@@ -123,7 +123,7 @@ public class SenderFragment extends Fragment {
                             return false;
                         }
                     });*/
-                    showSelectDialogue(activity.getFromAccountOptions(), null, "accountType:value", "accountType:value", id, attribut);
+                    showSelectDialogue(activity.getFromAccountOptions(), null, "accountNo", "accountNo", id, attribut);
 
 
                 }
@@ -162,7 +162,7 @@ public class SenderFragment extends Fragment {
                     activity.setCurrentePage(1);
 
                 })
-                .setTitle("Sélectionnez un compte".toUpperCase())
+                .setTitle("Compte émetteur".toUpperCase())
                 .setMultiselect(false)
                 .setSelect(selection);
 

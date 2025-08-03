@@ -211,7 +211,6 @@ public class BeneficiaireFragment extends Fragment {
     public void onResume() {
         super.onResume();
         AddBeneciaireActivity activity= (AddBeneciaireActivity) getActivity();
-
         if(activity!=null&&activity.beneficiary!=null){
             if(activity.beneficiary.getOfficeName()!=null)
                 id.setText(activity.beneficiary.getOfficeName());

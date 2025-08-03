@@ -162,6 +162,51 @@ public class SavingsAccount implements Serializable {
     public SavingsAccount fromJs(String js) {
         return new Gson().fromJson(js, SavingsAccount.class);
     }
+
+    /**
+     * Vérifie le statut d’un compte d’épargne et retourne :
+     *   0 si le compte est clôturé,
+     *  -1 si le compte n’est pas encore utilisable (en attente d’approbation),
+     *   2 si le compte est bloqué,
+     *   1 si tout est OK.
+     */
+    public int checkSavingsAccountStatus() {
+        SavingsAccount savingsAccount=this;
+        if (savingsAccount == null || savingsAccount.getStatus() == null || savingsAccount.getSubStatus() == null) {
+            throw new IllegalArgumentException("Le SavingsAccount, son status et son subStatus ne doivent pas être null");
+        }
+
+        Status status     = savingsAccount.getStatus();
+        SubStatus subStatus = savingsAccount.getSubStatus();
+
+        // 0 : compte clôturé ou inactif
+        if (!status.getActive()
+                || status.getClosed()
+                || status.getPrematureClosed()
+                || status.getRejected()
+        ) {
+            return 0;
+        }
+
+        // -1 : compte pas encore utilisable (en attente d’approbation)
+        if (status.getSubmittedAndPendingApproval()) {
+            return -1;
+        }
+
+        // 2 : compte bloqué
+        if (subStatus.getBlock()
+                || subStatus.getBlockDebit()
+                || subStatus.getBlockCredit()
+                || status.getTransferOnHold()
+                || status.getTransferInProgress()
+        ) {
+            return 2;
+        }
+
+        // 1 : tout est OK
+        return 1;
+    }
+
 }
 
 

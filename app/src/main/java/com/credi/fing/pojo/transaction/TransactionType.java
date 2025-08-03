@@ -5,61 +5,24 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class TransactionType implements Serializable {
-    @SerializedName("id")
-    private Integer id;
-
-    @SerializedName("code")
+    private int id;
     private String code;
-
-    @SerializedName("value")
     private String value;
-
-    @SerializedName("deposit")
     private boolean deposit;
-
-    @SerializedName("dividendPayout")
     private boolean dividendPayout;
-
-    @SerializedName("withdrawal")
     private boolean withdrawal;
-
-    @SerializedName("interestPosting")
     private boolean interestPosting;
-
-    @SerializedName("feeDeduction")
     private boolean feeDeduction;
-
-    @SerializedName("initiateTransfer")
     private boolean initiateTransfer;
-
-    @SerializedName("approveTransfer")
     private boolean approveTransfer;
-
-    @SerializedName("withdrawTransfer")
     private boolean withdrawTransfer;
-
-    @SerializedName("rejectTransfer")
     private boolean rejectTransfer;
-
-    @SerializedName("overdraftInterest")
     private boolean overdraftInterest;
-
-    @SerializedName("writtenoff")
     private boolean writtenoff;
-
-    @SerializedName("overdraftFee")
     private boolean overdraftFee;
-
-    @SerializedName("withholdTax")
     private boolean withholdTax;
-
-    @SerializedName("escheat")
     private boolean escheat;
-
-    @SerializedName("amountHold")
     private boolean amountHold;
-
-    @SerializedName("amountRelease")
     private boolean amountRelease;
 
     public TransactionType() { }

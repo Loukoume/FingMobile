@@ -2,6 +2,7 @@ package com.credi.fing.pojo;
 
 import com.credi.fing.entity.AccountType;
 import com.credi.fing.entity.AccountTypeOption;
+import com.credi.fing.entity.Beneficiary;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
@@ -80,6 +81,19 @@ public class AccountInfo implements Serializable {
 
     public String js(){
         return new Gson().toJson(this);
+    }
+
+    public AccountInfo toAccountInfo(Beneficiary beneficiary){
+        AccountInfo accountInfo=new AccountInfo();
+        accountInfo.setLocale("en_GB");
+        accountInfo.setAccountType(beneficiary.getAccountType().getId());
+        accountInfo.setAccountNumber(beneficiary.getAccountNumber());
+        accountInfo.setName(beneficiary.getClientName());
+        accountInfo.setType(beneficiary.getAccountType());
+        accountInfo.setOfficeName(beneficiary.getOfficeName());
+        if(beneficiary.getTransferLimit()!=null)
+          accountInfo.setTransferLimit(beneficiary.getTransferLimit().intValue());
+        return accountInfo;
     }
 }
 

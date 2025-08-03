@@ -24,6 +24,7 @@ import com.credi.fing.pojo.AccountOption;
 import com.credi.fing.pojo.AccountOptionsResponse;
 import com.credi.fing.pojo.err.ApiErrorResponse;
 import com.credi.fing.pojo.err.ErrorUtils;
+import com.credi.fing.publics.composant.NetworkCp;
 import com.credi.fing.publics.service.ApiService;
 import com.credi.fing.publics.service.RetrofitClient;
 import com.credi.fing.publics.service.impl.Attribut;
@@ -57,12 +58,14 @@ public class RemboursementActivity extends AppCompatActivity {
     TransferPayload transferPayload;
     ProgressBar pb;
     Attribut attribut;
+    LinearLayout network;
     View vide;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_remboursement);
         context = this;
+        network=findViewById(R.id.network);
         String js = getIntent().getStringExtra("compte");
         if (js != null && !js.isEmpty()) {
             loanAccount = (LoanAccount) Ut.fromJs(js, LoanAccount.class);
@@ -241,10 +244,10 @@ public class RemboursementActivity extends AppCompatActivity {
 
         // 3. Préparez l'appel
         String tenant = "default";              // tenantIdentifier
-        String tpt="tpt";
+        String tpt="tpt?";
 
-        Call<Object> call = api.saveTransFert("Basic " + okhttp3.Credentials.basic(username, Inscription.body.getPassword()),
-                loanAccount,tpt, tenant);
+        Call<Object> call = api.saveTransFertInterne("Basic " + okhttp3.Credentials.basic(username, Inscription.body.getPassword()),
+                loanAccount, tenant);
 
         // 4. Exécutez l'appel de manière asynchrone
         call.enqueue(new Callback<Object>() {
@@ -265,31 +268,8 @@ public class RemboursementActivity extends AppCompatActivity {
                         e.printStackTrace();
                         errorContent = "Impossible de lire le contenu de l’erreur";
                     }
-                    // Affiche le message d’erreur et le code HTTP
 
-                    if (context instanceof Activity) {
-                        Activity activity = (Activity) context;
-                        if (!activity.isFinishing() && !activity.isDestroyed()) {
-                            String finalErrorContent = errorContent;
-                            if(finalErrorContent.contains("{")){
-                                try {
-                                    ApiErrorResponse apiErrorResponse=
-                                            new ApiErrorResponse().fromJs(finalErrorContent);
-                                    finalErrorContent= ErrorUtils.buildErrorMessage(apiErrorResponse);
-                                }catch (Exception e){
-
-                                }
-                            }
-                            String finalErrorContent1 = finalErrorContent;
-                            activity.runOnUiThread(() -> {
-                                Dialogue.neutreDialog(
-                                        finalErrorContent1,
-                                        "Code d'erreur : " + response.code(),
-                                        context
-                                ).show();
-                            });
-                        }
-                    }
+                    erreurTechnique(errorContent,"Erreur technique",1);
 
                 }
                 hidePb();
@@ -299,17 +279,21 @@ public class RemboursementActivity extends AppCompatActivity {
             public void onFailure(Call<Object> call, Throwable t) {
                 // Problème réseau ou exception
                 hidePb();
-                // 1) Loggez la stack trace dans Logcat
-                Log.e("LoanSave", "Erreur onFailure", t);
-
-                // 2) Récupérez la stack trace complète
-                String stackTrace = Log.getStackTraceString(t);
-
                 if (context instanceof Activity) {
                     Activity activity = (Activity) context;
+                    final String[] titre = {t.getMessage()};
                     if (!activity.isFinishing() && !activity.isDestroyed()) {
                         activity.runOnUiThread(() -> {
-                            Dialogue.neutreDialog(stackTrace, "Echec", context).show();
+                            if(titre[0].contains("java.net")|| titre[0].contains("javax.net")
+                                    || titre[0].contains("failed")|| titre[0].contains("Unable to resolve host"))
+                            {
+                                titre[0] ="Vérifier votre connexion internet et réessayer";
+                                showNetWork("Problème de connexion",titre[0],
+                                        R.drawable.wifi_100,1);
+                            }else {
+                                showNetWork("Erreur technique",t.getMessage(),
+                                        R.drawable.erreur_tech_100,1);
+                            }
                         });
                     }
                 }
@@ -345,8 +329,8 @@ public class RemboursementActivity extends AppCompatActivity {
         String clientId = "individual";                     // ID du client (ici 8)
         String tenant = "default";              // tenantIdentifier
 
-        Call<AccountOptionsResponse> call = api.getTemplateTransfert("Basic " + okhttp3.Credentials.basic(username, Inscription.body.getPassword()),
-                clientId, tenant);
+        Call<AccountOptionsResponse> call = api.getTemplateTransfertInterne("Basic " + okhttp3.Credentials.basic(username, Inscription.body.getPassword()),
+                tenant);
 
         // 4. Exécutez l'appel de manière asynchrone
         call.enqueue(new Callback<AccountOptionsResponse>() {
@@ -355,7 +339,10 @@ public class RemboursementActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     accountOptionsResponse = response.body();
                     toAccountOptions=accountOptionsResponse.getToAccountOptions();
-                    fromAccountOptions=accountOptionsResponse.getFromAccountOptions();
+                    fromAccountOptions=accountOptionsResponse.getFromAccountOptions().stream().filter(
+                            a-> Objects.equals(a.getAccountType().getValue(),"Savings Account")
+                                    ||a.getAccountType().getIdServeur()==2
+                    ).collect(Collectors.toList());;
 
                     toAccountOption=toAccountOptions.stream().filter(
                             t-> Objects.equals(t.getAccountNo(),loanAccount.getAccountNo())
@@ -372,25 +359,20 @@ public class RemboursementActivity extends AppCompatActivity {
                     }
 
                     System.out.println("==cotoAccountOptionsmpte=== "+toAccountOptions.stream().map(t->t.getAccountNo()).collect(Collectors.toList()));
-
-                    /*activity.updateTransferPayload("fromOfficeId",accountOption.getOfficeId());
-                    activity.updateTransferPayload("fromClientId",accountOption.getClientId());
-                    activity.updateTransferPayload("fromAccountType",accountOption.getAccountType().getIdServeur());
-                    activity.updateTransferPayload("fromAccountId",accountOption.getAccountId());*/
-                } else {
-                    //client= (Client) Ut.fromJs(Json.json,Client.class);
-                    //loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
-                    // savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
-                    // setComptesValues();
-                    // Erreur côté serveur ou JSON non parsable
-                    if (context instanceof Activity) {
-                        Activity activity = (Activity) context;
-                        if (!activity.isFinishing() && !activity.isDestroyed()) {
-                            activity.runOnUiThread(() -> {
-                                Dialogue.neutreDialog(response.message()+" "+response.code(),response.errorBody()+"",context).show();
-                            });
-                        }
+                 } else {
+                    String errorContent;
+                    try {
+                        // Lit le corps de la réponse d’erreur en String
+                        errorContent = response.errorBody() != null
+                                ? response.errorBody().string()
+                                : "Corps de l’erreur vide";
+                    } catch (IOException e) {
+                        // En cas de problème de lecture
+                        e.printStackTrace();
+                        errorContent = "Impossible de lire le contenu de l’erreur";
                     }
+
+                    erreurTechnique(errorContent,"Erreur technique",0);
 
                 }
                 hidePb();
@@ -400,8 +382,67 @@ public class RemboursementActivity extends AppCompatActivity {
             public void onFailure(Call<AccountOptionsResponse> call, Throwable t) {
                 // Problème réseau ou exception
                 hidePb();
-
+                if (context instanceof Activity) {
+                    Activity activity = (Activity) context;
+                    final String[] titre = {t.getMessage()};
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        activity.runOnUiThread(() -> {
+                            if(titre[0].contains("java.net")|| titre[0].contains("javax.net")
+                                    || titre[0].contains("failed")|| titre[0].contains("Unable to resolve host"))
+                            {
+                                titre[0] ="Vérifier votre connexion internet et réessayer";
+                                showNetWork("Problème de connexion",titre[0],
+                                        R.drawable.wifi_100,0);
+                            }else {
+                                showNetWork("Erreur technique",t.getMessage(),
+                                        R.drawable.erreur_tech_100,0);
+                            }
+                        });
+                    }
+                }
             }
         });
+    }
+
+    private void showNetWork(String title,String msg,int icone,int p){
+        NetworkCp networkCp=new NetworkCp(context,network,(o, k)->{
+            if(k==1){
+              if(p==1){
+                  saveTransfert(transferPayload);
+              }else {
+                  getTemplate();
+              }
+                network.setVisibility(View.GONE);
+            }else {
+                finish();
+            }
+        });
+        networkCp.parametrer(title,msg,icone);
+    }
+
+    private void erreurTechnique(String errorContent,String title,int p){
+        // Affiche le message d’erreur et le code HTTP
+        if(errorContent.contains("offline")||errorContent.contains("404")){
+            errorContent="Service indisponible pour le moment, veuillez réessayer ultérieurement.";
+        }
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            if (!activity.isFinishing() && !activity.isDestroyed()) {
+                String finalErrorContent = errorContent;
+                if(finalErrorContent.contains("{")){
+                    try {
+                        ApiErrorResponse apiErrorResponse=
+                                new ApiErrorResponse().fromJs(finalErrorContent);
+                        finalErrorContent= ErrorUtils.buildErrorMessage(apiErrorResponse);
+                    }catch (Exception e){
+
+                    }
+                }
+                String finalErrorContent1 = finalErrorContent;
+                activity.runOnUiThread(() -> {
+                    showNetWork(title,finalErrorContent1,R.drawable.erreur_tech_100,p);
+                });
+            }
+        }
     }
 }

@@ -376,6 +376,40 @@ public class LoanAccount implements Serializable {
     public LoanAccount fromJs(String js) {
         return new Gson().fromJson(js, LoanAccount.class);
     }
+
+
+
+    public int checkLoanAccountStatus() {
+        LoanAccount loanAccount=this;
+        if (loanAccount == null || loanAccount.getStatus() == null) {
+            throw new IllegalArgumentException("loanAccount et son status ne doivent pas être null");
+        }
+
+        Status status = loanAccount.getStatus();
+
+        // 0 si le compte est clôturé (plus actif)
+        if (!status.getActive()) {
+            if (status.getPendingApproval() || status.getWaitingForDisbursal()) {
+                return -1;
+            }
+            return 0;
+        }
+
+        // -1 si le compte n’est pas encore utilisable
+        // (en attente d’approbation ou en attente de décaissement)
+        if (status.getPendingApproval() || status.getWaitingForDisbursal()) {
+            return -1;
+        }
+
+        // 2 si le compte est en défaut de paiement (en retard)
+        if (loanAccount.getInArrears()) {
+            return 2;
+        }
+
+        // Sinon, tout est OK
+        return 1;
+    }
+
 }
 
 

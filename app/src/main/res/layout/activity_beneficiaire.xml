@@ -132,4 +132,12 @@
         android:layout_height="30dp">
 
     </ImageView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:id="@+id/network"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+        <include layout="@layout/network_layout"/>
+    </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

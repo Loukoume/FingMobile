@@ -185,5 +185,23 @@
         android:layout_height="wrap_content">
 
     </ProgressBar>
+
+    <View
+        android:layout_width="match_parent"
+        android:background="@color/black"
+        android:id="@+id/vde"
+        android:alpha="0.6"
+        android:visibility="gone"
+        android:layout_height="match_parent">
+
+    </View>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:id="@+id/network"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+        <include layout="@layout/network_layout"/>
+    </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -16,11 +17,15 @@ import com.credi.fing.MainActivity;
 import com.credi.fing.R;
 import com.credi.fing.entity.Client;
 import com.credi.fing.pojo.LoanPojo;
+import com.credi.fing.pojo.err.ApiErrorResponse;
+import com.credi.fing.pojo.err.ErrorUtils;
 import com.credi.fing.publics.AddActivity;
+import com.credi.fing.publics.composant.NetworkCp;
 import com.credi.fing.publics.service.ApiService;
 import com.credi.fing.publics.service.RetrofitClient;
 import com.credi.fing.publics.service.impl.Ut;
 import com.credi.fing.publics.utils.Dialogue;
+import com.credi.fing.publics.utils.S;
 
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -45,12 +50,17 @@ public class RevuPretActivity extends AppCompatActivity {
     private TextView tvExpectedPaymentDateValue;
     private Button buttonEditLoan;
     private Button buttonConfirmLoan;
+    LinearLayout network;
+    View vide;
+    LoanPojo loan;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.revu_pret);
         TextView tx=findViewById(R.id.tx_text);
         context=this;
+        network=findViewById(R.id.network);
+        vide=findViewById(R.id.vde);
         tx.setText("Revue Demande de prêt".toUpperCase());
         tvAccountNumberValue         = findViewById(R.id.tvAccountNumberValue);
         tvLoanProductValue           = findViewById(R.id.tvLoanProductValue);
@@ -68,7 +78,7 @@ public class RevuPretActivity extends AppCompatActivity {
         if(getIntent().hasExtra("editeObject")){
             String js=getIntent().getStringExtra("editeObject");
             if(js!=null){
-                LoanPojo loan= (LoanPojo) Ut.fromJs(js,LoanPojo.class);
+                 loan= (LoanPojo) Ut.fromJs(js,LoanPojo.class);
                 if(loan!=null){
                     if (loan != null) {
                         // Numéro de compte
@@ -119,7 +129,12 @@ public class RevuPretActivity extends AppCompatActivity {
                        @Override
                        public void onClick(View view) {
                            AddActivity.finish=true;
-                           saveLoan(loan);
+                           if(loan.getProductOption()!=null)
+                              saveLoan(loan);
+                           else {
+                               S.toast(context,"Remplire correctement les champs");
+                               finish();
+                           }
                        }
                    });
                     buttonEditLoan.setOnClickListener(new View.OnClickListener() {
@@ -160,7 +175,6 @@ public class RevuPretActivity extends AppCompatActivity {
         }
     }
     ProgressBar pb;
-    View vide;
     void showPb(){
         pb.setVisibility(View.VISIBLE);
         vide.setVisibility(View.VISIBLE);
@@ -208,21 +222,8 @@ public class RevuPretActivity extends AppCompatActivity {
                         e.printStackTrace();
                         errorContent = "Impossible de lire le contenu de l’erreur";
                     }
-                    // Affiche le message d’erreur et le code HTTP
 
-                    if (context instanceof Activity) {
-                        Activity activity = (Activity) context;
-                        if (!activity.isFinishing() && !activity.isDestroyed()) {
-                            String finalErrorContent = errorContent;
-                            activity.runOnUiThread(() -> {
-                                Dialogue.neutreDialog(
-                                        finalErrorContent,
-                                        "Code d'erreur : " + response.code(),
-                                        context
-                                ).show();
-                           });
-                        }
-                    }
+                    erreurTechnique(errorContent,"Erreur technique");
 
                 }
                 hidePb();
@@ -233,17 +234,20 @@ public class RevuPretActivity extends AppCompatActivity {
                 // Problème réseau ou exception
                 hidePb();
 
-                // 1) Loggez la stack trace dans Logcat
-                Log.e("LoanSave", "Erreur onFailure", t);
-
-                // 2) Récupérez la stack trace complète
-                String stackTrace = Log.getStackTraceString(t);
-
                 if (context instanceof Activity) {
                     Activity activity = (Activity) context;
+                    final String[] titre = {t.getMessage()};
                     if (!activity.isFinishing() && !activity.isDestroyed()) {
                         activity.runOnUiThread(() -> {
-                            Dialogue.neutreDialog(stackTrace, "Echec", context).show();
+                            if(titre[0].contains("java.net")|| titre[0].contains("javax.net"))
+                            {
+                                titre[0] ="Vérifier votre connexion internet et réessayer";
+                                showNetWork("Problème de connexion",titre[0],
+                                        R.drawable.wifi_100);
+                            }else {
+                                showNetWork("Erreur technique",t.getMessage(),
+                                        R.drawable.erreur_tech_100);
+                            }
                         });
                     }
                 }
@@ -251,8 +255,6 @@ public class RevuPretActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     void getClientAcount(){
         showPb();
@@ -285,14 +287,7 @@ public class RevuPretActivity extends AppCompatActivity {
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 } else {
-                    if (context instanceof Activity) {
-                        Activity activity = (Activity) context;
-                        if (!activity.isFinishing() && !activity.isDestroyed()) {
-                            activity.runOnUiThread(() -> {
-                                Dialogue.neutreDialog(response.message()+" "+response.code(),response.errorBody()+"",context).show();
-                            });
-                        }
-                    }
+                    finish();
 
                 }
                 hidePb();
@@ -302,8 +297,44 @@ public class RevuPretActivity extends AppCompatActivity {
             public void onFailure(Call<Client> call, Throwable t) {
                 // Problème réseau ou exception
                 hidePb();
-
+                finish();
             }
         });
+    }
+
+    private void showNetWork(String title,String msg,int icone){
+        NetworkCp networkCp=new NetworkCp(context,network,(o, k)->{
+            if(k==1){
+                saveLoan(loan);
+                network.setVisibility(View.GONE);
+            }else {
+                finish();
+            }
+        });
+        networkCp.parametrer(title,msg,icone);
+    }
+
+    private void erreurTechnique(String errorContent,String title){
+        // Affiche le message d’erreur et le code HTTP
+
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            if (!activity.isFinishing() && !activity.isDestroyed()) {
+                String finalErrorContent = errorContent;
+                if(finalErrorContent.contains("{")){
+                    try {
+                        ApiErrorResponse apiErrorResponse=
+                                new ApiErrorResponse().fromJs(finalErrorContent);
+                        finalErrorContent= ErrorUtils.buildErrorMessage(apiErrorResponse);
+                    }catch (Exception e){
+
+                    }
+                }
+                String finalErrorContent1 = finalErrorContent;
+                activity.runOnUiThread(() -> {
+                    showNetWork(title,finalErrorContent1,R.drawable.erreur_tech_100);
+                });
+            }
+        }
     }
 }

@@ -30,10 +30,8 @@
                     android:id="@+id/lmain"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="40dp"
-                    android:background="@color/colorSendre"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="2dp">
+                    android:background="@drawable/shap_back2"
+                    android:orientation="vertical">
 
                 </LinearLayout>
             </ScrollView>

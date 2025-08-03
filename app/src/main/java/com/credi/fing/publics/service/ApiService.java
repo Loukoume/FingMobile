@@ -3,11 +3,13 @@ package com.credi.fing.publics.service;
 import com.credi.fing.entity.Beneficiary;
 import com.credi.fing.entity.BeneficiaryTemplate;
 import com.credi.fing.entity.Client;
+import com.credi.fing.entity.SavingsTransferPayload;
 import com.credi.fing.entity.TransferPayload;
 import com.credi.fing.pojo.AccountInfo;
 import com.credi.fing.pojo.AccountOptionsResponse;
 import com.credi.fing.pojo.LoanPojo;
 import com.credi.fing.pojo.LoanProductResponse;
+import com.credi.fing.pojo.transaction.Transaction;
 import com.credi.fing.pojo.transaction.TransactionsResponse;
 import com.credi.fing.publics.UploadFileResponse;
 
@@ -19,10 +21,12 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
@@ -99,21 +103,49 @@ public interface ApiService {
             @Query("tenantIdentifier") String tenantIdentifier
     );
 
-    //https://fingiciel.ngrok.io/fineract-provider/api/v1/self/accounttransfers?type=tpt?&tenantIdentifier=default
-    //https://fingiciel.ngrok.io/fineract-provider/api/v1/self/accounttransfers?type=tpt&tenantIdentifier=default
+    //fineract-provider/api/v1/self/accounttransfers?tenantIdentifier=default
     @POST("fineract-provider/api/v1/self/accounttransfers")
-    Call<Object> saveTransFert(
+    Call<Object> saveTransFertInterne(
+            @Header("Authorization") String authHeader,
+            @Body TransferPayload transferPayload,
+            @Query("tenantIdentifier") String tenantIdentifier
+    );
+    //fineract-provider/api/v1 /self/accounttransfers?type=tpt&tenantIdentifier=default
+    @POST("fineract-provider/api/v1/self/accounttransfers")
+    Call<Object> saveTransFertExterne(
             @Header("Authorization") String authHeader,
             @Body TransferPayload transferPayload,
             @Query("type") String type, // par exemple: "tpt"
             @Query("tenantIdentifier") String tenantIdentifier
     );
+
+     /**
+         * Transfert interne entre deux savings accounts en mode "self" (PUT)
+         */
+        @PUT("fineract-provider/api/v1/self/savingsaccounts/{fromAccountId}")
+        Call<Object> transferSavings(
+                @Header("Authorization") String authHeader,
+                @Path("fromAccountId") Long fromAccountId,
+                @Query("command") String command,            // "transfer"
+                @Query("tenantIdentifier") String tenantId,  // "default"
+                @Body SavingsTransferPayload payload
+        );
+
+
     //fineract-provider/api/v1/self/accounttransfers/template?type=tpt?&tenantIdentifier=default
 
     @GET("fineract-provider/api/v1/self/accounttransfers/template")
-    Call<AccountOptionsResponse> getTemplateTransfert(
+    Call<AccountOptionsResponse> getTemplateTransfertExterne(
             @Header("Authorization") String authHeader,
             @Query("type") String type, // le bon nom du paramètre est "type", pas "templateType"
+            @Query("tenantIdentifier") String tenantIdentifier
+    );
+
+    //fineract-provider/api/v1/self/accounttransfers/template?type=tpt&tenantIdentifier=default
+
+    @GET("fineract-provider/api/v1/self/accounttransfers/template")
+    Call<AccountOptionsResponse> getTemplateTransfertInterne(
+            @Header("Authorization") String authHeader,
             @Query("tenantIdentifier") String tenantIdentifier
     );
 
@@ -173,10 +205,16 @@ public interface ApiService {
             @Query("tenantIdentifier") String tenantIdentifier
     );
 
+    @DELETE("fineract-provider/api/v1/self/beneficiaries/tpt/{beneficiaryId}")
+    Call<Void> deleteBeneficiary(
+            @Path("beneficiaryId") long beneficiaryId,
+            @Query("tenantIdentifier") String tenantIdentifier
+    );
+
     //https://fingiciel.ngrok.io/fineract-provider/api/v1/self/beneficiaries/tpt/template?&tenantIdentifier=default
 
     @GET("fineract-provider/api/v1/self/savingsaccounts/{accountId}/transactions")
-    Call<TransactionsResponse> getSavingsTransactions(
+    Call<List<Transaction>> getSavingsTransactions(
             @Header("Authorization") String authorization,
             @Path("accountId") long accountId,
             @Query("tenantIdentifier") String tenantIdentifier

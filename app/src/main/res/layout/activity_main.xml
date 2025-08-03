@@ -367,8 +367,9 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:background="@color/black_transparant"
-        android:id="@+id/vide"
+        android:background="@color/black"
+        android:id="@+id/vde"
+        android:alpha="0.6"
         android:visibility="gone"
         android:layout_height="match_parent">
 
@@ -459,7 +460,6 @@
         android:id="@+id/pb"
         android:visibility="gone"
         android:layout_height="wrap_content">
-
     </ProgressBar>
     <LinearLayout
         android:layout_width="match_parent"
@@ -471,5 +471,13 @@
         android:background="@drawable/shap_rarre_bleu"
         android:layout_height="match_parent">
 
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:id="@+id/network"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+        <include layout="@layout/network_layout"/>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     ProgressBar pb;
     ImageView eye_pret,eye_epargne,mort,drawer;
     View vide;
-    LinearLayout lservice,sheet,drawer_lineair,gradien,network;
+    LinearLayout lservice,sheet,drawer_lineair,gradien,network,contenu;
     //FloatingActionButton add;
     Context context;
     TextView solde_pret,solde_epargne,symbole,name;
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         eye_pret=findViewById(R.id.eye_pret);
         lservice=findViewById(R.id.lservice);
         sheet=findViewById(R.id.sheet);
-       // add=findViewById(R.id.add);
+        contenu=findViewById(R.id.contenu);
         drawer=findViewById(R.id.drawer);
         drawer_lineair=findViewById(R.id.drawer_lineair);
         vide=findViewById(R.id.vde);
@@ -173,6 +173,16 @@ public class MainActivity extends AppCompatActivity {
                 getClientAcount();
 
            // }
+            Ut.swip(gradien,(b,i)->{
+                if(i==3){
+                    getClientAcount();
+                }
+            });
+            Ut.swip(contenu,(b,i)->{
+                if(i==3){
+                    getClientAcount();
+                }
+            });
         }else {
             finish();
         }
@@ -492,6 +502,12 @@ public class MainActivity extends AppCompatActivity {
           //  Dialogue.neutreDialog(o+"",i+" long",MainActivity.this).show();
         });
 
+        Ut.swip(recyclierViewCp.getRecyclerView(),(b,i)->{
+            if(i==3){
+                getClientAcount();
+            }
+        });
+
 
     }
 
@@ -743,13 +759,16 @@ public class MainActivity extends AppCompatActivity {
         return v==null||v.isEmpty()?0:Double.parseDouble(v);
     }
     private void setComptesValues(){
+        Double prets=0.0,eprgne=0.0;
         if(loanAccounts!=null){
-            Double prets=loanAccounts.stream().mapToDouble(x->value(Ut.getAllValues(x,"loanBalance"))).sum();
-            Double eprgne=savingsAccounts.stream().mapToDouble(x->value(Ut.getAllValues(x,"accountBalance"))).sum();
-            pret=Ut.formatMontant(prets);
-            epargne=Ut.formatMontant(eprgne);
-            closEyes();
+             prets=loanAccounts.stream().mapToDouble(x->value(Ut.getAllValues(x,"loanBalance"))).sum();
         }
+        if(savingsAccounts!=null){
+             eprgne=savingsAccounts.stream().mapToDouble(x->value(Ut.getAllValues(x,"accountBalance"))).sum();
+        }
+        pret=Ut.formatMontant(prets);
+        epargne=Ut.formatMontant(eprgne);
+        closEyes();
     }
 
     void getTemplate(){

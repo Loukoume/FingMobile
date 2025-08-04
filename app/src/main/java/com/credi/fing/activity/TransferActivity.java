@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -235,7 +236,8 @@ public class TransferActivity extends AppCompatActivity {
             /*Dialogue.neutreDialog(Ut.js(transferPayload),S.dateToString(new Date(),
                     transferPayload.getDateFormat()),context).show();*/
            // System.out.println(" -transferPayload- "+transferPayload.js());
-            saveTransfert(transferPayload);
+           // saveTransfert(transferPayload);
+            confirmCp(confirme);
         }
     }
 
@@ -336,9 +338,7 @@ public class TransferActivity extends AppCompatActivity {
             public void onResponse(Call<Object> call, Response<Object> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     MonFichier.ecrire(context,"transmis","ok");
-
-                    confirme.setVisibility(View.VISIBLE);
-                    confirme.startAnimation(Anim.getAnimeBH(context));
+                    confirmCp(confirme);
                    // finish();
                 } else {
                     String errorContent;
@@ -717,5 +717,105 @@ public class TransferActivity extends AppCompatActivity {
                 });
             }
         }
+    }
+    private TextView tvLabelEmitter;
+    private TextView tvLabelEmitterCompte;
+    private TextView tvValueEmitterAccount;
+    private TextView tvLabelEmitterName;
+    private TextView tvValueEmitterName;
+    private TextView tvLabelEmitterOffice;
+    private TextView tvValueEmitterOffice;
+
+    private TextView tvLabelBeneficiary;
+    private TextView tvLabelBeneficiaryCompte;
+    private TextView tvValueBeneficiaryAccount;
+    private TextView tvLabelBeneficiaryName;
+    private TextView tvValueBeneficiaryName;
+    private TextView tvLabelBeneficiaryOffice;
+    private TextView tvValueBeneficiaryOffice;
+
+    private TextView tvLabelAmount;
+    private TextView tvValueAmount;
+    private TextView tvLabelDate;
+    private TextView tvValueDate;
+    private TextView tvLabelDescription;
+    private TextView tvValueDescription;
+    void confirmCp(View view){
+        tvLabelEmitter             = view.findViewById(R.id.tv_label_emitter);
+        tvLabelEmitterCompte       = view.findViewById(R.id.tv_label_emitter_compte);
+        tvValueEmitterAccount      = view.findViewById(R.id.tv_value_emitter_account);
+        tvLabelEmitterName         = view.findViewById(R.id.tv_label_emitter_name);
+        tvValueEmitterName         = view.findViewById(R.id.tv_value_emitter_name);
+        tvLabelEmitterOffice       = view.findViewById(R.id.tv_label_emitter_office);
+        tvValueEmitterOffice       = view.findViewById(R.id.tv_value_emitter_office);
+
+        // Bloc Bénéficiaire
+        tvLabelBeneficiary             = view.findViewById(R.id.tv_label_beneficiary);
+        tvLabelBeneficiaryCompte       = view.findViewById(R.id.tv_label_beneficiary_compte);
+        tvValueBeneficiaryAccount      = view.findViewById(R.id.tv_value_beneficiary_account);
+        tvLabelBeneficiaryName         = view.findViewById(R.id.tv_label_beneficiary_name);
+        tvValueBeneficiaryName         = view.findViewById(R.id.tv_value_beneficiary_name);
+        tvLabelBeneficiaryOffice       = view.findViewById(R.id.tv_label_beneficiary_office);
+        tvValueBeneficiaryOffice       = view.findViewById(R.id.tv_value_beneficiary_office);
+
+        tvLabelAmount       = view.findViewById(R.id.tv_label_amount);
+        tvValueAmount       = view.findViewById(R.id.tv_value_amount);
+        tvLabelDate         = view.findViewById(R.id.tv_label_date);
+        tvValueDate         = view.findViewById(R.id.tv_value_date);
+        tvLabelDescription  = view.findViewById(R.id.tv_label_description);
+        tvValueDescription  = view.findViewById(R.id.tv_value_description);
+
+        Button btn_return=view.findViewById(R.id.btn_return);
+
+        Activity activity = this;
+
+            TransferActivity transferActivity = (TransferActivity) activity;
+            TransferPayload payload = transferActivity.getTransferPayload();
+            // ← Assure-toi que TransferActivity expose un getter :
+            // public TransferPayload getTransferPayload() { return this.transferPayload; }
+
+            if (payload != null) {
+                // 3. Remplissage des blocs Émetteur / Bénéficiaire
+                if (transferActivity.getFromAccountOption() != null) {
+                    AccountOption em = transferActivity.getFromAccountOption();
+                    if (em.getAccountNo() != null)
+                        tvValueEmitterAccount.setText(em.getAccountNo());
+                    if (em.getClientName() != null)
+                        tvValueEmitterName.setText(em.getClientName());
+                    if (em.getOfficeName() != null)
+                        tvValueEmitterOffice.setText(em.getOfficeName());
+                }
+                if (transferActivity.getToAccountOption() != null) {
+                    AccountOption ben = transferActivity.getToAccountOption();
+                    if (ben.getAccountNo() != null)
+                        tvValueBeneficiaryAccount.setText(ben.getAccountNo());
+                    if (ben.getClientName() != null)
+                        tvValueBeneficiaryName.setText(ben.getClientName());
+                    if (ben.getOfficeName() != null)
+                        tvValueBeneficiaryOffice.setText(ben.getOfficeName());
+                }
+                // 4. Remplissage des détails additionnels
+                // Montant
+                tvValueAmount.setText(
+                        Ut.formatMontant(payload.getTransferAmount())
+                );
+                // Date
+               /* if (payload.getTransferDate() != null)
+                    tvValueDate.setText(payload.getTransferDate());
+                // Description
+                if (payload.getTransferDescription() != null)
+                    tvValueDescription.setText(payload.getTransferDescription());*/
+            }
+
+
+        btn_return.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        confirme.setVisibility(View.VISIBLE);
+        confirme.startAnimation(Anim.getAnimeBH(context));
     }
 }

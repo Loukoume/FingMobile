@@ -128,7 +128,6 @@ public class NoteFragment extends Fragment {
         tvValueDescription  = view.findViewById(R.id.tv_value_description);
 
 
-
         Activity activity = getActivity();
         if (activity instanceof TransferActivity) {
             TransferActivity transferActivity = (TransferActivity) activity;

@@ -179,37 +179,7 @@
                                     android:layout_height="wrap_content">
                                 </TextView>
                             </LinearLayout>
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_marginTop="8dp"
-                                android:visibility="gone"
-                                android:gravity="end|center"
-                                android:layout_height="match_parent">
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:src="@drawable/ic_eye_off_24dp2"
-                                    app:tint="@color/colorSendre2"
-                                    android:id="@+id/eye_epargne"
-                                    android:layout_height="wrap_content">
-                                </ImageView>
-                                <FrameLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:visibility="gone"
-                                    android:background="@drawable/circle_border_background"
-                                    android:padding="-2dp">
-                                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:id="@+id/add0"
-                                        app:fabSize="mini"
-                                        android:src="@drawable/plus_argant"
-                                        android:backgroundTint="@color/white"
-                                        app:tint="@color/colorPrimary" />
-                                </FrameLayout>
 
-                            </LinearLayout>
                         </LinearLayout>
 
                         <LinearLayout
@@ -247,38 +217,7 @@
 
                                 </TextView>
                             </LinearLayout>
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_marginTop="8dp"
-                                android:visibility="gone"
-                                android:gravity="end|center"
-                                android:layout_height="match_parent">
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:src="@drawable/ic_eye_off_24dp2"
-                                    app:tint="@color/colorSendre2"
-                                    android:id="@+id/eye_pret"
 
-                                    android:layout_height="wrap_content">
-                                </ImageView>
-                                <FrameLayout
-                                    android:layout_width="wrap_content"
-                                    android:visibility="gone"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/circle_border_background"
-                                    android:padding="-2dp">
-                                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:id="@+id/add"
-                                        app:fabSize="mini"
-                                        android:src="@drawable/plus_argant"
-                                        android:backgroundTint="@color/white"
-                                        app:tint="@color/colorPrimary" />
-                                </FrameLayout>
-
-                            </LinearLayout>
                         </LinearLayout>
 
                     </LinearLayout>

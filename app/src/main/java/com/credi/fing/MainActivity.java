@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     private int currentPage = 0;
     CircleImageView profil;
     ProgressBar pb;
-    ImageView eye_pret,eye_epargne,mort,drawer;
+    ImageView eye,mort,drawer;
     View vide;
     LinearLayout lservice,sheet,drawer_lineair,gradien,network,contenu;
     //FloatingActionButton add;
@@ -102,8 +102,7 @@ public class MainActivity extends AppCompatActivity {
         solde_pret=findViewById(R.id.solde_pret);
         solde_epargne=findViewById(R.id.solde_epargne);
         profil.setVisibility(View.VISIBLE);
-        eye_epargne=findViewById(R.id.eye_epargne);
-        eye_pret=findViewById(R.id.eye_pret);
+        eye=findViewById(R.id.eye);
         lservice=findViewById(R.id.lservice);
         sheet=findViewById(R.id.sheet);
         contenu=findViewById(R.id.contenu);
@@ -424,71 +423,6 @@ public class MainActivity extends AppCompatActivity {
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     break;
                 case 2:
-                   /* CompteBinder compteBinder=new CompteBinder();
-                    NavigateObject nvgdp=compteBinder.navigateObject();
-                    if(loanAccounts!=null&&savingsAccounts!=null){
-                        List<Object> lit=new ArrayList<>(loanAccounts);
-                        lit.addAll(savingsAccounts);
-                        nvgdp.setValues(lit);
-                    }
-                    nvgdp.setObject(o);
-                    ClickHandler.setCrudInterface(crudInterface("idCompteBancaire","comptabilite_compte_bancaire", context));
-                    ClickHandler.setOnBindViewHolderAction((vo,v,j)->{
-                        TextView title=vo.title,second=vo.secondre,
-                        title2=vo.title2,secondre2=vo.secondre2,date=vo.date,value=vo.textePourcentage;
-                        Object productN_ob=Ut.getValue(v,"accountNo");
-                        Object productName_ob=Ut.getValue(v,"productName");
-
-                        if(productN_ob!=null){
-                            String productName=productN_ob.toString();
-                            title.setText(productName);
-                        }
-                        if(productName_ob!=null){
-                            second.setText(productName_ob.toString());
-                        }
-                        if(j<loanAccounts.size()){
-                            Object loanBalance_ob=Ut.getValue(v,"loanBalance");
-                            if(loanBalance_ob!=null)
-                              title2.setText(Ut.formatMontant(Double.parseDouble(loanBalance_ob.toString())));
-                        }else {
-                            Object loanBalance_ob=Ut.getValue(v,"accountBalance");
-                            Object currency_ob=Ut.getValue(v,"currency");
-                            if(loanBalance_ob!=null&&currency_ob!=null)
-                            {
-                                Object symb=Ut.getValue(currency_ob,"displaySymbol");
-                                String sb=symb==null?"":symb.toString();
-                                title2.setText(sb+" "+Ut.formatMontant(Double.parseDouble(loanBalance_ob.toString())));
-
-                                Object displ=Ut.getValue(currency_ob,"displayLabel");
-                                String displsb=displ==null?"":displ.toString();
-                                secondre2.setText(displsb);
-
-                                Object last_ob=Ut.getValue(v,"lastActiveTransactionDate");
-                                if(last_ob!=null){
-                                    List<Object> obs= (List<Object>) last_ob;
-                                    String sdate=obs.get(2)+" "+ S.en2(Integer.parseInt(obs.get(1).toString()))+" "+obs.get(0);
-                                    String dat= S.date(sdate,"dd MM yyyy","dd MMM yyyy");
-                                    date.setText(dat);
-                                }
-                                Object type=Ut.getValue(v,"depositType");
-                                if(type!=null){
-                                    Object vl=Ut.getValue(type,"value");
-                                    if(vl!=null){
-                                        if(vl.toString().toLowerCase().contains("sav")){
-                                          value.setText("Dépôt");value.setTextColor(Ut.getColor(context,R.color.green));
-                                        }else {
-                                            value.setText("Retrait");value.setTextColor(Ut.getColor(context,R.color.rouge));
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-
-                    });
-                    startActivity(new Intent(context, ListActivity.class)
-                            .putExtra("id","idCompteBancaire")
-                            .putExtra("navigateObject",nvgdp));*/
                     startActivity(new Intent(context, PagerActivity.class)
                             .putExtra("client",client));
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -520,34 +454,23 @@ public class MainActivity extends AppCompatActivity {
         if(epargne!=null&&!epargne.isEmpty()){
             solde_epargne.setText(epargne+" CFA");
         }
-        eye_pret.setOnClickListener(new View.OnClickListener() {
+        eye.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
               isShowingPret=!isShowingPret;
               MonFichier.ecrire(context,"isShowingPret",isShowingPret+"");
               if(isShowingPret){
                   solde_pret.setText(pret+" CFA");
-                  eye_pret.setImageResource(R.drawable.ic_eye_off_24dp2);
+                  solde_epargne.setText(epargne+" CFA");
+                  eye.setImageResource(R.drawable.ic_eye_off_24dp2);
               }else {
-                  eye_pret.setImageResource(R.drawable.ic_eye_white_24dp);
+                  eye.setImageResource(R.drawable.ic_eye_white_24dp);
                   solde_pret.setText("**************");
+                  solde_epargne.setText("***************");
               }
             }
         });
-        eye_epargne.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                isShowingEprgne=!isShowingEprgne;
-                MonFichier.ecrire(context,"isShowingEprgne",isShowingEprgne+"");
-                if(isShowingEprgne){
-                    eye_epargne.setImageResource(R.drawable.ic_eye_off_24dp2);
-                 solde_epargne.setText(epargne+" CFA");
-                }else {
-                    eye_epargne.setImageResource(R.drawable.ic_eye_white_24dp);
-                  solde_epargne.setText("***************");
-                }
-            }
-        });
+
     }
 
     private static CrudInterface crudInterface(String id, String url, Context context){

@@ -104,7 +104,6 @@ public class PlaceholderFragment extends Fragment {
                 main.addView(recyclierViewCp.view());
                 break;
             case 2:
-
                 recyclierViewCp = new RecyclierViewCp(context, R.layout.row_epargne, PagerActivity.loanAccounts, (h, o, i) -> {
                     setText(o, h, 2);
                 }).setNumberItems(1).setBackground(R.color.colorSendre);
@@ -207,17 +206,18 @@ public class PlaceholderFragment extends Fragment {
                 }
             });
 
-        } else if (loanBalance_ob != null && currency_ob != null) {
+        } else  {
             mort.setVisibility(GONE);
-            Object symb = Ut.getValue(currency_ob, "displaySymbol");
+            Object symb=null;
+            if (currency_ob != null)
+               symb = Ut.getValue(currency_ob, "displaySymbol");
             String sb = symb == null ? "" : symb.toString();
-            title2.setText(sb + " " + Ut.formatMontant(Double.parseDouble(loanBalance_ob.toString())));
+            if (loanBalance_ob != null)
+               title2.setText(sb + " " + Ut.formatMontant(Double.parseDouble(loanBalance_ob.toString())));
 
             Object displ = Ut.getValue(currency_ob, "displayLabel");
             String displsb = displ == null ? "" : displ.toString();
             secondre2.setText(displsb);
-
-            System.out.println(" compte_js "+Ut.js(object));
 
             Object last_ob = Ut.getValue(object, "lastActiveTransactionDate");
             if (last_ob != null) {

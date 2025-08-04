@@ -236,8 +236,8 @@ public class TransferActivity extends AppCompatActivity {
             /*Dialogue.neutreDialog(Ut.js(transferPayload),S.dateToString(new Date(),
                     transferPayload.getDateFormat()),context).show();*/
            // System.out.println(" -transferPayload- "+transferPayload.js());
-           // saveTransfert(transferPayload);
-            confirmCp(confirme);
+            saveTransfert(transferPayload);
+
         }
     }
 

@@ -67,7 +67,7 @@ public class ViewQrCodeActivity extends AppCompatActivity {
         try {
             SavingsAccount account= (SavingsAccount) Ut.fromJs(dataToEncode, SavingsAccount.class);
             beneficiary=new Beneficiary();
-
+            // Dialogue.neutreDialog(Ut.js(account),"",context).show();
             String js= MonFichier.lire(context,"displayName");
             if(js.isEmpty()&&testPlayStor){
                 js= Json.displayNam;

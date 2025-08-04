@@ -34,6 +34,7 @@ import com.credi.fing.pojo.err.ErrorUtils;
 import com.credi.fing.publics.composant.NetworkCp;
 import com.credi.fing.publics.service.ApiService;
 import com.credi.fing.publics.service.RetrofitClient;
+import com.credi.fing.publics.service.impl.Anim;
 import com.credi.fing.publics.service.impl.Ut;
 import com.credi.fing.publics.utils.Dialogue;
 import com.credi.fing.publics.utils.MonFichier;
@@ -71,7 +72,7 @@ public class TransferActivity extends AppCompatActivity {
     ProgressBar pb;
     View vide;
     ImageView type_tr_icone;
-    LinearLayout button_bar2,button_bar,network;
+    LinearLayout button_bar2,button_bar,network,confirme;
     String[] typs={"Transfert entre mes comptes","Transfert vers un tiers"};
     TypeTransFert typeTransFert=TypeTransFert.INTERNE;
     @Override
@@ -84,6 +85,7 @@ public class TransferActivity extends AppCompatActivity {
         tv_type=findViewById(R.id.tv_type);
         btnNext   = findViewById(R.id.btn_next2);
         tx=findViewById(R.id.tx_text);
+        confirme=findViewById(R.id.confirm);
         type_tr_icone=findViewById(R.id.type_tr_icone);
         vide=findViewById(R.id.vde);
         network=findViewById(R.id.network);
@@ -334,8 +336,9 @@ public class TransferActivity extends AppCompatActivity {
             public void onResponse(Call<Object> call, Response<Object> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     MonFichier.ecrire(context,"transmis","ok");
-                    Dialogue.neutreDialogF("Transfert effectué avec succè","Infermation",context,
-                            (Activity) context).show();
+
+                    confirme.setVisibility(View.VISIBLE);
+                    confirme.startAnimation(Anim.getAnimeBH(context));
                    // finish();
                 } else {
                     String errorContent;

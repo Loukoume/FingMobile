@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Icône de succès -->
+    <ImageView
+        android:id="@+id/iv_success_icon"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/ic_check_circle_24dp"
+        app:tint="@color/green"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Montant -->
+    <TextView
+        android:id="@+id/tv_confirm_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="500.00 $"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/iv_success_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Bloc Émetteur -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_emitter"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:cardCornerRadius="8dp"
+        android:layout_marginHorizontal="@dimen/fab_margin"
+        app:cardElevation="4dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_confirm_amount"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tv_section_emitter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Informations Émetteur"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/gray_dark" />
+
+            <TextView
+                android:id="@+id/tv_emitter_account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="N° compte : 000000074"
+                android:layout_marginTop="4dp"
+                android:textSize="14sp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_emitter_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nom : Jean Dupont"
+                android:layout_marginTop="2dp"
+                android:textSize="14sp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_emitter_office"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Agence : Centrale Siège"
+                android:layout_marginTop="2dp"
+                android:textSize="14sp"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Bloc Bénéficiaire -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_beneficiary"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginHorizontal="@dimen/fab_margin"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        android:paddingVertical="8dp"
+        app:layout_constraintTop_toBottomOf="@id/card_emitter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tv_section_beneficiary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Informations Bénéficiaire"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/gray_dark" />
+
+            <TextView
+                android:id="@+id/tv_beneficiary_account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="N° compte : 000000077"
+                android:layout_marginTop="4dp"
+                android:textSize="14sp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_beneficiary_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nom : Madjey MENSAH"
+                android:layout_marginTop="2dp"
+                android:textSize="14sp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_beneficiary_office"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Agence : Dantokpa"
+                android:layout_marginTop="2dp"
+                android:textSize="14sp"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Bouton Retour -->
+    <Button
+        android:id="@+id/btn_return"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Retour"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

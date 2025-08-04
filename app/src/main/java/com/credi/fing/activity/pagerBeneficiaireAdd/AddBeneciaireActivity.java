@@ -151,7 +151,7 @@ public class AddBeneciaireActivity extends AppCompatActivity {
             if(beneficiary.getType()!=null){
                 beneficiary.setType(null);
             }
-            //Dialogue.neutreDialog(Ut.getValue(beneficiary,"id")+"",update+"",context).show();
+            //Dialogue.neutreDialog(Ut.js(beneficiary)+"",update+"",context).show();
             if(update){
                 Object object=editeObject.getObject();
                 Object ids=Ut.getValue(object,"id");

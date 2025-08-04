@@ -86,7 +86,7 @@ public class AccountInfo implements Serializable {
     public AccountInfo toAccountInfo(Beneficiary beneficiary){
         AccountInfo accountInfo=new AccountInfo();
         accountInfo.setLocale("en_GB");
-        accountInfo.setAccountType(beneficiary.getAccountType().getId());
+        accountInfo.setAccountType(2);
         accountInfo.setAccountNumber(beneficiary.getAccountNumber());
         accountInfo.setName(beneficiary.getClientName());
         accountInfo.setType(beneficiary.getAccountType());

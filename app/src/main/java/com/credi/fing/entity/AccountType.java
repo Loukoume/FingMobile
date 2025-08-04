@@ -67,9 +67,9 @@ public class AccountType implements Serializable {
 
     public AccountTypeOption typeOption(){
         AccountTypeOption accountTypeOption=new AccountTypeOption();
-        accountTypeOption.setCode(code);
-        accountTypeOption.setId(idServeur);
-        accountTypeOption.setValue(value);
+        accountTypeOption.setCode("accountType.savings");
+        accountTypeOption.setId(2);
+        accountTypeOption.setValue("Savings Account");
         return accountTypeOption;
     }
 }

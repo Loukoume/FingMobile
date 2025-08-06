@@ -8,7 +8,6 @@
         android:layout_height="match_parent"
         android:background="@drawable/shap_tabe_body"
         android:orientation="vertical">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:id="@+id/limage"
@@ -365,7 +364,7 @@
             android:layout_marginTop="12sp"
             android:id="@+id/drawer"
             android:visibility="visible"
-            app:tint="@color/colorPrimary"
+            app:tint="@color/backgrund2"
             android:layout_marginStart="8dp"
             android:layout_height="wrap_content">
 

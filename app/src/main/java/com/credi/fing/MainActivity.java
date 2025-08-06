@@ -168,10 +168,9 @@ public class MainActivity extends AppCompatActivity {
                     name.setText(cl.getDisplayName());
                 }
             }
-           // if(!testPlayStor){
+            if(!testPlayStor){
                 getClientAcount();
 
-           // }
             Ut.swip(gradien,(b,i)->{
                 if(i==3){
                     getClientAcount();
@@ -182,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
                     getClientAcount();
                 }
             });
+            }
         }else {
             finish();
         }
@@ -793,9 +793,10 @@ public class MainActivity extends AppCompatActivity {
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         return true;
                     case "Enquêtes":
-                        startActivity(new Intent(context, Beneficiaire.class)
+                        /*startActivity(new Intent(context, Beneficiaire.class)
                                 .putExtra("titre","Les enquêtes"));
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);*/
+                        S.toast(context,"Module en cour de dévéloppement");
                         return true;
                     case "Nous contacter":
                        showContact();

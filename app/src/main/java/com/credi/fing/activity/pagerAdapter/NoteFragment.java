@@ -157,6 +157,7 @@ public class NoteFragment extends Fragment {
                 }
                 // 4. Remplissage des détails additionnels
                 // Montant
+                if(payload.getTransferAmount()!=null)
                 tvValueAmount.setText(
                         Ut.formatMontant(payload.getTransferAmount())
                 );

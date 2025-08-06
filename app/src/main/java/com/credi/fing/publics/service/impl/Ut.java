@@ -456,6 +456,9 @@ public class Ut {
         return value.trim();
     }
     public static String formatMontant(double montant) {
+        if(montant==0){
+            return "";
+        }
         // 1. On définit des symboles personnalisés :
         DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
         symbols.setDecimalSeparator(',');    // virgule pour la partie décimale

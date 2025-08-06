@@ -72,7 +72,6 @@ public class TransactionsActivity extends AppCompatActivity {
             String js=getIntent().getStringExtra("compte");
             compte= (SavingsAccount) Ut.fromJs(js,SavingsAccount.class);
             savingsAccounts=MainActivity.savingsAccounts;
-
             lexpand=findViewById(R.id.lexpand);
             network=findViewById(R.id.network);
             texpand=findViewById(R.id.text_expand);
@@ -90,31 +89,22 @@ public class TransactionsActivity extends AppCompatActivity {
             pb=findViewById(R.id.pb);
            // views=List.of(accountNumber,type_compte,view1,libelle,soldeDisponible,view2);
 
-            /*lexpand.setOnClickListener(new View.OnClickListener() {
+            lexpand.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     if(!close){
                         text_close.setVisibility(View.VISIBLE);
                         texpand.setVisibility(View.GONE);
-                        Ut.deplier(views);
-                       Ut.sleep(50*views.size(),(vs,k)->{
-                          // S.toast(context,(50*views.size())+" milisecondes");
-                           balanceContent.setVisibility(View.GONE);
-                       },balanceSection);
+                        balanceContent.setVisibility(View.GONE);
                     }else {
                         text_close.setVisibility(View.GONE);
                         texpand.setVisibility(View.VISIBLE);
-                        Ut.sleep(0*views.size(),(vs,k)->{
-                           // S.toast(context,(0*views.size())+" milisecondes");
-                            balanceContent.setVisibility(View.VISIBLE);
-                        },balanceSection);
-                        Ut.plier(views);
-                       // balanceSection.setVisibility(View.VISIBLE);
+                        balanceContent.setVisibility(View.VISIBLE);
                     }
                     close=!close;
                 }
-            });*/
+            });
             z=savingsAccounts.size();
             index=defaultIndex();
 
@@ -257,22 +247,19 @@ public class TransactionsActivity extends AppCompatActivity {
         }
     }
     private void displayData(){
-       /* list=List.of(new Transaction("Intérêt postés","Depot","187"),
-                new Transaction("Dépôt","Depot","190000"),
-                new Transaction("Retrait","Retrait","24500"),
-                new Transaction("Intérêt postés","Depot","187"),
-                new Transaction("Dépôt","Depot","190000"),
-                new Transaction("Retrait","Retrait","24500"));*/
-
-            List<Object> objects = new ArrayList<>(list);
-            recyclierViewCp=new RecyclierViewCp(context,R.layout.item_transaction,
-                    objects,(h,o,i)->{
-                setText(h,o);
-            }).setRecyclerView(recyclerView);
-            recyclierViewCp.view();
-            recyclierViewCp.setOnClick((o,k)->{
-               // getAcountTransacgtion();
-            });
+        List<Object> objects = new ArrayList<>(list);
+           if(recyclierViewCp==null){
+               recyclierViewCp=new RecyclierViewCp(context,R.layout.item_transaction,
+                       objects,(h,o,i)->{
+                   setText(h,o);
+               }).setRecyclerView(recyclerView);
+               recyclierViewCp.view();
+               recyclierViewCp.setOnClick((o,k)->{
+                   // getAcountTransacgtion();
+               });
+           }else {
+               recyclierViewCp.updateList(objects);
+           }
 
 
     }
@@ -286,7 +273,7 @@ public class TransactionsActivity extends AppCompatActivity {
         TextView  labelText    = view.findViewById(R.id.labelText);
         TextView  montantText  = view.findViewById(R.id.montantText);
         TextView  balanceText  = view.findViewById(R.id.balanceText);
-
+        TextView acountNumber = view.findViewById(R.id.acountNumber);
         Context ctx = view.getContext();
 
         // 1) Déterminer dépôt / retrait / intérêts
@@ -335,6 +322,7 @@ public class TransactionsActivity extends AppCompatActivity {
         // 7) Solde courant
         String formattedBalance = Ut.formatMontant(t.getRunningBalance());
         balanceText.setText("Solde : " + formattedBalance + " XOF");
+        acountNumber.setText("N° cpt: "+t.getAccountNo());
     }
 
     ProgressBar pb;
@@ -350,8 +338,10 @@ public class TransactionsActivity extends AppCompatActivity {
         ApiService api = retrofitClient.getFineractApi();
 
         // 3. Préparez l'appel
-        long acountId = compte.getProductId();                     // ID du client (ici 8)
+        long acountId = compte.getIdServeur();                     // ID du client (ici 8)
         String tenant = "default";              // tenantIdentifier
+
+        //System.out.println(" acountId "+acountId);
 
         Call<List<Transaction>> call = api.getSavingsTransactions("Basic " + okhttp3.Credentials.basic(username, Inscription.body.getPassword()),
                 acountId, tenant);
@@ -365,6 +355,7 @@ public class TransactionsActivity extends AppCompatActivity {
                    // MonFichier.ecrire(context,"transactions_response_js",transactions.js());
                         setCurrentDot(position);
                     list=transactions;
+                        System.out.println(list.size()+" listx = "+list);
                     displayData();
 
                 } else {
@@ -486,6 +477,7 @@ public class TransactionsActivity extends AppCompatActivity {
           index=position;
             String js=Ut.js(recyclierViewCp.getObjects().get(position));
             compte= (SavingsAccount) Ut.fromJs(js,SavingsAccount.class);
+           // System.out.println(compte.getIdServeur()+" =x=x= "+compte.getAccountNo()+"  "+compte.getProductId());
           getAcountTransacgtion(position);
         });
     }

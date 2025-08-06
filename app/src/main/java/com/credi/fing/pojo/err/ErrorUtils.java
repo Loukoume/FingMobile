@@ -5,8 +5,11 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class ErrorUtils {
-
     public static String buildErrorMessage(ApiErrorResponse errorResponse) {
+        return errorResponse.toString();
+    }
+
+    public static String buildErrorMessage2(ApiErrorResponse errorResponse) {
         StringBuilder message = new StringBuilder();
 
         // Horodatage

@@ -134,5 +134,15 @@ public class Transaction implements Serializable {
     public void setSubmittedByUsername(String submittedByUsername) {
         this.submittedByUsername = submittedByUsername;
     }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", accountId=" + accountId +
+                ", accountNo='" + accountNo + '\'' +
+                ", amount=" + amount +
+                '}';
+    }
 }
 

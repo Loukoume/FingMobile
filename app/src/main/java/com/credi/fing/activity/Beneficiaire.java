@@ -74,6 +74,7 @@ public class Beneficiaire extends AppCompatActivity {
     View vide;
     EditText editTextSearch;
     ImageView clear;
+
     List<AccountTypeOption> typeAcounts;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,6 +174,11 @@ public class Beneficiaire extends AppCompatActivity {
             }
         });
 
+        if(getIntent().hasExtra("add")){
+            Ut.sleep(1000,(v,k)->{
+                showContact();
+            },null);
+        }
 
     }
 

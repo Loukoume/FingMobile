@@ -111,48 +111,6 @@ public class TransferActivity extends AppCompatActivity {
             tv_type.setText(typs[1]);
         }
 
-        /*type_tr_icone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu pop=S.popupMenu(v,typs);
-                pop.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        tv_type.setText(typs[item.getItemId()-1]);
-                        if(item.getItemId()==1){
-                            if(typeTransFert!=TypeTransFert.INTERNE){
-                                typeTransFert=TypeTransFert.INTERNE;
-                                transferPayload.setToAccountId(null);
-                                transferPayload.setToOfficeId(null);
-                                transferPayload.setToAccountType(null);
-                                transferPayload.setToAccountType(null);
-                                viewPager.setCurrentItem(0);
-                                viewPager.setCurrentItem(1);
-                            }
-                        }else {
-                            if(typeTransFert!=TypeTransFert.TIERS)
-                            {
-                                typeTransFert=TypeTransFert.TIERS;
-                                transferPayload.setToAccountId(null);
-                                transferPayload.setToOfficeId(null);
-                                transferPayload.setToAccountType(null);
-                                transferPayload.setToAccountType(null);
-                                viewPager.setCurrentItem(0);
-                                viewPager.setCurrentItem(1);
-                            }
-                        }
-
-                        return false;
-                    }
-                });
-            }
-        });
-        tv_type.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                type_tr_icone.performClick();
-            }
-        });*/
         context=this;
         adapter = new TransferPagerAdapter(this,4, TypeAdapter.TRANSFERT);
         viewPager.setAdapter(adapter);
@@ -200,6 +158,14 @@ public class TransferActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
+
+    public TypeTransFert getTypeTransFert() {
+        return typeTransFert;
+    }
+
+    public void setTypeTransFert(TypeTransFert typeTransFert) {
+        this.typeTransFert = typeTransFert;
     }
 
     public List<AccountOption> getFromAccountOptions() {
@@ -377,7 +343,6 @@ public class TransferActivity extends AppCompatActivity {
                             });
                         }
                     }
-
                 }
                 hidePb();
             }

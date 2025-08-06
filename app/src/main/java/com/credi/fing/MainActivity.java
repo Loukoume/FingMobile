@@ -616,6 +616,7 @@ public class MainActivity extends AppCompatActivity {
                    // System.out.println(" clien_t => "+Ut.listJs(savingsAccounts));
                     for (Object sav:savingsAccounts){
                         SavingsAccount vac= (SavingsAccount) Ut.creatObject(sav, SavingsAccount.class);
+                       // Dialogue.neutreDialog(Ut.js(sav),"compte",context).show();
 
                         int code = vac.checkSavingsAccountStatus();
                         String msg;

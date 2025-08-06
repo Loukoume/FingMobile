@@ -1,5 +1,7 @@
 package com.credi.fing.activity.pagerAdapter;
 
+import static android.view.View.VISIBLE;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -18,6 +20,7 @@ import android.widget.LinearLayout;
 import com.credi.fing.R;
 import com.credi.fing.activity.Beneficiaire;
 import com.credi.fing.activity.TransferActivity;
+import com.credi.fing.enums.TypeTransFert;
 import com.credi.fing.pojo.AccountOption;
 import com.credi.fing.publics.service.impl.Attribut;
 import com.credi.fing.publics.service.impl.SelectService;
@@ -98,7 +101,7 @@ public class BeneficiaryFragment extends Fragment {
         id=view.findViewById(R.id.id);
         nom=view.findViewById(R.id.nom);
         attribut=new Attribut();
-        attribut.setSubLabel("accountType:value");
+        attribut.setSubLabel("clientName");
          activity= (TransferActivity) view.getContext();
 
         if(activity!=null&&activity.getTransferPayload()!=null){
@@ -107,26 +110,6 @@ public class BeneficiaryFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     showSelectDialogue(activity.getToAccountOptions(), null, "accountNo", "acountNo", id, attribut);
-
-                   /* String m[]=activity.getToAccountOptions().stream().filter(o->o!=null).map(o->
-                            o.getAccountNo()
-                    ).collect(Collectors.toList()).toArray(new String[0]);
-
-                    PopupMenu pop= S.popupMenu(v,m);
-                    pop.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            AccountOption accountOption=activity.getToAccountOptions().get(item.getItemId()-1);
-                            id.setText(accountOption.getAccountNo());
-                            nom.setText(accountOption.getClientName());
-                            activity.updateTransferPayload("toOfficeId",accountOption.getOfficeId());
-                            activity.updateTransferPayload("toClientId",accountOption.getClientId());
-                            activity.updateTransferPayload("toAccountType",accountOption.getAccountType().getIdServeur());
-                            activity.updateTransferPayload("toAccountId",accountOption.getAccountId());
-                            activity.setCurrentePage(2);
-                            return false;
-                        }
-                    });*/
                 }
             });
         }
@@ -139,6 +122,24 @@ public class BeneficiaryFragment extends Fragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(dialogView.getContext());
         builder.setView(dialogView);
+
+        if(activity.getTypeTransFert()== TypeTransFert.TIERS){
+            MaterialButton add=dialogView.findViewById(R.id.outlinedButton);
+            LinearLayout espace=dialogView.findViewById(R.id.espace);
+            LinearLayout ladd=dialogView.findViewById(R.id.add_bouton);
+            ladd.setVisibility(VISIBLE);
+            espace.setVisibility(VISIBLE);
+            add.setText("Plus");
+            add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    activity.startActivity(new Intent(getContext(), Beneficiaire.class)
+                            .putExtra("add","add")
+                            .putExtra("titre","Bénéficiaires"));
+                    activity.finish();
+                }
+            });
+        }
 
         final AlertDialog alertDialog = builder.create();
 

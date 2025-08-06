@@ -97,7 +97,7 @@ public class SenderFragment extends Fragment {
         id=view.findViewById(R.id.id);
         nom=view.findViewById(R.id.et_full_name);
         attribut=new Attribut();
-        attribut.setSubLabel("accountType:value");
+        attribut.setSubLabel("clientName");
          activity= (TransferActivity) view.getContext();
 
         if(activity!=null&&activity.getTransferPayload()!=null){

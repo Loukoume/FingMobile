@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.credi.fing.R;
 import com.credi.fing.publics.OnClickView;
+import com.credi.fing.publics.service.impl.Ut;
 import com.google.android.material.button.MaterialButton;
 
 public class NetworkCp {
@@ -84,8 +85,34 @@ public class NetworkCp {
     public void parametrer(String title,String message,int icone){
         ivNoConnection.setImageResource(icone);
         tvTitle.setText(title);
+        if(message!=null&&message.contains("offline")){
+            message="Le serveur est momentanément indisponible. Veuillez réessayer ultérieurement.";
+        }else {
+            System.out.println(" -text- "+message);
+            message=traduireMessage(message);
+        }
         tvSubtitle.setText(message);
     }
 
+    public static String traduireMessage(String message) {
+        if(message==null)return "";
+        // Format 1 : "The principal amount 250.0 must be between 1000000.00 and 4000000.00 ."
+        if (message.matches("The principal amount \\d+(\\.\\d+)? must be between \\d+(\\.\\d+)? and \\d+(\\.\\d+)?\\s*\\.")) {
+            String[] parts = message.split(" ");
+            String montant = parts[3];
+            String min = parts[7];
+            String max = parts[9];
+            return "Le montant principal " + Ut.formatMontant(Double.parseDouble(montant)) + " doit être compris entre " + Ut.formatMontant(Double.parseDouble(min)) + " et " + Ut.formatMontant(Double.parseDouble(max)) + ".";
+        }
+
+        // Format 2 : "The date on which a loan is submitted cannot be after its expected disbursement date: 2025-08-04."
+        if (message.contains("The date on which a loan is submitted cannot be after its expected disbursement date:")) {
+            String date = message.replaceAll(".*date: ", "").replace(".", "");
+            return "La date de soumission du prêt ne peut pas être postérieure à la date prévue de décaissement : " + date + ".";
+        }
+
+        // Si aucun format reconnu
+        return message;
+    }
 
 }

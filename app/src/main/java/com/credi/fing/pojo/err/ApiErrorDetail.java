@@ -66,5 +66,19 @@ public class ApiErrorDetail {
     public ApiErrorDetail fromJs(String js){
         return new Gson().fromJson(js,ApiErrorDetail.class);
     }
+
+    @Override
+    public String toString() {
+        if(defaultUserMessage!=null){
+            return defaultUserMessage;
+        }
+        if(developerMessage!=null){
+            return developerMessage;
+        }
+        if(userMessageGlobalisationCode!=null){
+            return userMessageGlobalisationCode.replace("."," ");
+        }
+        return "Une erreur s'est produit";
+    }
 }
 

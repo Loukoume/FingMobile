@@ -129,7 +129,7 @@ public class RevuPretActivity extends AppCompatActivity {
                        @Override
                        public void onClick(View view) {
                            AddActivity.finish=true;
-                           if(loan.getProductOption()!=null)
+                           if(loan.getProductOption()!=null||repeat)
                               saveLoan(loan);
                            else {
                                S.toast(context,"Remplire correctement les champs");
@@ -186,14 +186,17 @@ public class RevuPretActivity extends AppCompatActivity {
     public static List<Object> savingsAccounts=MainActivity.savingsAccounts;
     public static List<Object> loanAccounts=MainActivity.savingsAccounts;
     Client client;
+    boolean repeat=false;
     void saveLoan(LoanPojo loanAccount){
         showPb();
         // 1. Spécifiez vos identifiants Basic Auth
         String username = Inscription.body.getUsername();
-        loanAccount.setProductId(loanAccount.getProductOption().getId());
-        loanAccount.setProductOption(null);
+        if(!repeat){
+            loanAccount.setProductId(loanAccount.getProductOption().getId());
+            loanAccount.setProductOption(null);
+        }
+        repeat=false;
         // String password = Inscription.user;
-
         // 2. Obtenez l'instance de RetrofitClient
         RetrofitClient retrofitClient = RetrofitClient.getInstance(username, Inscription.body.getPassword());
         ApiService api = retrofitClient.getFineractApi();
@@ -222,8 +225,16 @@ public class RevuPretActivity extends AppCompatActivity {
                         e.printStackTrace();
                         errorContent = "Impossible de lire le contenu de l’erreur";
                     }
+                    if(errorContent.contains("java.net")|| errorContent.contains("javax.net"))
+                    {
+                        errorContent ="Vérifier votre connexion internet et réessayer";
+                        showNetWork("Problème de connexion","" +
+                                        "Vérifier votre connexion internet et réessayer",
+                                R.drawable.wifi_50);
+                    }else {
+                        erreurTechnique(errorContent,"Erreur technique");
+                    }
 
-                    erreurTechnique(errorContent,"Erreur technique");
 
                 }
                 hidePb();
@@ -305,10 +316,11 @@ public class RevuPretActivity extends AppCompatActivity {
     private void showNetWork(String title,String msg,int icone){
         NetworkCp networkCp=new NetworkCp(context,network,(o, k)->{
             if(k==1){
+                repeat=true;
                 saveLoan(loan);
                 network.setVisibility(View.GONE);
             }else {
-                finish();
+                network.setVisibility(View.GONE);
             }
         });
         networkCp.parametrer(title,msg,icone);

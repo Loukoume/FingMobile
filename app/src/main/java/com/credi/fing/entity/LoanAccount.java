@@ -12,12 +12,11 @@ import java.io.Serializable;
 public class LoanAccount implements Serializable {
     private String idLocal;
     @Expose
-    @SerializedName("idLoanAccount")
+    @SerializedName("id")
     private String idServeur;
     private Integer clientId;
     private String accountNo;
     private Integer productId;
-
     private String productName;
     private String shortProductName;
     private Status status;

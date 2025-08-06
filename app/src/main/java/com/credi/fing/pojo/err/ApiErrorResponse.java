@@ -3,6 +3,7 @@ package com.credi.fing.pojo.err;
 import com.google.gson.Gson;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ApiErrorResponse {
     private Long timestamp;
@@ -16,6 +17,36 @@ public class ApiErrorResponse {
     private String defaultUserMessage;
     private String userMessageGlobalisationCode;
     private List<ApiErrorDetail> errors;
+
+    @Override
+    public String toString() {
+        String er=errorString();
+        if(er!=null){
+            return er;
+        }
+        if(defaultUserMessage!=null){
+            return defaultUserMessage;
+        }
+        if(developerMessage!=null){
+            return developerMessage;
+        }
+        if(userMessageGlobalisationCode!=null){
+            return userMessageGlobalisationCode.replace("."," ");
+        }
+        return "Une erreur s'est produit";
+    }
+
+    private String errorString(){
+        if(errors!=null){
+            for (ApiErrorDetail api:errors){
+                String s=api.toString();
+                if(!Objects.equals(s,"Une erreur s'est produit")){
+                    return s;
+                }
+            }
+        }
+        return null;
+    }
 
     public Long getTimestamp() {
         return timestamp;

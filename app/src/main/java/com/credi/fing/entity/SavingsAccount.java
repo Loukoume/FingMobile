@@ -15,8 +15,8 @@ import java.io.Serializable;
 public class SavingsAccount implements Serializable {
     private String idLocal;
     @Expose
-    @SerializedName("idSavingsAccount")
-    private String idServeur;
+    @SerializedName("id")
+    private Long idServeur;
     private String accountNo;
     private Integer productId;
     private String productName;
@@ -40,12 +40,12 @@ public class SavingsAccount implements Serializable {
     }
 
 
-    public String getIdServeur() {
+    public Long getIdServeur() {
         return this.idServeur;
     }
 
 
-    public void setIdServeur(String idServeur) {
+    public void setIdServeur(Long idServeur) {
         this.idServeur = idServeur;
     }
 

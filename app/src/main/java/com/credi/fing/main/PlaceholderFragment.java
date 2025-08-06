@@ -222,7 +222,8 @@ public class PlaceholderFragment extends Fragment {
             Object last_ob = Ut.getValue(object, "lastActiveTransactionDate");
             if (last_ob != null) {
                 List<Object> obs = (List<Object>) last_ob;
-                String sdate = obs.get(2) + " " + S.en2(Integer.parseInt(obs.get(1).toString())) + " " + obs.get(0);
+                String sdate = obs.get(2) + " " + S.en2(Integer.parseInt(obs.get(1).toString()
+                        .replace(".0",""))) + " " + obs.get(0);
                 String dat = S.date(sdate, "dd MM yyyy", "dd MMM yyyy");
                 date.setText(dat);
             }

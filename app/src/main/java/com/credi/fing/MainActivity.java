@@ -188,21 +188,22 @@ public class MainActivity extends AppCompatActivity {
         mort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] m={"Se déconnecter"};
+                String[] m={"Nous contacter","Se déconnecter"};
                 //,"Qui somme nous"
                 PopupMenu pop=S.popupMenu(view,m);
                 pop.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()){
-                            case 1:
+                            case 2:
                                 new LesConnectes().remove(context,Inscription.user);
                                 MonFichier.ecrire(context,"displayName","");
                                 MonFichier.ecrire(context,"client","");
                                 startActivity(new Intent(context, Inscription.class));
                                 finish();
                                 break;
-                            case 2:
+                            case 1:
+                                showContact();
                                 break;
                         }
                         return false;
@@ -310,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void services(){
         List<Object> list= Arrays.asList(new CarouselItem("",R.drawable.transfert0),new CarouselItem("",R.drawable.pret)
-                ,new CarouselItem("",R.drawable.compte),new CarouselItem("",R.drawable.charge));
+                ,new CarouselItem("",R.drawable.compte),new CarouselItem("",R.drawable.beneficiaire));
          RecyclierViewCp recyclierViewCp=new RecyclierViewCp(this,R.layout.row_home,list,(h,o,i)->{
          CarouselItem ob= (CarouselItem) o;
          ImageView imageView=h.image;
@@ -428,7 +429,9 @@ public class MainActivity extends AppCompatActivity {
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                      break;
                 case 3:
-                    S.toast(context,"Module en cours de developpement");
+                    startActivity(new Intent(context, Beneficiaire.class)
+                            .putExtra("titre","Bénéficiaires"));
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     break;
             }
         });

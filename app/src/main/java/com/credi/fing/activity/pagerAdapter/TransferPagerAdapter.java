@@ -34,9 +34,9 @@ public class TransferPagerAdapter extends FragmentStateAdapter {
             default:
                 switch (position) {
                     case 0: return new SenderFragment();
-                    case 1: return new BeneficiaryFragment();
+                    case 1: return new NoteFragment();
                     case 2: return new AmountFragment();
-                    default: return new NoteFragment();
+                    default: return new BeneficiaireFragment();
                 }
         }
 

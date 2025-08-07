@@ -62,9 +62,9 @@ public class TransferActivity extends AppCompatActivity {
     TextView tx;
     private MaterialButton btnPrev, btnNext;
     private TransferPagerAdapter adapter;
-    private TextView tvStepHeader,tv_type;
+    private TextView tv_type;
     private final List<String> steps = Arrays.asList(
-            "Émetteur", "Bénéficiaire", "Montant","Détail du transfert"
+            "Infos générales", "Détail du transfert"
     );
     public TransferPayload transferPayload;
     public AccountOption fromAccountOption;
@@ -81,7 +81,7 @@ public class TransferActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transfer);
         viewPager = findViewById(R.id.view_pager);
-        tvStepHeader = findViewById(R.id.tv_step_header);
+       // tvStepHeader = findViewById(R.id.tv_step_header);
         btnPrev   = findViewById(R.id.btn_prev2);
         tv_type=findViewById(R.id.tv_type);
         btnNext   = findViewById(R.id.btn_next2);
@@ -112,7 +112,7 @@ public class TransferActivity extends AppCompatActivity {
         }
 
         context=this;
-        adapter = new TransferPagerAdapter(this,4, TypeAdapter.TRANSFERT);
+        adapter = new TransferPagerAdapter(this,steps.size(), TypeAdapter.TRANSFERT);
         viewPager.setAdapter(adapter);
 //        configureStepView();
 
@@ -124,10 +124,12 @@ public class TransferActivity extends AppCompatActivity {
         });
         btnNext.setOnClickListener(v -> {
             int p = viewPager.getCurrentItem();
-            if (p < adapter.getItemCount() - 1) {
+            if (p < adapter.getItemCount() - 1&&ok()) {
                 viewPager.setCurrentItem(p + 1, true);
-            } else {
+            } else if(p==adapter.getItemCount()-1){
                 submitAllData();
+            }else {
+                S.toast(context,"Remplissez tous les champs");
             }
         });
 
@@ -135,14 +137,13 @@ public class TransferActivity extends AppCompatActivity {
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int pos) {
-                tvStepHeader.setText(steps.get(pos));
+                //tvStepHeader.setText(steps.get(pos));
                 btnPrev.setEnabled(pos > 0);
                 btnNext.setText(pos < steps.size() - 1 ? "Suivant" : "Terminer");
                 //numero_etape.setText((pos+1)+"");
                 //un_sur_total.setText((pos+1)+"/"+steps.size());
             }
         });
-
         getTemplate();
     }
 
@@ -199,6 +200,8 @@ public class TransferActivity extends AppCompatActivity {
         if(ok()){
             transferPayload.setTransferDate(S.dateToString(new Date(),
                     transferPayload.getDateFormat(),transferPayload.getLocale()));
+            transferPayload.setTransferDescription(typeTransFert==TypeTransFert.TIERS?
+                    "Transfert tièrce":"Transfert interne");
             /*Dialogue.neutreDialog(Ut.js(transferPayload),S.dateToString(new Date(),
                     transferPayload.getDateFormat()),context).show();*/
            // System.out.println(" -transferPayload- "+transferPayload.js());
@@ -222,14 +225,12 @@ public class TransferActivity extends AppCompatActivity {
         if(transferPayload!=null){
             if(transferPayload.getFromOfficeId()!=null&&transferPayload.getFromClientId()!=null){
                 if(transferPayload.getToAccountId()!=null&&transferPayload.getToClientId()!=null){
-                    if(transferPayload.getTransferAmount()!=null&&transferPayload.getTransferDescription()!=null
+                    if(transferPayload.getTransferAmount()!=null
                     ){
                         return true;
                     }
-                    viewPager.setCurrentItem(1, true);
-                    viewPager.setCurrentItem(2, true);
                 }else {
-                    viewPager.setCurrentItem(1, true);
+                    viewPager.setCurrentItem(0, true);
                 }
             }else {
                 viewPager.setCurrentItem(0, true);

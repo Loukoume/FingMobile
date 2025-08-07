@@ -126,9 +126,18 @@ public class NoteFragment extends Fragment {
         tvValueDate         = view.findViewById(R.id.tv_value_date);
         tvLabelDescription  = view.findViewById(R.id.tv_label_description);
         tvValueDescription  = view.findViewById(R.id.tv_value_description);
+        activity = getActivity();
+        traitement();
+    }
+    Activity activity;
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        traitement();
+    }
 
-        Activity activity = getActivity();
+    void traitement(){
         if (activity instanceof TransferActivity) {
             TransferActivity transferActivity = (TransferActivity) activity;
             TransferPayload payload = transferActivity.getTransferPayload();
@@ -158,9 +167,9 @@ public class NoteFragment extends Fragment {
                 // 4. Remplissage des détails additionnels
                 // Montant
                 if(payload.getTransferAmount()!=null)
-                tvValueAmount.setText(
-                        Ut.formatMontant(payload.getTransferAmount())
-                );
+                    tvValueAmount.setText(
+                            Ut.formatMontant(payload.getTransferAmount())
+                    );
                 // Date
                 if (payload.getTransferDate() != null)
                     tvValueDate.setText(payload.getTransferDate());
@@ -169,6 +178,5 @@ public class NoteFragment extends Fragment {
                     tvValueDescription.setText(payload.getTransferDescription());
             }
         }
-
     }
 }

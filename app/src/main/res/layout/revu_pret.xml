@@ -195,13 +195,26 @@
         android:layout_height="match_parent">
 
     </View>
-    <LinearLayout
+
+    <TextView
+        android:id="@+id/tv_subtitle_no_connection"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/fab_margin"
+        android:text="Veuillez vérifier votre connexion Internet et réessayer."
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:textColor="@color/rouge"
         android:visibility="gone"
-        android:id="@+id/network"
-        android:orientation="vertical"
-        android:layout_height="match_parent">
-        <include layout="@layout/network_layout"/>
-    </LinearLayout>
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_marginTop="120dp"
+        android:gravity="center"
+        android:padding="24dp"
+        android:textSize="18sp"
+        />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

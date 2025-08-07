@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activity.pagerAdapter.SenderFragment">
 
@@ -10,9 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:layout_marginTop="@dimen/fab_margin"
-        android:layout_marginHorizontal="8dp"
-        android:layout_height="match_parent">
+         android:layout_height="wrap_content">
         <include layout="@layout/input_drop_mt_outlin"/>
 
         <com.google.android.material.textfield.TextInputLayout

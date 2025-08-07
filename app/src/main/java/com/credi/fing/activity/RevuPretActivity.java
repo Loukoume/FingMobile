@@ -1,5 +1,8 @@
 package com.credi.fing.activity;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +26,7 @@ import com.credi.fing.publics.AddActivity;
 import com.credi.fing.publics.composant.NetworkCp;
 import com.credi.fing.publics.service.ApiService;
 import com.credi.fing.publics.service.RetrofitClient;
+import com.credi.fing.publics.service.impl.Anim;
 import com.credi.fing.publics.service.impl.Ut;
 import com.credi.fing.publics.utils.Dialogue;
 import com.credi.fing.publics.utils.S;
@@ -45,7 +49,7 @@ public class RevuPretActivity extends AppCompatActivity {
     private TextView tvLoanProductValue;
     private TextView tvLoanPurposeValue;
     private TextView tvPrincipalAmountValue;
-    private TextView tvCurrencyValue;
+    private TextView tvCurrencyValue,tv_subtitle_no_connection;
     private TextView tvSubmissionDeadlineValue;
     private TextView tvExpectedPaymentDateValue;
     private Button buttonEditLoan;
@@ -60,6 +64,8 @@ public class RevuPretActivity extends AppCompatActivity {
         TextView tx=findViewById(R.id.tx_text);
         context=this;
         network=findViewById(R.id.network);
+        tv_subtitle_no_connection=findViewById(R.id.tv_subtitle_no_connection);
+        tv_subtitle_no_connection.setSelected(true);
         vide=findViewById(R.id.vde);
         tx.setText("Revue Demande de prêt".toUpperCase());
         tvAccountNumberValue         = findViewById(R.id.tvAccountNumberValue);
@@ -176,18 +182,19 @@ public class RevuPretActivity extends AppCompatActivity {
     }
     ProgressBar pb;
     void showPb(){
-        pb.setVisibility(View.VISIBLE);
-        vide.setVisibility(View.VISIBLE);
+        pb.setVisibility(VISIBLE);
+        vide.setVisibility(VISIBLE);
     }
     void hidePb(){
-        pb.setVisibility(View.GONE);
-        vide.setVisibility(View.GONE);
+        pb.setVisibility(GONE);
+        vide.setVisibility(GONE);
     }
     public static List<Object> savingsAccounts=MainActivity.savingsAccounts;
     public static List<Object> loanAccounts=MainActivity.savingsAccounts;
     Client client;
     boolean repeat=false;
     void saveLoan(LoanPojo loanAccount){
+        tv_subtitle_no_connection.setVisibility(GONE);
         showPb();
         // 1. Spécifiez vos identifiants Basic Auth
         String username = Inscription.body.getUsername();
@@ -228,14 +235,23 @@ public class RevuPretActivity extends AppCompatActivity {
                     if(errorContent.contains("java.net")|| errorContent.contains("javax.net"))
                     {
                         errorContent ="Vérifier votre connexion internet et réessayer";
-                        showNetWork("Problème de connexion","" +
+                       /* showNetWork("Problème de connexion","" +
                                         "Vérifier votre connexion internet et réessayer",
-                                R.drawable.wifi_50);
-                    }else {
-                        erreurTechnique(errorContent,"Erreur technique");
+                                R.drawable.wifi_50);*/
                     }
+                    if(errorContent.contains("{")){
+                        try {
+                            ApiErrorResponse apiErrorResponse=
+                                    new ApiErrorResponse().fromJs(errorContent);
+                            errorContent= ErrorUtils.buildErrorMessage(apiErrorResponse);
+                        }catch (Exception e){
 
-
+                        }
+                    }
+                    tv_subtitle_no_connection.setText(errorContent);
+                    tv_subtitle_no_connection.setVisibility(VISIBLE);
+                    tv_subtitle_no_connection.startAnimation(Anim.getAnimeBH(context));
+                    repeat=true;
                 }
                 hidePb();
             }
@@ -253,12 +269,26 @@ public class RevuPretActivity extends AppCompatActivity {
                             if(titre[0].contains("java.net")|| titre[0].contains("javax.net"))
                             {
                                 titre[0] ="Vérifier votre connexion internet et réessayer";
-                                showNetWork("Problème de connexion",titre[0],
-                                        R.drawable.wifi_100);
-                            }else {
+                                /*showNetWork("Problème de connexion",titre[0],
+                                        R.drawable.wifi_100);*/
+                            }/*else {
                                 showNetWork("Erreur technique",t.getMessage(),
                                         R.drawable.erreur_tech_100);
+                            }*/
+                            if(titre[0].contains("{")){
+                                try {
+                                    ApiErrorResponse apiErrorResponse=
+                                            new ApiErrorResponse().fromJs(titre[0]);
+                                    titre[0]= ErrorUtils.buildErrorMessage(apiErrorResponse);
+                                }catch (Exception e){
+
+                                }
                             }
+                            tv_subtitle_no_connection.setText(titre[0]);
+                            tv_subtitle_no_connection.setVisibility(VISIBLE);
+
+                            tv_subtitle_no_connection.startAnimation(Anim.getAnimeBH(context));
+                            repeat=true;
                         });
                     }
                 }
@@ -318,9 +348,9 @@ public class RevuPretActivity extends AppCompatActivity {
             if(k==1){
                 repeat=true;
                 saveLoan(loan);
-                network.setVisibility(View.GONE);
+                network.setVisibility(GONE);
             }else {
-                network.setVisibility(View.GONE);
+                network.setVisibility(GONE);
             }
         });
         networkCp.parametrer(title,msg,icone);

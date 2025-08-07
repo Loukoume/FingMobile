@@ -1,5 +1,8 @@
 package com.credi.fing.activity.pagerAdapter;
 
+import static android.view.View.VISIBLE;
+
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,6 +11,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,8 +20,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.credi.fing.R;
+import com.credi.fing.activity.Beneficiaire;
 import com.credi.fing.activity.TransferActivity;
 import com.credi.fing.activity.pagerBeneficiaireAdd.AddBeneciaireActivity;
+import com.credi.fing.enums.TypeTransFert;
 import com.credi.fing.pojo.AccountOption;
 import com.credi.fing.publics.service.impl.Attribut;
 import com.credi.fing.publics.service.impl.SelectService;
@@ -84,21 +91,30 @@ public class SenderFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_sender, container, false);
     }
 
-    TextInputLayout input,fieldNom;
-    TextInputEditText nom,id;
+    TextInputLayout input,fieldNom,textFieldCpEmt;
+    TextInputEditText nom,id,idCpEmt;
     TransferActivity activity;
     Attribut attribut;
+
+    TextInputLayout inputBen,fieldNomBen,textField;
+    TextInputEditText nomBen,idBen;
+    Attribut attributBen;
+    LinearLayout lbene;
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-         input=view.findViewById(R.id.textField);
+        input=view.findViewById(R.id.textField);
         input.setHint("Numéro du compte");
         fieldNom=view.findViewById(R.id.textFieldNom);
         id=view.findViewById(R.id.id);
+        textFieldCpEmt=view.findViewById(R.id.textFieldCpEmt);
+        idCpEmt=view.findViewById(R.id.idCpEmt);
+        lbene=view.findViewById(R.id.lbene);
         nom=view.findViewById(R.id.et_full_name);
         attribut=new Attribut();
         attribut.setSubLabel("clientName");
-         activity= (TransferActivity) view.getContext();
+        activity= (TransferActivity) view.getContext();
 
         if(activity!=null&&activity.getTransferPayload()!=null){
             id.setOnClickListener(new View.OnClickListener() {
@@ -124,14 +140,37 @@ public class SenderFragment extends Fragment {
                         }
                     });*/
                     showSelectDialogue(activity.getFromAccountOptions(), null, "accountNo", "accountNo", id, attribut);
-
-
                 }
             });
         }
+        idCpEmt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
 
-         List<AccountOption> fromAccountOptions;
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String value=s.toString();
+                if(activity!=null){
+                    if(!value.isEmpty()){
+                        textFieldCpEmt.setError(null);
+                        activity.updateTransferPayload("transferAmount",value);
+                    }else {
+                        activity.updateTransferPayload("transferAmount",null);
+                    }
+                }
+            }
+        });
+
+        traiterBeneficiaire(lbene);
+
+        List<AccountOption> fromAccountOptions;
     }
 
     private void showSelectDialogue(final List<AccountOption> data, Object sec, String label, String field, TextInputEditText editText,
@@ -159,11 +198,105 @@ public class SenderFragment extends Fragment {
                     activity.updateTransferPayload("fromClientId",accountOption.getClientId());
                     activity.updateTransferPayload("fromAccountType",accountOption.getAccountType().getIdServeur());
                     activity.updateTransferPayload("fromAccountId",accountOption.getAccountId());
-                    activity.setCurrentePage(1);
-                    activity.setFromAccountOption(accountOption);
+                   activity.setFromAccountOption(accountOption);
 
                 })
                 .setTitle("Compte émetteur".toUpperCase())
+                .setMultiselect(false)
+                .setSelect(selection);
+
+        View view = selectService.view(alertDialog);
+
+        View btn1 = Ut.getView(getContext(), R.layout.outline_bouton);
+        MaterialButton mtbt1 = btn1.findViewById(R.id.outlinedButton);
+        mtbt1.setText("Valider la sélection");
+        lm.addView(view);
+        //  lm.addView(btn1);
+
+
+        alertDialog.show();
+        mtbt1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.cancel();
+                String fs = field.contains(":") ? field.substring(0, field.indexOf(":")) : field;
+                // object=Ut.setField(fs,object,selectService.getSelect());
+                editText.setText(selectService.getStringSelect());
+                //Dialogue.neutreDialog(Ut.js(object),selectService.getSelect().size()+"",context).show();
+            }
+        });
+
+    }
+
+
+    private void traiterBeneficiaire(View view){
+        inputBen=view.findViewById(R.id.textField);
+        inputBen.setHint("Numéro du compte");
+        fieldNomBen=view.findViewById(R.id.textFieldNom);
+        idBen=view.findViewById(R.id.id);
+        nomBen=view.findViewById(R.id.nom);
+        attributBen=new Attribut();
+        attributBen.setSubLabel("clientName");
+
+        if(activity!=null&&activity.getTransferPayload()!=null){
+            // S.toast(getContext(),"input -v");
+            idBen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showSelectDialogueBene(activity.getToAccountOptions(), null, "accountNo", "acountNo", idBen, attributBen);
+                }
+            });
+        }
+    }
+
+    private void showSelectDialogueBene(final List<AccountOption> data, Object sec, String label, String field, TextInputEditText editText,
+                                    Attribut attribut) {
+        View dialogView = Ut.getView(getContext(), R.layout.add_layout);
+        LinearLayout lm = dialogView.findViewById(R.id.lmain);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(dialogView.getContext());
+        builder.setView(dialogView);
+
+        if(activity.getTypeTransFert()== TypeTransFert.TIERS){
+            MaterialButton add=dialogView.findViewById(R.id.outlinedButton);
+            LinearLayout espace=dialogView.findViewById(R.id.espace);
+            LinearLayout ladd=dialogView.findViewById(R.id.add_bouton);
+            ladd.setVisibility(VISIBLE);
+            espace.setVisibility(VISIBLE);
+            add.setText("Plus");
+            add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    activity.startActivity(new Intent(getContext(), Beneficiaire.class)
+                            .putExtra("add","add")
+                            .putExtra("titre","Bénéficiaires"));
+                    activity.finish();
+                }
+            });
+        }
+
+        final AlertDialog alertDialog = builder.create();
+
+        List<Object> selection;
+        if (sec == null) selection = new ArrayList<>();
+        else selection = (List<Object>) sec;
+
+        SelectService selectService = new SelectService(getContext(), new ArrayList<>(data), label, attribut,
+                (d, v, k) -> {
+                    d.cancel();
+                    // String fs=field.contains(":")?field.substring(0,field.indexOf(":")):field;
+                    AccountOption accountOption=data.get(Integer.parseInt(k + ""));;
+                    // AccountOption accountOption=activity.getToAccountOptions().get(item.getItemId()-1);
+                    idBen.setText(accountOption.getAccountNo());
+                    nomBen.setText(accountOption.getClientName());
+                    activity.updateTransferPayload("toOfficeId",accountOption.getOfficeId());
+                    activity.updateTransferPayload("toClientId",accountOption.getClientId());
+                    activity.updateTransferPayload("toAccountType",accountOption.getAccountType().getIdServeur());
+                    activity.updateTransferPayload("toAccountId",accountOption.getAccountId());
+                    activity.setToAccountOption(accountOption);
+
+                })
+                .setTitle("Compte bénéficiaire".toUpperCase())
                 .setMultiselect(false)
                 .setSelect(selection);
 

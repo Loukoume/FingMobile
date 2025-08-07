@@ -9,24 +9,49 @@
 
     <!-- En-tête dynamique -->
     <TextView
-        android:id="@+id/tv_step_header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Infos générals"
-        android:textSize="20sp"
+        android:textSize="17sp"
         android:layout_marginStart="8dp"
         android:textStyle="bold"
+        android:visibility="gone"
         android:textColor="?attr/colorOnBackground"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/top"
+        android:visibility="gone"
+        android:layout_marginHorizontal="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <TextView
+            android:id="@+id/tv_step_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Informations Émetteur"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/colorPrimary"
+            android:layout_height="1dp">
+        </View>
+    </LinearLayout>
 
     <!-- ViewPager pour les fragments -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_step_header"
+        app:layout_constraintTop_toBottomOf="@id/top"
         app:layout_constraintBottom_toTopOf="@id/button_bar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

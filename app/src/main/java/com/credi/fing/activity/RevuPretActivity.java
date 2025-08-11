@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import com.credi.fing.MainActivity;
 import com.credi.fing.R;
 import com.credi.fing.entity.Client;
 import com.credi.fing.pojo.LoanPojo;
+import com.credi.fing.pojo.LoanPurposeOption;
 import com.credi.fing.pojo.err.ApiErrorResponse;
 import com.credi.fing.pojo.err.ErrorUtils;
 import com.credi.fing.publics.AddActivity;
@@ -57,6 +59,7 @@ public class RevuPretActivity extends AppCompatActivity {
     LinearLayout network;
     View vide;
     LoanPojo loan;
+    ImageView back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +67,7 @@ public class RevuPretActivity extends AppCompatActivity {
         TextView tx=findViewById(R.id.tx_text);
         context=this;
         network=findViewById(R.id.network);
+        back=findViewById(R.id.back);
         tv_subtitle_no_connection=findViewById(R.id.tv_subtitle_no_connection);
         tv_subtitle_no_connection.setSelected(true);
         vide=findViewById(R.id.vde);
@@ -99,10 +103,7 @@ public class RevuPretActivity extends AppCompatActivity {
 
                         // Objet du prêt (ID à traduire en texte selon votre logique métier)
                         // Par exemple, si vous avez une Map<Integer, String> loanPurposeMap :
-                        // tvLoanPurposeValue.setText( loanPurposeMap.get(loan.getLoanPurposeId()) );
-                        tvLoanPurposeValue.setText(
-                               ""
-                        );
+                        tvLoanPurposeValue.setText(loan.getLoanPurpose().getName());
 
                         // Montant principal
                         tvPrincipalAmountValue.setText(
@@ -161,6 +162,14 @@ public class RevuPretActivity extends AppCompatActivity {
                 }
             }
         }
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            }
+        });
     }
 
     @Override
@@ -193,7 +202,15 @@ public class RevuPretActivity extends AppCompatActivity {
     public static List<Object> loanAccounts=MainActivity.savingsAccounts;
     Client client;
     boolean repeat=false;
+    LoanPurposeOption loanPurposeOption;
     void saveLoan(LoanPojo loanAccount){
+        if(loanAccount.getLoanPurpose()!=null){
+            loanPurposeOption=loanAccount.getLoanPurpose();
+            loanAccount.setLoanPurposeId(loanAccount.getLoanPurpose().getId());
+            loanAccount.setLoanPurpose(null);
+        }else if(loanPurposeOption!=null){
+            loanAccount.setLoanPurposeId(loanPurposeOption.getId());
+        }
         tv_subtitle_no_connection.setVisibility(GONE);
         showPb();
         // 1. Spécifiez vos identifiants Basic Auth
@@ -248,9 +265,8 @@ public class RevuPretActivity extends AppCompatActivity {
 
                         }
                     }
-                    tv_subtitle_no_connection.setText(errorContent);
-                    tv_subtitle_no_connection.setVisibility(VISIBLE);
-                    tv_subtitle_no_connection.startAnimation(Anim.getAnimeBH(context));
+                    int httpCode = response.code();
+                    erreurTechnique(errorContent,httpCode);
                     repeat=true;
                 }
                 hidePb();
@@ -284,10 +300,8 @@ public class RevuPretActivity extends AppCompatActivity {
 
                                 }
                             }
-                            tv_subtitle_no_connection.setText(titre[0]);
-                            tv_subtitle_no_connection.setVisibility(VISIBLE);
-
-                            tv_subtitle_no_connection.startAnimation(Anim.getAnimeBH(context));
+                            int pseudoCode = S.mapThrowableToCode(t);
+                            erreurTechnique(titre[0],pseudoCode);
                             repeat=true;
                         });
                     }
@@ -329,7 +343,6 @@ public class RevuPretActivity extends AppCompatActivity {
                     finish();
                 } else {
                     finish();
-
                 }
                 hidePb();
             }
@@ -343,20 +356,11 @@ public class RevuPretActivity extends AppCompatActivity {
         });
     }
 
-    private void showNetWork(String title,String msg,int icone){
-        NetworkCp networkCp=new NetworkCp(context,network,(o, k)->{
-            if(k==1){
-                repeat=true;
-                saveLoan(loan);
-                network.setVisibility(GONE);
-            }else {
-                network.setVisibility(GONE);
-            }
-        });
-        networkCp.parametrer(title,msg,icone);
+    private void showNetWork(String msg,int code){
+        Dialogue.dialog(msg,code,context).show();
     }
 
-    private void erreurTechnique(String errorContent,String title){
+    private void erreurTechnique(String errorContent,int code){
         // Affiche le message d’erreur et le code HTTP
 
         if (context instanceof Activity) {
@@ -374,7 +378,7 @@ public class RevuPretActivity extends AppCompatActivity {
                 }
                 String finalErrorContent1 = finalErrorContent;
                 activity.runOnUiThread(() -> {
-                    showNetWork(title,finalErrorContent1,R.drawable.erreur_tech_100);
+                    showNetWork(finalErrorContent1,code);
                 });
             }
         }

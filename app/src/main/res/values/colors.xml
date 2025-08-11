@@ -42,14 +42,22 @@
     <color name="blue">#448AFF</color>
     <color name="cardview_light_background">#F5F2F2</color>
 
-    <!-- Couleurs pour les onglets (TabLayout) -->
-    <color name="tab_text_inactive">@color/colorPrimary</color>  <!-- Gris moyen pour texte inactif -->
-    <color name="tab_text_active">@color/colorAccent</color>    <!-- Reprendre le bleu principal pour actif -->
+    <color name="tab_text_inactive">@color/colorPrimary</color>
+    <color name="tab_text_active">@color/colorAccent</color>
 
-    <color name="tab_icon_inactive">@color/colorPrimary</color>  <!-- Gris moyen pour icône inactif -->
-    <color name="tab_icon_active">#1565C0</color>    <!-- Bleu principal pour icône active -->
+    <color name="tab_icon_inactive">@color/colorPrimary</color>
+    <color name="tab_icon_active">#1565C0</color>
 
-    <!-- Couleur d’indicateur d’onglet (trait sous l’onglet actif) -->
+
     <color name="tab_indicator">@color/colorAccent</color>
-    <color name="colorOnPrimary">@color/colorPrimary</color>    <!-- Texte clair sur bleu -->
+    <color name="colorOnPrimary">@color/colorPrimary</color>
+
+    <!-- res/values/colors.xml -->
+    <color name="infoColor">#1565C0</color>
+    <color name="warningColor">#EF6C00</color>
+    <color name="errorColor">#C62828</color>
+    <color name="successColor">#2E7D32</color>
+    <color name="dialogBg">#FFFFFFFF</color>
+    <color name="iconBg">#0D000000</color> <!-- léger voile pour l’icône -->
+
 </resources>

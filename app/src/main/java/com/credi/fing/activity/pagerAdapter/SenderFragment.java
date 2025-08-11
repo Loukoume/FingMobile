@@ -142,6 +142,31 @@ public class SenderFragment extends Fragment {
                     showSelectDialogue(activity.getFromAccountOptions(), null, "accountNo", "accountNo", id, attribut);
                 }
             });
+            nom.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    /*String m[]=activity.getFromAccountOptions().stream().filter(o->o!=null).map(o->
+                            o.getAccountNo()
+                    ).collect(Collectors.toList()).toArray(new String[0]);
+                    PopupMenu pop= S.popupMenu(v,m);
+                    pop.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            AccountOption accountOption=activity.getFromAccountOptions().get(item.getItemId()-1);
+                            id.setText(accountOption.getAccountNo());
+                            nom.setText(accountOption.getClientName());
+                            activity.updateTransferPayload("fromOfficeId",accountOption.getOfficeId());
+                            activity.updateTransferPayload("fromClientId",accountOption.getClientId());
+                            activity.updateTransferPayload("fromAccountType",accountOption.getAccountType().getIdServeur());
+                            activity.updateTransferPayload("fromAccountId",accountOption.getAccountId());
+                            activity.setCurrentePage(1);
+
+                            return false;
+                        }
+                    });*/
+                    showSelectDialogue(activity.getFromAccountOptions(), null, "accountNo", "accountNo", id, attribut);
+                }
+            });
         }
         idCpEmt.addTextChangedListener(new TextWatcher() {
             @Override
@@ -175,6 +200,7 @@ public class SenderFragment extends Fragment {
 
     private void showSelectDialogue(final List<AccountOption> data, Object sec, String label, String field, TextInputEditText editText,
                                     Attribut attribut) {
+        activity.hidKey();
         View dialogView = Ut.getView(getContext(), R.layout.add_layout);
         LinearLayout lm = dialogView.findViewById(R.id.lmain);
 
@@ -228,7 +254,6 @@ public class SenderFragment extends Fragment {
 
     }
 
-
     private void traiterBeneficiaire(View view){
         inputBen=view.findViewById(R.id.textField);
         inputBen.setHint("Numéro du compte");
@@ -246,11 +271,18 @@ public class SenderFragment extends Fragment {
                     showSelectDialogueBene(activity.getToAccountOptions(), null, "accountNo", "acountNo", idBen, attributBen);
                 }
             });
+            nomBen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showSelectDialogueBene(activity.getToAccountOptions(), null, "accountNo", "acountNo", idBen, attributBen);
+                }
+            });
         }
     }
 
     private void showSelectDialogueBene(final List<AccountOption> data, Object sec, String label, String field, TextInputEditText editText,
                                     Attribut attribut) {
+        activity.hidKey();
         View dialogView = Ut.getView(getContext(), R.layout.add_layout);
         LinearLayout lm = dialogView.findViewById(R.id.lmain);
 

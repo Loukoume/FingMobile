@@ -370,8 +370,18 @@ public class TransactionsActivity extends AppCompatActivity {
                             e.printStackTrace();
                             errorContent = "Impossible de lire le contenu de l’erreur";
                         }
+                        if(errorContent.contains("{")){
+                            try {
+                                ApiErrorResponse apiErrorResponse=
+                                        new ApiErrorResponse().fromJs(errorContent);
+                                errorContent= ErrorUtils.buildErrorMessage(apiErrorResponse);
+                            }catch (Exception e){
 
-                        erreurTechnique(errorContent,"Erreur technique");
+                            }
+                        }
+
+                        int httpCode = response.code();
+                        erreurTechnique(errorContent,httpCode);
 
                 }
                 hideVide();
@@ -386,16 +396,17 @@ public class TransactionsActivity extends AppCompatActivity {
                     final String[] titre = {t.getMessage()};
                     if (!activity.isFinishing() && !activity.isDestroyed()) {
                         activity.runOnUiThread(() -> {
-                            if(titre[0].contains("java.net")|| titre[0].contains("javax.net")
-                                    || titre[0].contains("failed")|| titre[0].contains("Unable to resolve host"))
-                            {
-                                titre[0] ="Vérifier votre connexion internet et réessayer";
-                                showNetWork("Problème de connexion",titre[0],
-                                        R.drawable.wifi_100);
-                            }else {
-                                showNetWork("Erreur technique",t.getMessage(),
-                                        R.drawable.erreur_tech_100);
+                            if(titre[0].contains("{")){
+                                try {
+                                    ApiErrorResponse apiErrorResponse=
+                                            new ApiErrorResponse().fromJs(titre[0]);
+                                    titre[0]= ErrorUtils.buildErrorMessage(apiErrorResponse);
+                                }catch (Exception e){
+
+                                }
                             }
+                            int pseudoCode = S.mapThrowableToCode(t);
+                            erreurTechnique(titre[0],pseudoCode);
                         });
                     }
                 }
@@ -413,25 +424,15 @@ public class TransactionsActivity extends AppCompatActivity {
         vide.setVisibility(GONE);
     }
 
-    private void showNetWork(String title,String msg,int icone){
-        NetworkCp networkCp=new NetworkCp(context,network,(o, k)->{
-            if(k==1){
-                getAcountTransacgtion(index);
-                network.setVisibility(GONE);
-            }else {
-                finish();
-            }
-        });
-        networkCp.parametrer(title,msg,icone);
+    private void showNetWork(String msg,int code){
+        Dialogue.dialog(msg,code,context).show();
     }
 
-    private void erreurTechnique(String errorContent,String title){
+    private void erreurTechnique(String errorContent,int code){
         // Affiche le message d’erreur et le code HTTP
-         if(errorContent.contains("offline")||errorContent.contains("404")){
-             errorContent="Service indisponible pour le moment, veuillez réessayer ultérieurement.";
-         }
-        if (context_aux instanceof Activity) {
-            Activity activity = (Activity) context_aux;
+
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
             if (!activity.isFinishing() && !activity.isDestroyed()) {
                 String finalErrorContent = errorContent;
                 if(finalErrorContent.contains("{")){
@@ -445,7 +446,7 @@ public class TransactionsActivity extends AppCompatActivity {
                 }
                 String finalErrorContent1 = finalErrorContent;
                 activity.runOnUiThread(() -> {
-                    showNetWork(title,finalErrorContent1,R.drawable.erreur_tech_100);
+                    showNetWork(finalErrorContent1,code);
                 });
             }
         }

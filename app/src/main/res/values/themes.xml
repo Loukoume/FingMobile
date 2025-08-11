@@ -123,4 +123,14 @@
         <!-- Distance entre l’indicateur et le bord (optionnel) -->
         <item name="tabIndicatorFullWidth">false</item>
     </style>
+
+    <!-- res/values/styles.xml -->
+    <style name="AppAlertDialogTheme" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="materialAlertDialogBodyTextStyle">@style/DialogBodyText</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/DialogTitleText</item>
+    </style>
+
+    <style name="DialogTitleText" parent="TextAppearance.Material3.TitleLarge"/>
+    <style name="DialogBodyText"  parent="TextAppearance.Material3.BodyMedium"/>
+
 </resources>

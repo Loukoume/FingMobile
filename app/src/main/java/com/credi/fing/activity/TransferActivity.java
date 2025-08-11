@@ -114,7 +114,7 @@ public class TransferActivity extends AppCompatActivity {
         context=this;
         adapter = new TransferPagerAdapter(this,steps.size(), TypeAdapter.TRANSFERT);
         viewPager.setAdapter(adapter);
-//        configureStepView();
+        //configureStepView();
 
 
         // 3) Navigation des boutons
@@ -268,6 +268,10 @@ public class TransferActivity extends AppCompatActivity {
         this.toAccountOption = toAccountOption;
     }
 
+    public void hidKey(){
+        Ut.hideKeyboard(this);
+    }
+
     public void updateTransferPayload(String key, Object value){
         if(transferPayload==null){
             transferPayload=new TransferPayload();
@@ -336,11 +340,8 @@ public class TransferActivity extends AppCompatActivity {
                             }
                             String finalErrorContent1 = finalErrorContent;
                             activity.runOnUiThread(() -> {
-                                Dialogue.neutreDialog(
-                                        finalErrorContent1,
-                                        "Code d'erreur : " + response.code(),
-                                        context
-                                ).show();
+                                int httpCode = response.code();
+                                erreurTechnique(finalErrorContent1,httpCode);
                             });
                         }
                     }
@@ -362,7 +363,8 @@ public class TransferActivity extends AppCompatActivity {
                     Activity activity = (Activity) context;
                     if (!activity.isFinishing() && !activity.isDestroyed()) {
                         activity.runOnUiThread(() -> {
-                            Dialogue.neutreDialog(stackTrace, "Echec", context).show();
+                            int pseudoCode = S.mapThrowableToCode(t);
+                            erreurTechnique(stackTrace,pseudoCode);
                         });
                     }
                 }
@@ -522,9 +524,10 @@ public class TransferActivity extends AppCompatActivity {
                             }
                             String finalError1 = finalError;
                             activity.runOnUiThread(() ->
-                                    Dialogue.neutreDialog(finalError1,
-                                            "Code d'erreur : " + response.code(),
-                                            context).show()
+                                    {
+                                        int httpCode = response.code();
+                                        erreurTechnique(finalError1,httpCode);
+                                    }
                             );
                         }
                     }
@@ -615,8 +618,8 @@ public class TransferActivity extends AppCompatActivity {
                         e.printStackTrace();
                         errorContent = "Impossible de lire le contenu de l’erreur";
                     }
-
-                    erreurTechnique(errorContent,"Erreur technique");
+                    int httpCode = response.code();
+                    erreurTechnique(errorContent,httpCode);
 
                 }
                 hidePb();
@@ -634,12 +637,14 @@ public class TransferActivity extends AppCompatActivity {
                             if(titre[0].contains("java.net")|| titre[0].contains("javax.net"))
                             {
                                 titre[0] ="Vérifier votre connexion internet et réessayer";
-                                showNetWork("Problème de connexion",titre[0],
-                                        R.drawable.wifi_100);
+                                /*showNetWork("Problème de connexion",titre[0],
+                                        R.drawable.wifi_100);*/
                             }else {
-                                showNetWork("Erreur technique",t.getMessage(),
-                                        R.drawable.erreur_tech_100);
+                                /*showNetWork("Erreur technique",t.getMessage(),
+                                        R.drawable.erreur_tech_100);*/
                             }
+                            int pseudoCode = S.mapThrowableToCode(t);
+                            erreurTechnique(titre[0],pseudoCode);
                         });
                     }
                 }
@@ -647,23 +652,13 @@ public class TransferActivity extends AppCompatActivity {
         });
     }
 
-    private void showNetWork(String title,String msg,int icone){
-        NetworkCp networkCp=new NetworkCp(context,network,(o, k)->{
-            if(k==1){
-                getTemplate();
-                network.setVisibility(View.GONE);
-            }else {
-                finish();
-            }
-        });
-        networkCp.parametrer(title,msg,icone);
+    private void showNetWork(String msg,int code){
+        Dialogue.dialog(msg,code,context).show();
     }
 
-    private void erreurTechnique(String errorContent,String title){
+    private void erreurTechnique(String errorContent,int code){
         // Affiche le message d’erreur et le code HTTP
-        if(errorContent.contains("offline")||errorContent.contains("404")){
-            errorContent="Service indisponible pour le moment, veuillez réessayer ultérieurement.";
-        }
+
         if (context instanceof Activity) {
             Activity activity = (Activity) context;
             if (!activity.isFinishing() && !activity.isDestroyed()) {
@@ -679,7 +674,7 @@ public class TransferActivity extends AppCompatActivity {
                 }
                 String finalErrorContent1 = finalErrorContent;
                 activity.runOnUiThread(() -> {
-                    showNetWork(title,finalErrorContent1,R.drawable.erreur_tech_100);
+                    showNetWork(finalErrorContent1,code);
                 });
             }
         }

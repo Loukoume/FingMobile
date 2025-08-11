@@ -75,6 +75,8 @@ public class LoanPojo implements Serializable {
     @SerializedName("loanPurposeId")
     private Integer loanPurposeId;
 
+    private LoanPurposeOption loanPurpose;
+
     @SerializedName("maxOutstandingLoanBalance")
     private Double maxOutstandingLoanBalance;
 
@@ -95,6 +97,14 @@ public class LoanPojo implements Serializable {
 
     public void setIdServeur(String idServeur) {
         this.idServeur = idServeur;
+    }
+
+    public LoanPurposeOption getLoanPurpose() {
+        return loanPurpose;
+    }
+
+    public void setLoanPurpose(LoanPurposeOption loanPurpose) {
+        this.loanPurpose = loanPurpose;
     }
 
     public Boolean getEqualAmortization() {

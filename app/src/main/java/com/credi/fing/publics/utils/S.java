@@ -1490,5 +1490,12 @@ public class S {
         return   file1;
     }
 
+    public static int mapThrowableToCode(Throwable t) {
+        if (t instanceof java.net.UnknownHostException)   return -4; // pas de DNS / hôte inconnu
+        if (t instanceof java.net.SocketTimeoutException) return -2; // délai dépassé
+        if (t instanceof javax.net.ssl.SSLException)      return -3; // problème SSL
+        if (t instanceof java.io.IOException)             return -5; // autre erreur réseau
+        return -5; // valeur par défaut
+    }
 }
 

@@ -352,8 +352,8 @@ public class EditeService<T> {
                                // System.out.println(" txc "+t);
                                // System.out.println(" oob1  "+Ut.js(object));
                                 object=Ut.creatObject(object,t);
-                                //System.out.println(" oob2  "+Ut.js(object));
                             }
+                            System.out.println(field+" oofieldb2  "+object);
                             object=Ut.setField(field,object,s.toString());
                             //System.out.println(" oob3  "+Ut.js(object));
                         }

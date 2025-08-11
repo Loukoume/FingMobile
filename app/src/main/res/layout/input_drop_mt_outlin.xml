@@ -14,6 +14,10 @@
             android:layout_width="match_parent"
             app:boxBackgroundColor="@color/white"
             app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="7dp"
+            app:boxCornerRadiusTopEnd="7dp"
+            app:boxCornerRadiusBottomStart="7dp"
+            app:boxCornerRadiusBottomEnd="7dp"
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText

@@ -28,6 +28,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.credi.fing.activity.Beneficiaire;
 import com.credi.fing.activity.Inscription;
+import com.credi.fing.activity.NewTransfertActivity;
 import com.credi.fing.activity.PagerActivity;
 import com.credi.fing.activity.ProfileActivity;
 import com.credi.fing.activity.TransferActivity;
@@ -68,6 +69,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -85,120 +87,122 @@ public class MainActivity extends AppCompatActivity {
     private int currentPage = 0;
     CircleImageView profil;
     ProgressBar pb;
-    ImageView eye,mort,drawer;
+    ImageView eye, mort, drawer;
     View vide;
-    LinearLayout lservice,sheet,drawer_lineair,gradien,network,contenu;
+    LinearLayout lservice, sheet, drawer_lineair, gradien, network, contenu;
     //FloatingActionButton add;
     Context context;
-    TextView solde_pret,solde_epargne,symbole,name;
+    TextView solde_pret, solde_epargne, symbole, name;
 
     NavigationDrawer navigationDrawer;
     View viewDrawer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        profil=findViewById(R.id.profile_image);
-        solde_pret=findViewById(R.id.solde_pret);
-        solde_epargne=findViewById(R.id.solde_epargne);
+        profil = findViewById(R.id.profile_image);
+        solde_pret = findViewById(R.id.solde_pret);
+        solde_epargne = findViewById(R.id.solde_epargne);
         profil.setVisibility(View.VISIBLE);
-        eye=findViewById(R.id.eye);
-        lservice=findViewById(R.id.lservice);
-        sheet=findViewById(R.id.sheet);
-        contenu=findViewById(R.id.contenu);
-        drawer=findViewById(R.id.drawer);
-        drawer_lineair=findViewById(R.id.drawer_lineair);
-        vide=findViewById(R.id.vde);
-        pb=findViewById(R.id.pb);
-        gradien=findViewById(R.id.gradien);
-        context=this;
+        eye = findViewById(R.id.eye);
+        lservice = findViewById(R.id.lservice);
+        sheet = findViewById(R.id.sheet);
+        contenu = findViewById(R.id.contenu);
+        drawer = findViewById(R.id.drawer);
+        drawer_lineair = findViewById(R.id.drawer_lineair);
+        vide = findViewById(R.id.vde);
+        pb = findViewById(R.id.pb);
+        gradien = findViewById(R.id.gradien);
+        context = this;
         sheet.setVisibility(View.GONE);
-        mort=findViewById(R.id.mort);
-        symbole=findViewById(R.id.symbole);
-        name=findViewById(R.id.name);
-        network=findViewById(R.id.network);
+        mort = findViewById(R.id.mort);
+        symbole = findViewById(R.id.symbole);
+        name = findViewById(R.id.name);
+        network = findViewById(R.id.network);
         //carousel();
         //gradien.setBackground(gradien());
 
         vide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                S.toast(context,"Veuillez patienter");
+                S.toast(context, "Veuillez patienter");
             }
         });
 
-        services();clickBotom();
-        pret="";
-        epargne="";
+        services();
+        clickBotom();
+        pret = "";
+        epargne = "";
         closEyes();
-        boolean testPlayStor=Inscription.body==null||(Inscription.body.getPassword().equalsIgnoreCase("fingiciel")&&
+        boolean testPlayStor = Inscription.body == null || (Inscription.body.getPassword().equalsIgnoreCase("fingiciel") &&
                 Inscription.body.getUsername().equalsIgnoreCase("fingiciel"));
-        if(Inscription.user!=null){
-            String js=MonFichier.lire(context,"client");
-            if(js.isEmpty()&&testPlayStor){
-                js=Json.client;
+        if (Inscription.user != null) {
+            String js = MonFichier.lire(context, "client");
+            if (js.isEmpty() && testPlayStor) {
+                js = Json.client;
             }
-            if(!js.isEmpty()){
-                 client= new Client().fromJs(js);
-               // System.out.println("=client=> "+js);
-                loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
-                savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
+            if (!js.isEmpty()) {
+                client = new Client().fromJs(js);
+                // System.out.println("=client=> "+js);
+                loanAccounts = (List<Object>) Ut.getValue(client, "loanAccounts");
+                savingsAccounts = (List<Object>) Ut.getValue(client, "savingsAccounts");
                 setComptesValues();
             }
-            js=MonFichier.lire(context,"loanProductResponse");
-            if(js.isEmpty()&&testPlayStor){
-                js=Json.loanProductResponse;
+            js = MonFichier.lire(context, "loanProductResponse");
+            if (js.isEmpty() && testPlayStor) {
+                js = Json.loanProductResponse;
             }
-            if(!js.isEmpty()){
+            if (!js.isEmpty()) {
                 //logLongIterative("=loanProductResponse_tag=>",js);
                 //System.out.println("=loanProductResponse=> "+js);
-                loanProductResponse=new LoanProductResponse().fromJs(js);
+                loanProductResponse = new LoanProductResponse().fromJs(js);
             }
-            js=MonFichier.lire(context,"displayName");
-            if(js.isEmpty()&&testPlayStor){
-                js=Json.displayNam;
+            js = MonFichier.lire(context, "displayName");
+            if (js.isEmpty() && testPlayStor) {
+                js = Json.displayNam;
             }
-            if(!js.isEmpty()){
+            if (!js.isEmpty()) {
                 //logLongIterative("=displayName_tag=>",js);
                 //System.out.println("=displayName=> "+js);
-                Client cl=new Client().fromJs(js);
-                if(cl.getDisplayName()!=null&&!cl.getDisplayName().isEmpty()){
-                    String  sy=cl.getDisplayName().charAt(0)+"";
+                Client cl = new Client().fromJs(js);
+                if (cl.getDisplayName() != null && !cl.getDisplayName().isEmpty()) {
+                    String sy = cl.getDisplayName().charAt(0) + "";
                     symbole.setText(sy.toUpperCase());
                     name.setText(cl.getDisplayName());
                 }
             }
-            if(!testPlayStor){
+           // if (!testPlayStor) {
                 getClientAcount();
 
-            Ut.swip(gradien,(b,i)->{
-                if(i==3){
-                    getClientAcount();
-                }
-            });
-            Ut.swip(contenu,(b,i)->{
-                if(i==3){
-                    getClientAcount();
-                }
-            });
-            }
-        }else {
+                Ut.swip(gradien, (b, i) -> {
+                    if (i == 3) {
+                        getClientAcount();
+                    }
+                });
+                Ut.swip(contenu, (b, i) -> {
+                    if (i == 3) {
+                        getClientAcount();
+                    }
+                });
+           // }
+        } else {
             finish();
         }
         mort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] m={"Nous contacter","Se déconnecter"};
+                String[] m = {"Nous contacter", "Se déconnecter"};
                 //,"Qui somme nous"
-                PopupMenu pop=S.popupMenu(view,m);
+                PopupMenu pop = S.popupMenu(view, m);
                 pop.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()){
+                        switch (item.getItemId()) {
                             case 2:
-                                new LesConnectes().remove(context,Inscription.user);
-                                MonFichier.ecrire(context,"displayName","");
-                                MonFichier.ecrire(context,"client","");
+                                new LesConnectes().remove(context, Inscription.user);
+                                MonFichier.ecrire(context, "displayName", "");
+                                MonFichier.ecrire(context, "client", "");
                                 startActivity(new Intent(context, Inscription.class));
                                 finish();
                                 break;
@@ -219,14 +223,16 @@ public class MainActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
-        navigationDrawer=new NavigationDrawer(context,drawer,drawer_lineair);
+        navigationDrawer = new NavigationDrawer(context, drawer, drawer_lineair);
         navigationDrawer.setVide(vide);
         navigationDrawer.setSheet(sheet);
         navigationDrawer.view();
     }
+
     public static List<String> backColors = Arrays.asList("#EEEEEE", "#FFFFFF", "#EEEEEE", "#FFFFFF", "#E6E9FB");
 
     private static final int MAX_LOG_LENGTH = 4000;
+
     public static void logLongIterative(String tag, String text) {
         int length = text.length();
         for (int i = 0; i < length; i += MAX_LOG_LENGTH) {
@@ -240,27 +246,26 @@ public class MainActivity extends AppCompatActivity {
         super.onRestart();
         bottomNav.setSelectedItemId(R.id.navigation_home);
         //MonFichier.ecrire(context,"transmis","");
-        String transmis=MonFichier.lire(context,"transmis");
-        if(transmis.equals("ok")){
-            MonFichier.ecrire(context,"transmis","");
+        String transmis = MonFichier.lire(context, "transmis");
+        if (transmis.equals("ok")) {
+            MonFichier.ecrire(context, "transmis", "");
             getClientAcount();
         }
     }
 
     @Override
     public void onBackPressed() {
-        if(sheet.getVisibility()==View.VISIBLE){
+        if (sheet.getVisibility() == View.VISIBLE) {
             sheet.setVisibility(View.GONE);
             vide.setVisibility(View.GONE);
             bottomNav.setSelectedItemId(R.id.navigation_home);
-        }else
-        {
+        } else {
             super.onBackPressed();
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
     }
 
-    private void carousel(){
+    private void carousel() {
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
 
@@ -309,40 +314,40 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void services(){
-        List<Object> list= Arrays.asList(new CarouselItem("",R.drawable.transfert0),new CarouselItem("",R.drawable.pret)
-                ,new CarouselItem("",R.drawable.compte),new CarouselItem("",R.drawable.beneficiaire));
-         RecyclierViewCp recyclierViewCp=new RecyclierViewCp(this,R.layout.row_home,list,(h,o,i)->{
-         CarouselItem ob= (CarouselItem) o;
-         ImageView imageView=h.image;
-         imageView.setImageResource(ob.imageRes);
+    private void services() {
+        List<Object> list = Arrays.asList(new CarouselItem("", R.drawable.transfert0), new CarouselItem("", R.drawable.pret)
+                , new CarouselItem("", R.drawable.compte), new CarouselItem("", R.drawable.beneficiaire));
+        RecyclierViewCp recyclierViewCp = new RecyclierViewCp(this, R.layout.row_home, list, (h, o, i) -> {
+            CarouselItem ob = (CarouselItem) o;
+            ImageView imageView = h.image;
+            imageView.setImageResource(ob.imageRes);
 
         }).setNumberItems(2).setBackground(R.color.colorSendre);
 
 
         lservice.addView(recyclierViewCp.view());
 
-        recyclierViewCp.setOnClick((o,i)->{
-            if(loanAccounts==null){
-                loanAccounts=new ArrayList<>();
+        recyclierViewCp.setOnClick((o, i) -> {
+            if (loanAccounts == null) {
+                loanAccounts = new ArrayList<>();
             }
-            if(savingsAccounts==null){
-                savingsAccounts=new ArrayList<>();
+            if (savingsAccounts == null) {
+                savingsAccounts = new ArrayList<>();
             }
-            if(loanProductResponse==null){
-                loanProductResponse=new LoanProductResponse();
+            if (loanProductResponse == null) {
+                loanProductResponse = new LoanProductResponse();
             }
-            switch (i){
+            switch (i) {
                 case 0:
-                   // S.toast(context,"Module en cours de developpement");
+                    // S.toast(context,"Module en cours de developpement");
                     //startActivity(new Intent(context, ViewQrCodeReadActivity.class));
                     showTypeTransfert();
 
                     break;
                 case 1:
-                    LoanPojo loanAccount=new LoanPojo();
+                    LoanPojo loanAccount = new LoanPojo();
                     loanAccount.setClientId(Inscription.user.getClientId());
-                    LoanType loanType=new LoanType();
+                    LoanType loanType = new LoanType();
                     loanType.setId(1L);
                     loanType.setCode("accountType.individual");
                     loanType.setValue("individual");
@@ -376,7 +381,8 @@ public class MainActivity extends AppCompatActivity {
 
                     loanAccount.setLocale("fr");
                     loanAccount.setDateFormat("dd MMMM yyyy");
-
+                    loanAccount.setSubmittedOnDate(S.dateToString(new Date(), "dd MMMM yyyy"));
+                    loanAccount.setExpectedDisbursementDate(S.dateToString(new Date(), "dd MMMM yyyy"));
                     /*loanAccount.setExpectedDisbursementDate("05 octobre 2024");
                     loanAccount.setSubmittedOnDate("05 octobre 2024");*/
 
@@ -413,34 +419,34 @@ public class MainActivity extends AppCompatActivity {
                         LoanPojo loan= (LoanPojo) Ut.creatObject(object,LoanAccount.class);
                         saveLoan(loan,activity);
                     });*/
-                    List<String> comptes=loanAccounts.stream().map(ac->Ut.getValue(ac,"accountNo")+"").collect(Collectors.toList());
+                    List<String> comptes = loanAccounts.stream().map(ac -> Ut.getValue(ac, "accountNo") + "").collect(Collectors.toList());
                     //System.out.println("comptes == "+comptes);
-                    LoanAccountBinder pretBinder=new LoanAccountBinder();
-                    EditeObject editeObject=pretBinder.editeObject(loanProductResponse,comptes);
+                    LoanAccountBinder pretBinder = new LoanAccountBinder();
+                    EditeObject editeObject = pretBinder.editeObject(loanProductResponse, comptes);
                     editeObject.setObject(loanAccount);
 
                     startActivity(new Intent(context, AddActivity.class)
-                            .putExtra("object",editeObject));
+                            .putExtra("object", editeObject));
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     break;
                 case 2:
                     startActivity(new Intent(context, PagerActivity.class)
-                            .putExtra("client",client));
+                            .putExtra("client", client));
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                     break;
+                    break;
                 case 3:
                     startActivity(new Intent(context, Beneficiaire.class)
-                            .putExtra("titre","Bénéficiaires"));
+                            .putExtra("titre", "Bénéficiaires"));
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     break;
             }
         });
-        recyclierViewCp.setOnLongClick((o,i)->{
-          //  Dialogue.neutreDialog(o+"",i+" long",MainActivity.this).show();
+        recyclierViewCp.setOnLongClick((o, i) -> {
+            //  Dialogue.neutreDialog(o+"",i+" long",MainActivity.this).show();
         });
 
-        Ut.swip(recyclierViewCp.getRecyclerView(),(b,i)->{
-            if(i==3){
+        Ut.swip(recyclierViewCp.getRecyclerView(), (b, i) -> {
+            if (i == 3) {
                 getClientAcount();
             }
         });
@@ -448,56 +454,57 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    boolean isShowingEprgne=true,isShowingPret=true;
-    String pret,epargne;
-    private void closEyes(){
-        if(pret!=null&&!pret.isEmpty()){
-            solde_pret.setText(pret+" CFA");
+    boolean isShowingEprgne = true, isShowingPret = true;
+    String pret, epargne;
+
+    private void closEyes() {
+        if (pret != null && !pret.isEmpty()) {
+            solde_pret.setText(pret + " CFA");
         }
-        if(epargne!=null&&!epargne.isEmpty()){
-            solde_epargne.setText(epargne+" CFA");
+        if (epargne != null && !epargne.isEmpty()) {
+            solde_epargne.setText(epargne + " CFA");
         }
         eye.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              isShowingPret=!isShowingPret;
-              MonFichier.ecrire(context,"isShowingPret",isShowingPret+"");
-              if(isShowingPret){
-                  solde_pret.setText(pret+" CFA");
-                  solde_epargne.setText(epargne+" CFA");
-                  eye.setImageResource(R.drawable.ic_eye_off_24dp2);
-              }else {
-                  eye.setImageResource(R.drawable.ic_eye_white_24dp);
-                  solde_pret.setText("**************");
-                  solde_epargne.setText("***************");
-              }
+                isShowingPret = !isShowingPret;
+                MonFichier.ecrire(context, "isShowingPret", isShowingPret + "");
+                if (isShowingPret) {
+                    solde_pret.setText(pret + " CFA");
+                    solde_epargne.setText(epargne + " CFA");
+                    eye.setImageResource(R.drawable.ic_eye_off_24dp2);
+                } else {
+                    eye.setImageResource(R.drawable.ic_eye_white_24dp);
+                    solde_pret.setText("**************");
+                    solde_epargne.setText("***************");
+                }
             }
         });
 
     }
 
-    private static CrudInterface crudInterface(String id, String url, Context context){
-        CrudInterface crudInterface=new CrudInterface();
-        crudInterface.setOnDelete((o,i)->{
-            String vals=Ut.getAllValues(o,"idServeur|"+id);
-            if(vals!=null&&!vals.isEmpty()){
-                new HttpApi(context).data(url+"/delete",o,(ob, s)->{
+    private static CrudInterface crudInterface(String id, String url, Context context) {
+        CrudInterface crudInterface = new CrudInterface();
+        crudInterface.setOnDelete((o, i) -> {
+            String vals = Ut.getAllValues(o, "idServeur|" + id);
+            if (vals != null && !vals.isEmpty()) {
+                new HttpApi(context).data(url + "/delete", o, (ob, s) -> {
                     ListActivity.update(i);
                     return ob;
                 });
             }
         });
-        crudInterface.setOnSave((o,i)->{
-            String vals=Ut.getAllValues(o,"idServeur|"+id);
+        crudInterface.setOnSave((o, i) -> {
+            String vals = Ut.getAllValues(o, "idServeur|" + id);
 
-            if(vals!=null&&!vals.isEmpty()){
-                ListActivity.update(i,o);
+            if (vals != null && !vals.isEmpty()) {
+                ListActivity.update(i, o);
             }
         });
         return crudInterface;
     }
 
-    void getClient(){
+    void getClient() {
         showPb();
         // 1. Spécifiez vos identifiants Basic Auth
         String username = Inscription.user.getUsername();
@@ -520,11 +527,11 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<Client> call, Response<Client> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Client client = response.body();
-                    MonFichier.ecrire(context,"displayName",client.js());
-                    System.out.println(" displayName => "+client.js());
-                   // String displayName = client.getFirstname() + " " + client.getLastname();
-                    if(client.getDisplayName()!=null&&!client.getDisplayName().isEmpty()){
-                        String  sy=client.getDisplayName().charAt(0)+"";
+                    MonFichier.ecrire(context, "displayName", client.js());
+                    System.out.println(" displayName => " + client.js());
+                    // String displayName = client.getFirstname() + " " + client.getLastname();
+                    if (client.getDisplayName() != null && !client.getDisplayName().isEmpty()) {
+                        String sy = client.getDisplayName().charAt(0) + "";
                         symbole.setText(sy);
                         name.setText(client.getDisplayName());
                     }
@@ -543,7 +550,8 @@ public class MainActivity extends AppCompatActivity {
                         errorContent = "Impossible de lire le contenu de l’erreur";
                     }
 
-                    erreurTechnique(errorContent,"Erreur technique");
+                     int httpCode = response.code();
+                    erreurTechnique(errorContent,httpCode);
 
                 }
                 hidePb();
@@ -557,18 +565,9 @@ public class MainActivity extends AppCompatActivity {
                     Activity activity = (Activity) context;
                     if (!activity.isFinishing() && !activity.isDestroyed()) {
                         activity.runOnUiThread(() -> {
-                            if(titre[0].contains("java.net")|| titre[0].contains("javax.net")
-                                    || titre[0].contains("failed")|| titre[0].contains("Unable to resolve host"))
-                            {
-                                titre[0] ="Vérifier votre connexion internet et réessayer";
-                                showNetWork("Problème de connexion",titre[0],
-                                        R.drawable.wifi_100);
-                            }else {
-                                showNetWork("Erreur technique",t.getMessage(),
-                                        R.drawable.erreur_tech_100);
-                            }
 
-                            Dialogue.neutreDialog(t.getMessage()+"","Echec",context).show();
+                            int pseudoCode = S.mapThrowableToCode(t);
+                            erreurTechnique(titre[0],pseudoCode);
                         });
                     }
 
@@ -578,23 +577,26 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    void showPb(){
+    void showPb() {
         pb.setVisibility(View.VISIBLE);
         vide.setVisibility(View.VISIBLE);
     }
-    void hidePb(){
+
+    void hidePb() {
         pb.setVisibility(View.GONE);
         vide.setVisibility(View.GONE);
     }
+
     public static List<Object> savingsAccounts;
     public static List<Object> loanAccounts;
     public static LoanProductResponse loanProductResponse;
     Client client;
-    void getClientAcount(){
+
+    void getClientAcount() {
         showPb();
         // 1. Spécifiez vos identifiants Basic Auth
         String username = Inscription.body.getUsername();
-       // String password = Inscription.user;
+        // String password = Inscription.user;
 
         // 2. Obtenez l'instance de RetrofitClient
         RetrofitClient retrofitClient = RetrofitClient.getInstance(username, Inscription.body.getPassword());
@@ -612,22 +614,30 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Client> call, Response<Client> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                     client = response.body();
-                     MonFichier.ecrire(context,"client",client.js());
-                    loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
-                    savingsAccounts= (List<Object>) Ut.getValue(client,"savingsAccounts");
-                   // System.out.println(" clien_t => "+Ut.listJs(savingsAccounts));
-                    for (Object sav:savingsAccounts){
-                        SavingsAccount vac= (SavingsAccount) Ut.creatObject(sav, SavingsAccount.class);
-                       // Dialogue.neutreDialog(Ut.js(sav),"compte",context).show();
+                    client = response.body();
+                    MonFichier.ecrire(context, "client", client.js());
+                    loanAccounts = (List<Object>) Ut.getValue(client, "loanAccounts");
+                    savingsAccounts = (List<Object>) Ut.getValue(client, "savingsAccounts");
+                    // System.out.println(" clien_t => "+Ut.listJs(savingsAccounts));
+                    for (Object sav : savingsAccounts) {
+                        SavingsAccount vac = (SavingsAccount) Ut.creatObject(sav, SavingsAccount.class);
+                        // Dialogue.neutreDialog(Ut.js(sav),"compte",context).show();
 
                         int code = vac.checkSavingsAccountStatus();
                         String msg;
                         switch (code) {
-                            case 0:  msg = "Clôturé"; break;
-                            case -1: msg = "En attente d’approbation"; break;
-                            case 2:  msg = "Bloqué"; break;
-                            default: msg = "OK"; break;
+                            case 0:
+                                msg = "Clôturé";
+                                break;
+                            case -1:
+                                msg = "En attente d’approbation";
+                                break;
+                            case 2:
+                                msg = "Bloqué";
+                                break;
+                            default:
+                                msg = "OK";
+                                break;
                         }
                         System.out.println("Compte " + vac.getAccountNo() + " : " + msg);
                     }
@@ -646,7 +656,8 @@ public class MainActivity extends AppCompatActivity {
                         errorContent = "Impossible de lire le contenu de l’erreur";
                     }
 
-                    erreurTechnique(errorContent,"Erreur technique");
+                    int httpCode = response.code();
+                    erreurTechnique(errorContent,httpCode);
 
                 }
                 hidePb();
@@ -661,16 +672,8 @@ public class MainActivity extends AppCompatActivity {
                     Activity activity = (Activity) context;
                     if (!activity.isFinishing() && !activity.isDestroyed()) {
                         activity.runOnUiThread(() -> {
-                            if(titre[0].contains("java.net")|| titre[0].contains("javax.net")
-                                    || titre[0].contains("failed")|| titre[0].contains("Unable to resolve host"))
-                            {
-                                titre[0] ="Vérifier votre connexion internet et réessayer";
-                                showNetWork("Problème de connexion",titre[0],
-                                        R.drawable.wifi_100);
-                            }else {
-                                showNetWork("Erreur technique",t.getMessage(),
-                                        R.drawable.erreur_tech_100);
-                            }
+                            int pseudoCode = S.mapThrowableToCode(t);
+                            erreurTechnique(titre[0],pseudoCode);
 
                             //Dialogue.neutreDialog(t.getMessage()+"","Echec",context).show();
                         });
@@ -682,23 +685,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    double value(String v){
-        return v==null||v.isEmpty()?0:Double.parseDouble(v);
+    double value(String v) {
+        return v == null || v.isEmpty() ? 0 : Double.parseDouble(v);
     }
-    private void setComptesValues(){
-        Double prets=0.0,eprgne=0.0;
-        if(loanAccounts!=null){
-             prets=loanAccounts.stream().mapToDouble(x->value(Ut.getAllValues(x,"loanBalance"))).sum();
+
+    private void setComptesValues() {
+        Double prets = 0.0, eprgne = 0.0;
+        if (loanAccounts != null) {
+            prets = loanAccounts.stream().mapToDouble(x -> value(Ut.getAllValues(x, "loanBalance"))).sum();
         }
-        if(savingsAccounts!=null){
-             eprgne=savingsAccounts.stream().mapToDouble(x->value(Ut.getAllValues(x,"accountBalance"))).sum();
+        if (savingsAccounts != null) {
+            eprgne = savingsAccounts.stream().mapToDouble(x -> value(Ut.getAllValues(x, "accountBalance"))).sum();
         }
-        pret=Ut.formatMontant(prets);
-        epargne=Ut.formatMontant(eprgne);
+        pret = Ut.formatMontant(prets);
+        epargne = Ut.formatMontant(eprgne);
         closEyes();
     }
 
-    void getTemplate(){
+    void getTemplate() {
         showPb();
         // 1. Spécifiez vos identifiants Basic Auth
         String username = Inscription.body.getUsername();
@@ -711,21 +715,22 @@ public class MainActivity extends AppCompatActivity {
         // 3. Préparez l'appel
         String clientId = "individual";                     // ID du client (ici 8)
         String tenant = "default";              // tenantIdentifier
+        int produitId=1;
 
         Call<LoanProductResponse> call = api.getTemplatePret("Basic " + okhttp3.Credentials.basic(username, Inscription.body.getPassword()),
-                clientId, tenant);
+                clientId,produitId, tenant);
 
         // 4. Exécutez l'appel de manière asynchrone
         call.enqueue(new Callback<LoanProductResponse>() {
             @Override
             public void onResponse(Call<LoanProductResponse> call, Response<LoanProductResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                   loanProductResponse = response.body();
-                    System.out.println(" loanProductResponse => "+loanProductResponse.js());
-                   MonFichier.ecrire(context,"loanProductResponse",loanProductResponse.js());
-                   // loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
+                    loanProductResponse = response.body();
+                    System.out.println(" loanProductResponse => " + loanProductResponse.js());
+                    MonFichier.ecrire(context, "loanProductResponse", loanProductResponse.js());
+                    // loanAccounts= (List<Object>) Ut.getValue(client,"loanAccounts");
                     //= (List<Object>) Ut.getValue(client,"savingsAccounts");
-                   // setComptesValues();
+                    // setComptesValues();
 
                 } else {
                     String errorContent;
@@ -740,7 +745,8 @@ public class MainActivity extends AppCompatActivity {
                         errorContent = "Impossible de lire le contenu de l’erreur";
                     }
 
-                    erreurTechnique(errorContent,"Erreur technique");
+                    int httpCode = response.code();
+                    erreurTechnique(errorContent,httpCode);
 
                 }
                 hidePb();
@@ -755,16 +761,8 @@ public class MainActivity extends AppCompatActivity {
                     Activity activity = (Activity) context;
                     if (!activity.isFinishing() && !activity.isDestroyed()) {
                         activity.runOnUiThread(() -> {
-                            if(titre[0].contains("java.net")|| titre[0].contains("javax.net")
-                                    || titre[0].contains("failed")|| titre[0].contains("Unable to resolve host"))
-                            {
-                                titre[0] ="Vérifier votre connexion internet et réessayer";
-                                showNetWork("Problème de connexion",titre[0],
-                                        R.drawable.wifi_100);
-                            }else {
-                                showNetWork("Erreur technique",t.getMessage(),
-                                        R.drawable.erreur_tech_100);
-                            }
+                            int pseudoCode = S.mapThrowableToCode(t);
+                            erreurTechnique(titre[0],pseudoCode);
 
                             //Dialogue.neutreDialog(t.getMessage()+"","Echec",context).show();
                         });
@@ -774,13 +772,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     BottomNavigationView bottomNav;
-    void clickBotom(){
-         bottomNav = findViewById(R.id.bottom_navigation);
+
+    void clickBotom() {
+        bottomNav = findViewById(R.id.bottom_navigation);
 
         // (Re)appliquer les modes si besoin
-       // bottomNav.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
-       // bottomNav.setItemHorizontalTranslationEnabled(false);
+        // bottomNav.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
+        // bottomNav.setItemHorizontalTranslationEnabled(false);
 
         // Gérer les clics sur les items
         bottomNav.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
@@ -791,18 +791,18 @@ public class MainActivity extends AppCompatActivity {
                         // TODO: Afficher la page d'accueil
                         return true;
                     case "Bénéficiaires":
-                       startActivity(new Intent(context, Beneficiaire.class)
-                               .putExtra("titre","Bénéficiaires"));
+                        startActivity(new Intent(context, Beneficiaire.class)
+                                .putExtra("titre", "Bénéficiaires"));
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         return true;
                     case "Enquêtes":
                         /*startActivity(new Intent(context, Beneficiaire.class)
                                 .putExtra("titre","Les enquêtes"));
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);*/
-                        S.toast(context,"Module en cour de dévéloppement");
+                        S.toast(context, "Module en cour de dévéloppement");
                         return true;
                     case "Nous contacter":
-                       showContact();
+                        showContact();
                         return true;
                 }
                 return false;
@@ -810,41 +810,41 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    void showContact(){
+    void showContact() {
         sheet.setVisibility(View.VISIBLE);
         sheet.removeAllViews();
-        SheetCp sheetCp=new SheetCp(context)
+        SheetCp sheetCp = new SheetCp(context)
                 .setTitle("Nous contacter");
-        View vv=sheetCp.view();
-        LinearLayout content=vv.findViewById(R.id.content);
+        View vv = sheetCp.view();
+        LinearLayout content = vv.findViewById(R.id.content);
         sheet.addView(vv);
-        View tm= Ut.getView(context,R.layout.row_jrs);
-        ImageView im1=tm.findViewById(R.id.icone);
-        ImageView close=vv.findViewById(R.id.close);
-        CheckBox checkbox=tm.findViewById(R.id.checkbox);
+        View tm = Ut.getView(context, R.layout.row_jrs);
+        ImageView im1 = tm.findViewById(R.id.icone);
+        ImageView close = vv.findViewById(R.id.close);
+        CheckBox checkbox = tm.findViewById(R.id.checkbox);
         checkbox.setVisibility(View.GONE);
         im1.setImageResource(R.drawable.outline_attach_email_24);
-        Ut.setImageTint(im1,R.color.colorPrimary,context);
-        TextView til=tm.findViewById(R.id.title);
+        Ut.setImageTint(im1, R.color.colorPrimary, context);
+        TextView til = tm.findViewById(R.id.title);
         til.setText("support@fingiciel.com");
-        til.setTextColor(Ut.getColor(context,R.color.colorPrimary));
+        til.setTextColor(Ut.getColor(context, R.color.colorPrimary));
         content.addView(tm);
 
-        View fz= Ut.getView(context,R.layout.row_jrs);
-        ImageView im2=fz.findViewById(R.id.icone);
-        CheckBox ch=fz.findViewById(R.id.checkbox);
+        View fz = Ut.getView(context, R.layout.row_jrs);
+        ImageView im2 = fz.findViewById(R.id.icone);
+        CheckBox ch = fz.findViewById(R.id.checkbox);
         ch.setVisibility(View.GONE);
         im2.setImageResource(R.drawable.baseline_add_call_24);
-        Ut.setImageTint(im2,R.color.colorAccent,context);
-        TextView ti=fz.findViewById(R.id.title);
+        Ut.setImageTint(im2, R.color.colorAccent, context);
+        TextView ti = fz.findViewById(R.id.title);
         ti.setText("0033695544758");
-        ti.setTextColor(Ut.getColor(context,R.color.colorAccent));
+        ti.setTextColor(Ut.getColor(context, R.color.colorAccent));
         content.addView(fz);
         vide.setVisibility(View.VISIBLE);
         fz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                appel("0033695544758",context);
+                appel("0033695544758", context);
                 sheet.setVisibility(View.GONE);
                 vide.setVisibility(View.GONE);
                 bottomNav.setSelectedItemId(R.id.navigation_home);
@@ -870,44 +870,47 @@ public class MainActivity extends AppCompatActivity {
         sheet.setAnimation(Anim.getAnimeBH(context));
     }
 
-    void showTypeTransfert(){
+    void showTypeTransfert() {
         sheet.setVisibility(View.VISIBLE);
         sheet.removeAllViews();
         //  String[] typs={"Transfert entre mes comptes","Transfert vers un tiers"};
-        SheetCp sheetCp=new SheetCp(context)
+        SheetCp sheetCp = new SheetCp(context)
                 .setTitle("Type de transfert".toUpperCase());
-        View vv=sheetCp.view();
-        LinearLayout content=vv.findViewById(R.id.content);
+        View vv = sheetCp.view();
+        LinearLayout content = vv.findViewById(R.id.content);
         sheet.addView(vv);
-        View tm= Ut.getView(context,R.layout.row_jrs);
-        ImageView im1=tm.findViewById(R.id.icone);
-        ImageView close=vv.findViewById(R.id.close);
-        CheckBox checkbox=tm.findViewById(R.id.checkbox);
+        View tm = Ut.getView(context, R.layout.row_jrs);
+        ImageView im1 = tm.findViewById(R.id.icone);
+        ImageView close = vv.findViewById(R.id.close);
+        CheckBox checkbox = tm.findViewById(R.id.checkbox);
         checkbox.setVisibility(View.GONE);
         im1.setImageResource(R.drawable.ic_transfert_interne);
-        Ut.setImageTint(im1,R.color.colorPrimary,context);
-        TextView til=tm.findViewById(R.id.title);
+        Ut.setImageTint(im1, R.color.colorPrimary, context);
+        TextView til = tm.findViewById(R.id.title);
         til.setText("Transfert entre mes comptes");
-        til.setTextColor(Ut.getColor(context,R.color.colorPrimary));
+        til.setTextColor(Ut.getColor(context, R.color.colorPrimary));
         content.addView(tm);
 
-        View fz= Ut.getView(context,R.layout.row_jrs);
-        ImageView im2=fz.findViewById(R.id.icone);
-        CheckBox ch=fz.findViewById(R.id.checkbox);
+        View fz = Ut.getView(context, R.layout.row_jrs);
+        ImageView im2 = fz.findViewById(R.id.icone);
+        CheckBox ch = fz.findViewById(R.id.checkbox);
         ch.setVisibility(View.GONE);
         im2.setImageResource(R.drawable.ic_transfert_tiers);
-        Ut.setImageTint(im2,R.color.colorAccent,context);
-        TextView ti=fz.findViewById(R.id.title);
+        Ut.setImageTint(im2, R.color.colorAccent, context);
+        TextView ti = fz.findViewById(R.id.title);
         ti.setText("Transfert vers un tiers");
-        ti.setTextColor(Ut.getColor(context,R.color.colorAccent));
+        ti.setTextColor(Ut.getColor(context, R.color.colorAccent));
         content.addView(fz);
         vide.setVisibility(View.VISIBLE);
         fz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 close.performClick();
+                /*startActivity(new Intent(context, NewTransfertActivity.class)
+                        .putExtra("type", "tiers"));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);*/
                 startActivity(new Intent(context, TransferActivity.class)
-                        .putExtra("type","tiers"));
+                        .putExtra("type", "tiers"));
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
@@ -916,7 +919,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 close.performClick();
                 startActivity(new Intent(context, TransferActivity.class)
-                        .putExtra("type","interne"));
+                        .putExtra("type", "interne"));
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
@@ -944,7 +947,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-   // @RequiresApi(api = Build.VERSION_CODES.M)
+    // @RequiresApi(api = Build.VERSION_CODES.M)
     private void appel(String tel, Context context) {
         tel = tel.replace("Tel: ", "").replace(" ", "");
         Intent callIntent = new Intent(Intent.ACTION_CALL);
@@ -969,6 +972,7 @@ public class MainActivity extends AppCompatActivity {
         }
         context.startActivity(callIntent);
     }
+
     private boolean checkPermission(Context c) {
         return (ContextCompat.checkSelfPermission(c, "android.permission.READ_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED) &&
                 (ContextCompat.checkSelfPermission(c, "android.permission.CALL_PHONE") == PackageManager.PERMISSION_GRANTED);
@@ -979,10 +983,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public GradientDrawable gradien(){
+    public GradientDrawable gradien() {
         int[] colors = new int[]{
-                Ut.getColor(context,R.color.blue),
-                Ut.getColor(context,R.color.backgrund2)
+                Ut.getColor(context, R.color.blue),
+                Ut.getColor(context, R.color.backgrund2)
                 // Ajoutez d'autres couleurs ici si besoin
         };
 
@@ -997,19 +1001,11 @@ public class MainActivity extends AppCompatActivity {
         return gradientDrawable;
     }
 
-    private void showNetWork(String title,String msg,int icone){
-        NetworkCp networkCp=new NetworkCp(context,network,(o,k)->{
-            if(k==1){
-                getClientAcount();
-                network.setVisibility(View.GONE);
-            }else {
-                finish();
-            }
-        });
-        networkCp.parametrer(title,msg,icone);
+    private void showNetWork(String msg,int code){
+        Dialogue.dialog(msg,code,context).show();
     }
 
-    private void erreurTechnique(String errorContent,String title){
+    private void erreurTechnique(String errorContent,int code){
         // Affiche le message d’erreur et le code HTTP
 
         if (context instanceof Activity) {
@@ -1027,7 +1023,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 String finalErrorContent1 = finalErrorContent;
                 activity.runOnUiThread(() -> {
-                  showNetWork(title,finalErrorContent1,R.drawable.erreur_tech_100);
+                    showNetWork(finalErrorContent1,code);
                 });
             }
         }

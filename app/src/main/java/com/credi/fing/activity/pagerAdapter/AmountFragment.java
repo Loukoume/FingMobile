@@ -84,10 +84,6 @@ public class AmountFragment extends Fragment {
 
         TransferActivity activity= (TransferActivity) view.getContext();
 
-        if(activity!=null&&activity.transferPayload!=null){
-
-        }
-
         textInputEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

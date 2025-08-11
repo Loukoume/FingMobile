@@ -5,6 +5,7 @@ import com.credi.fing.activity.RevuPretActivity;
 import com.credi.fing.entity.LoanAccount;
 import com.credi.fing.pojo.LoanPojo;
 import com.credi.fing.pojo.LoanProductResponse;
+import com.credi.fing.pojo.LoanPurposeOption;
 import com.credi.fing.pojo.ProductOption;
 import com.credi.fing.publics.AddActivity;
 import com.credi.fing.publics.adapters.generiqueAdapter.ActionMenu;
@@ -54,13 +55,15 @@ public class LoanAccountBinder implements Serializable, BinderInterface {
                                        List<String> comptes) {
         List<ProductOption> options=loanProductResponse.getProductOptions();
         if(options==null)options=new ArrayList<>();
+        List<LoanPurposeOption> purposeOptions=loanProductResponse.getLoanPurposeOptions();
+        if(purposeOptions==null)purposeOptions=new ArrayList<>();
         List<Attribut> attributs = Arrays.asList(
-                new Attribut("Produit de crédit", "productOption","object", false)
+                new Attribut("Produit de crédit", "productOption","object", true)
                         .setValuess(options.stream().map(ss->(ProductOption) ss).collect(Collectors.toList())).setLabel("name"),
                  new Attribut("Montant principal", "principal","number", true),
-                new Attribut("Date limite de soumission", "submittedOnDate","dateString|dd MMMM yyyy", false),
-                new Attribut("Date de paiement attendue", "expectedDisbursementDate","dateString|dd MMMM yyyy", false)
-        );
+                new Attribut("Objet du prêt", "loanPurpose","object", true)
+                        .setValuess(purposeOptions.stream().map(ss->(LoanPurposeOption) ss).collect(Collectors.toList())).setLabel("name")
+                );
         /*attributs.get(3).setValues(Arrays.asList("TAUX","INTERVAL"));
         Request request=new Request(attributs.get(0),"tmobile_operation/find_by_operateur");
         attributs.get(1).setRequest(request);

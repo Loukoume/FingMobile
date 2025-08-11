@@ -87,8 +87,10 @@ public interface ApiService {
     Call<LoanProductResponse> getTemplatePret(
             @Header("Authorization") String authHeader,
             @Query("templateType") String templateType,
+            @Query("productId") long productId,
             @Query("tenantIdentifier") String tenantIdentifier
     );
+    //fineract-provider/api/v1/self/loans/template?templateType=individual&productId=1&tenantIdentifier=default
     @POST("fineract-provider/api/v1/self/loans")
     Call<Object> saveLoan(
             @Header("Authorization") String authHeader,

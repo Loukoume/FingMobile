@@ -239,7 +239,6 @@ public class SenderFragment extends Fragment {
         lm.addView(view);
         //  lm.addView(btn1);
 
-
         alertDialog.show();
         mtbt1.setOnClickListener(new View.OnClickListener() {
             @Override

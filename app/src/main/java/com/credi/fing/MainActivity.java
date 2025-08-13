@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         boolean testPlayStor = Inscription.body == null || (Inscription.body.getPassword().equalsIgnoreCase("fingiciel") &&
                 Inscription.body.getUsername().equalsIgnoreCase("fingiciel"));
         if (Inscription.user != null) {
-            String js = MonFichier.lire(context, "client");
+           /* String js = MonFichier.lire(context, "client");
             if (js.isEmpty() && testPlayStor) {
                 js = Json.client;
             }
@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
                     symbole.setText(sy.toUpperCase());
                     name.setText(cl.getDisplayName());
                 }
-            }
+            }*/
            // if (!testPlayStor) {
                 getClientAcount();
 
@@ -458,10 +458,12 @@ public class MainActivity extends AppCompatActivity {
     String pret, epargne;
 
     private void closEyes() {
-        if (pret != null && !pret.isEmpty()) {
+        if(pret==null)pret="0,00";
+        if(epargne==null)epargne="0,00";
+        if (!pret.isEmpty()) {
             solde_pret.setText(pret + " CFA");
         }
-        if (epargne != null && !epargne.isEmpty()) {
+        if (!epargne.isEmpty()) {
             solde_epargne.setText(epargne + " CFA");
         }
         eye.setOnClickListener(new View.OnClickListener() {
@@ -615,7 +617,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<Client> call, Response<Client> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     client = response.body();
-                    MonFichier.ecrire(context, "client", client.js());
+                   // MonFichier.ecrire(context, "client", client.js());
                     loanAccounts = (List<Object>) Ut.getValue(client, "loanAccounts");
                     savingsAccounts = (List<Object>) Ut.getValue(client, "savingsAccounts");
                     // System.out.println(" clien_t => "+Ut.listJs(savingsAccounts));
@@ -691,10 +693,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void setComptesValues() {
         Double prets = 0.0, eprgne = 0.0;
-        if (loanAccounts != null) {
+        if (loanAccounts != null&&!loanAccounts.isEmpty()) {
             prets = loanAccounts.stream().mapToDouble(x -> value(Ut.getAllValues(x, "loanBalance"))).sum();
         }
-        if (savingsAccounts != null) {
+        if (savingsAccounts != null&&!savingsAccounts.isEmpty()) {
             eprgne = savingsAccounts.stream().mapToDouble(x -> value(Ut.getAllValues(x, "accountBalance"))).sum();
         }
         pret = Ut.formatMontant(prets);

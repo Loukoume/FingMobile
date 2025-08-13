@@ -125,7 +125,6 @@ public class AddBeneciaireActivity extends AppCompatActivity {
             }
         });
 
-
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int pos) {
@@ -163,17 +162,13 @@ public class AddBeneciaireActivity extends AppCompatActivity {
             }
         }
     }
-
     boolean clikSubmit=false;
-
     public void updatClikSubmit(boolean clik){
         this.clikSubmit=clik;
     }
-
     public boolean isClikSubmit() {
         return clikSubmit;
     }
-
     private boolean ok(){
         updatClikSubmit(true);
         if(getBeneficiary()!=null){

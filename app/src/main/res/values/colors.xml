@@ -58,6 +58,7 @@
     <color name="errorColor">#C62828</color>
     <color name="successColor">#2E7D32</color>
     <color name="dialogBg">#FFFFFFFF</color>
-    <color name="iconBg">#0D000000</color> <!-- léger voile pour l’icône -->
+    <color name="iconBg">#0D000000</color>
+    <color name="gray_500">#9E9E9E</color> <!-- léger voile pour l’icône -->
 
 </resources>

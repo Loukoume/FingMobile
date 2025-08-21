@@ -42,7 +42,6 @@ public class NewTransfertActivity extends AppCompatActivity {
     TextInputEditText nomBen,idBen;
     TextView titleSender,titleRecieaver;
     Attribut attributBen;
-    LinearLayout lbene;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

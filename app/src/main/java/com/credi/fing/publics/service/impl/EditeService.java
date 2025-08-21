@@ -162,7 +162,7 @@ public class EditeService<T> {
                     visibility(visible,at.getDefaul());
                 }else {
                     if(at.getVisible()!=null&&at.getVisible().getAttribut().getName()==null){
-                      visibility(List.of(at),at.getVisible().getValeurs());
+                        visibility(List.of(at),at.getVisible().getValeurs());
                     }
                 }
             }
@@ -171,33 +171,22 @@ public class EditeService<T> {
 
 
     private RetourData<Object> getValues(Object object, String fieldName) {
-        // Vérifier si le champ n'est pas imbriqué
         if (!fieldName.contains(":")) {
             Object vo=Ut.getValue(object,fieldName);
             RetourData<Object> retourData=new RetourData();
             retourData.setData(vo);
-            // retourData.setObject(field.getType());
             return retourData;
-            //return getValue(object, fieldName);
         }
 
         RetourData<Object> retourData = new RetourData<>();
         String[] fields = fieldName.split(":");
         Object currentObject = object;
-        //System.out.println(currentObject.getClass().getName()+"====Object="+fieldName);
         for (String field : fields) {
             if (currentObject == null) {
-                return null; // Si un objet intermédiaire est null, on arrête la recherche
+                return null;
             }
-            // System.out.println(currentObject.getClass().getName()+"====currentObject="+field);
-            // Obtenir la valeur du champ actuel
             currentObject=Ut.getValue(currentObject,field);
-          /*  if(currentObject!=null)
-                System.out.println(currentObject.getClass()+"===retour=="+field);
-            else System.out.println(" nulll "+field);*/
         }
-
-        // Retourner le dernier RetourData obtenu
         retourData.setData(currentObject);
         retourData.setStatus("OK");
         return retourData;
@@ -206,7 +195,7 @@ public class EditeService<T> {
 
     private boolean hasField(Object object,String field){
         Field[] fields=object.getClass().getDeclaredFields();
-        return Arrays.stream(fields).filter(f->f.getName().equals(field)).findFirst().isPresent();
+        return Arrays.stream(fields).anyMatch(f->f.getName().equals(field));
     }
 
     private String getFieldNameForNestedObject(String parentFieldName, Object nestedObject) {
@@ -227,7 +216,6 @@ public class EditeService<T> {
         return clazz.getName();
     }
 
-    // Vérifier si la classe est de type primitif ou son équivalent wrapper
     private boolean isPrimitiveOrWrapper(Class<?> clazz) {
         return clazz.isPrimitive() ||
                 clazz == Integer.class ||
@@ -247,11 +235,10 @@ public class EditeService<T> {
 
         if(exclude==null)exclude=new ArrayList<>();
         List<Attribut> columns = Arrays.stream(object.getClass().getDeclaredFields())
-                .filter(f -> !List.class.isAssignableFrom(f.getType())) // Exclut les champs de type List ou sous-types de List
-                .peek(f -> f.setAccessible(true)) // Rendre le champ accessible si besoin
+                .filter(f -> !List.class.isAssignableFrom(f.getType()))
+                .peek(f -> f.setAccessible(true))
                 .map(c->{
                     Attribut attribut=new Attribut(c.getName());
-
                     return attribut;
                 })
                 .filter(c->!exclude.contains(c))
@@ -260,11 +247,11 @@ public class EditeService<T> {
     }
 
     public View getView(int i){
-       if (i<controls.size()){
-           Control control=controls.get(i);
-           return control.view;
-       }
-       return null;
+        if (i<controls.size()){
+            Control control=controls.get(i);
+            return control.view;
+        }
+        return null;
     }
 
     public View view(){
@@ -272,7 +259,6 @@ public class EditeService<T> {
             View view=  LayoutInflater.from(context).inflate(R.layout.add_layout,null,false);
             LinearLayout lmain=view.findViewById(R.id.lmain);
             List<Attribut> coln=colonnes();
-            //  System.out.println("==colonnes=="+coln.stream().map(c->c.getColonne()).collect(Collectors.toList()));
             for (Attribut c:coln){
                 if(c.getAttributs()!=null&&!c.getAttributs().isEmpty()){
                     if(c.getAttributs().size()==2){
@@ -303,7 +289,6 @@ public class EditeService<T> {
 
     private View putAndGetValue(String field,Attribut attribut){
         RetourData rt=getValues(object,field);
-        // System.out.println(rt+"====rtData="+field);
         String v=null,format=null;
         String type=attribut.getType();
         v=rt!=null&&rt.getData()!=null?rt.getData().toString():null;
@@ -314,15 +299,10 @@ public class EditeService<T> {
                 type=type.substring(0,idx);
             }
             switch (type){
-                case "string":case "number":
-                    if(v!=null&&v.endsWith(".0")){
-                        v=v.replace(".0","");
-                    }
+                case "string":case "number":{
+                    if(v!=null&&v.endsWith(".0")) v=v.replace(".0","");
                     View view=  LayoutInflater.from(context).inflate(R.layout.input_mt,null,false);
-                    // Récupérez le TextInputLayout
                     TextInputLayout textInputLayout = view.findViewById(R.id.textField);
-
-                    // Définissez le hint dynamiquement sur le TextInputLayout
                     textInputLayout.setHint(attribut.getName());
                     TextInputEditText editText=view.findViewById(R.id.id);
                     if(type.equals("number")){
@@ -330,150 +310,113 @@ public class EditeService<T> {
                     }
                     controls.add(new Control(attribut,textInputLayout,TYP.INPUT));
                     visibles.add(new Control(attribut,view,TYP.INPUT));
-                    if(v!=null)
-                        editText.setText(v);
+                    if(v!=null) editText.setText(v);
+
+                    // ✅ coloration dynamique
+                    UtilsInput.setupMaterialInput(view, context, attribut.isRequierd(), null, null);
+
                     editText.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                            if(!s.toString().isEmpty()){
-                                textInputLayout.setError(null);
-                            }
+                        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                        @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                        @Override public void afterTextChanged(Editable s) {
                             if(t!=null&& !(t.getSimpleName().equals("LinkedTreeMap"))){
-                               // System.out.println(" txc "+t);
-                               // System.out.println(" oob1  "+Ut.js(object));
                                 object=Ut.creatObject(object,t);
                             }
-                            System.out.println(field+" oofieldb2  "+object);
-                            object=Ut.setField(field,object,s.toString());
-                            //System.out.println(" oob3  "+Ut.js(object));
+                            object=Ut.setField(field,object,s==null?"":s.toString());
                         }
                     });
                     return view;
-                case "text":
-                    view=  LayoutInflater.from(context).inflate(R.layout.input_text_area_mt,null,false);
-                    // Récupérez le TextInputLayout
-                    textInputLayout = view.findViewById(R.id.textInputLayout);
-
-                    // Définissez le hint dynamiquement sur le TextInputLayout
+                }
+                case "text":{
+                    View view=  LayoutInflater.from(context).inflate(R.layout.input_text_area_mt,null,false);
+                    TextInputLayout textInputLayout = view.findViewById(R.id.textInputLayout);
                     textInputLayout.setHint(attribut.getName());
-                    editText=view.findViewById(R.id.editTextMessage);
+                    TextInputEditText editText=view.findViewById(R.id.editTextMessage);
 
                     controls.add(new Control(attribut,textInputLayout,TYP.INPUT));
                     visibles.add(new Control(attribut,view,TYP.INPUT));
-                    if(v!=null)
-                        editText.setText(v);
+                    if(v!=null) editText.setText(v);
+
+                    // ✅ coloration dynamique (IDs custom)
+                    UtilsInput.setupMaterialInput(
+                            view, context, attribut.isRequierd(), null, null,
+                            R.id.textInputLayout, R.id.editTextMessage
+                    );
+
                     editText.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                            if(!s.toString().isEmpty()){
-                                textInputLayout.setError(null);
-                            }
-                            System.out.println(object+" ffield "+field);
-                            object=Ut.setField(field,object,s.toString());
+                        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                        @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                        @Override public void afterTextChanged(Editable s) {
+                            object=Ut.setField(field,object,s==null?"":s.toString());
                         }
                     });
                     return view;
-                case "date":
-                    view=  LayoutInflater.from(context).inflate(R.layout.pick_date,null,false);
-                    editText=view.findViewById(R.id.id);
-                    // Récupérez le TextInputLayout
-                    textInputLayout = view.findViewById(R.id.textField);
-                    // Définissez le hint dynamiquement sur le TextInputLayout
+                }
+                case "date":{
+                    View view=  LayoutInflater.from(context).inflate(R.layout.pick_date,null,false);
+                    TextInputEditText editText=view.findViewById(R.id.id);
+                    TextInputLayout textInputLayout = view.findViewById(R.id.textField);
                     textInputLayout.setHint(attribut.getName());
-                    if(v!=null)
-                    {
-                        if(rt.getData() != null && format != null){
+                    if(v!=null){
+                        if(rt.getData()!=null && format!=null){
                             editText.setText(S.date(v,"yyyy-MM-dd'T'HH:mm:ss",format));
-                        }else
-                            editText.setText(v);
+                        }else editText.setText(v);
                     }
                     String finalFormat = format;
-                    editText.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            new Composant(object,field,(finalFormat ==null?"yyyy-MM-dd'T'HH:mm:ss": finalFormat)).showDateTimePicker(context,attribut.getName(),editText,"edite"
-                                    ,(finalFormat ==null?"yyyy-MM-dd'T'HH:mm:ss": finalFormat));
-                        }
-                    });
+                    editText.setOnClickListener(v1 -> new Composant(object,field,(finalFormat==null?"yyyy-MM-dd'T'HH:mm:ss": finalFormat))
+                            .showDateTimePicker(context,attribut.getName(),editText,"edite",(finalFormat==null?"yyyy-MM-dd'T'HH:mm:ss": finalFormat)));
+
+                    // ✅ coloration dynamique
+                    UtilsInput.setupMaterialInput(view, context, attribut.isRequierd(), null, null);
+
                     controls.add(new Control(attribut,textInputLayout,TYP.INPUT));
                     visibles.add(new Control(attribut,view,TYP.INPUT));
                     return view;
-                case "dateString":
-                    view=  LayoutInflater.from(context).inflate(R.layout.pick_date,null,false);
-                    editText=view.findViewById(R.id.id);
-                    // Récupérez le TextInputLayout
-                    textInputLayout = view.findViewById(R.id.textField);
-                    // Définissez le hint dynamiquement sur le TextInputLayout
+                }
+                case "dateString":{
+                    View view=  LayoutInflater.from(context).inflate(R.layout.pick_date,null,false);
+                    TextInputEditText editText=view.findViewById(R.id.id);
+                    TextInputLayout textInputLayout = view.findViewById(R.id.textField);
                     textInputLayout.setHint(attribut.getName());
-                    if(v!=null)
-                    {
-                        if(rt.getData() != null && format != null){
+                    if(v!=null){
+                        if(rt.getData()!=null && format!=null){
                             editText.setText(S.date(v,"yyyy-MM-dd'T'HH:mm:ss",format));
-                        }else
-                            editText.setText(v);
+                        }else editText.setText(v);
                     }
-                     finalFormat = format;
-                    editText.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            new Composant(object,field,(finalFormat ==null?"yyyy-MM-dd'T'HH:mm:ss": finalFormat))
-                                    .setDateString(true).showDateTimePicker(context,attribut.getName(),editText,"edite"
-                                    ,(finalFormat ==null?"yyyy-MM-dd'T'HH:mm:ss": finalFormat));
-                        }
-                    });
+                    String finalFormat = format;
+                    editText.setOnClickListener(v12 -> new Composant(object,field,(finalFormat==null?"yyyy-MM-dd'T'HH:mm:ss": finalFormat))
+                            .setDateString(true)
+                            .showDateTimePicker(context,attribut.getName(),editText,"edite",(finalFormat==null?"yyyy-MM-dd'T'HH:mm:ss": finalFormat)));
+
+                    // ✅ coloration dynamique
+                    UtilsInput.setupMaterialInput(view, context, attribut.isRequierd(), null, null);
+
                     controls.add(new Control(attribut,textInputLayout,TYP.INPUT));
                     visibles.add(new Control(attribut,view,TYP.INPUT));
                     return view;
-                case "heur":
-                    view=  LayoutInflater.from(context).inflate(R.layout.pick_date,null,false);
-                    editText=view.findViewById(R.id.id);
-                    // Récupérez le TextInputLayout
-                    textInputLayout = view.findViewById(R.id.textField);
-                    // Définissez le hint dynamiquement sur le TextInputLayout
+                }
+                case "heur":{
+                    View view=  LayoutInflater.from(context).inflate(R.layout.pick_date,null,false);
+                    TextInputEditText editText=view.findViewById(R.id.id);
+                    TextInputLayout textInputLayout = view.findViewById(R.id.textField);
                     textInputLayout.setHint(attribut.getName());
-                    if(v!=null)
-                    {
-                        editText.setText(v);
-                    }
-                    finalFormat = format;
-                    editText.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            new Composant(object,field,"yyyy-MM-dd'T'HH:mm:ss").showTimePicker(context,attribut.getName(),editText,"edite"
-                            );
-                        }
-                    });
+                    if(v!=null) editText.setText(v);
+
+                    editText.setOnClickListener(v13 -> new Composant(object,field,"yyyy-MM-dd'T'HH:mm:ss")
+                            .showTimePicker(context,attribut.getName(),editText,"edite"));
+
+                    // ✅ coloration dynamique
+                    UtilsInput.setupMaterialInput(view, context, attribut.isRequierd(), null, null);
+
                     controls.add(new Control(attribut,textInputLayout,TYP.INPUT));
                     visibles.add(new Control(attribut,view,TYP.INPUT));
                     return view;
-                case "boolean":
-                    view=  LayoutInflater.from(context).inflate(R.layout.switch_material,null,false);
+                }
+                case "boolean":{
+                    View view=  LayoutInflater.from(context).inflate(R.layout.switch_material,null,false);
                     SwitchMaterial switchMaterial=view.findViewById(R.id.id_switch);
-                    // Récupérez le TextInputLayout
-                    // Définissez le hint dynamiquement sur le TextInputLayout
                     switchMaterial.setText(attribut.getName());
-                    if(v!=null)
-                    {
+                    if(v!=null){
                         boolean bv= v.equals("true");
                         switchMaterial.setChecked(bv);
                     }
@@ -484,15 +427,12 @@ public class EditeService<T> {
                         }
                     });
                     return view;
-
+                }
             }
         }
 
         View view=  LayoutInflater.from(context).inflate(R.layout.inpu_drop_mt,null,false);
-        // Récupérez le TextInputLayout
         TextInputLayout textInputLayout = view.findViewById(R.id.textField);
-
-        // Définissez le hint dynamiquement sur le TextInputLayout
         textInputLayout.setHint(attribut.getName());
         TextInputEditText editText=view.findViewById(R.id.id);
         controls.add(new Control(attribut,textInputLayout,TYP.INPUT));
@@ -500,6 +440,10 @@ public class EditeService<T> {
         if(v!=null){
             editText.setText(v);
         }
+
+        // ✅ coloration dynamique
+        UtilsInput.setupMaterialInput(view, context, attribut.isRequierd(), null, null);
+
         if(attribut.getRequest()!=null&&attribut.getRequest().getUrl()!=null&&
                 attribut.getRequest().getAttribut()==null&&!(type!=null&&type.equals("multiSelect")||type!=null&&type.equals("oneSelect"))){
             getData(attribut.getRequest().getUrl(),attribut.getRequest().getParam(),attribut);
@@ -508,19 +452,15 @@ public class EditeService<T> {
         String finalType = type;
         editText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v14) {
                 inputEditText=editText;
                 if(finalType != null&&(finalType.equals("multiSelect")||finalType.equals("oneSelect"))){
                     if(attribut.getValues()!=null&&attribut.getValues().size()<=7){
                         Object  lb=Ut.getValue(object,field);
                         showSelectDialogue(attribut.getValues(),lb,attribut.getLabel(),field,editText,attribut);
                     }else {
-                        // select activity
                         EditeService.field=attribut;
-                        System.out.println("_object__"+object);
-                        System.out.println("_field__"+field);
                         Object  lb=Ut.getValue(object,field);
-
                         context.startActivity(new Intent(context, SelectActivity.class)
                                 .putExtra("attribut",attribut)
                                 .putExtra("selected",Ut.js(lb)));
@@ -529,7 +469,6 @@ public class EditeService<T> {
                     if(attribut.getValues()!=null&&!attribut.getValues().isEmpty()){
                         ImageView ups=view.findViewById(R.id.ups);
                         List<Object> objects=attribut.getValues();
-                        System.out.println(Ut.js(objects.get(0))+"===pop="+attribut.getLabel());
 
                         PopupMenu pop=S.popupMenu(ups,attribut.getLabel()==null? attribut.getValues().toArray(new String[0])
                                 :objects.stream().filter(o->o!=null).map(o->
@@ -548,7 +487,6 @@ public class EditeService<T> {
                                 Object nouvelleObject=attribut.getValues().get(item.getItemId()-1);
                                 Object nouvelleValeur=attribut.getField()==null?nouvelleObject:Ut.getValue(nouvelleObject,attribut.getField());
                                 object=Ut.setField(fs,object,nouvelleValeur);
-
 
                                 for (Attribut at:depend){
                                     setValues(at,o,at.getRequest());
@@ -569,19 +507,10 @@ public class EditeService<T> {
         });
 
         editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(!s.toString().isEmpty()){
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            @Override public void afterTextChanged(Editable s) {
+                if(s!=null && s.length()>0){
                     textInputLayout.setError(null);
                 }
             }
@@ -621,8 +550,6 @@ public class EditeService<T> {
                     attribut.setValues(copy(httpApi.getList(),Ut.getValueType(object,attribut.getColonne())));
                     break;
             }
-            /*Dialogue.neutreDialog(textView.getText()+"  "+httpApi.getList().size()+"  "+Ut.js(o)
-                    ,""+url,context).show();*/
         });
         if(o==null){
             httpApi.getAllDatas();
@@ -632,11 +559,9 @@ public class EditeService<T> {
     }
 
     private List<Object> copy(List<Object> objects,Class<?> t){
-        // Dialogue.neutreDialog(objects.size()+""," "+t.getSimpleName(),context).show();
         List<Object> objectList=new ArrayList<>();
         for (Object o:objects){
             Object oc=Ut.creatObject(o,t);
-            // System.out.println((oc==null?" null ":oc.toString())+"   "+t.getSimpleName()+" "+(o==null?" null ":o.toString()));
             objectList.add(oc);
         }
         return objectList;
@@ -644,13 +569,10 @@ public class EditeService<T> {
 
     public Attribut update(Object nouvelleValeur){
         Object v=Ut.getValue(nouvelleValeur,field.getLabel());
-
         inputEditText.setText(v==null?"":v.toString());
         String fs=field.getColonne().contains(":")?field.getColonne().substring(0,field.getColonne().indexOf(":")):field.getColonne();
         object=Ut.setField(fs,object,nouvelleValeur);
-        // Dialogue.neutreDialog(Ut.js(object)+"",""+fs,context).show();
         AddActivity.nouvellValue=null;
-        //field=null;
         return field;
     }
 
@@ -711,7 +633,6 @@ public class EditeService<T> {
         lm.addView(view);
         lm.addView(btn1);
 
-
         alertDialog.show();
         mtbt1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -720,7 +641,6 @@ public class EditeService<T> {
                 String fs=field.contains(":")?field.substring(0,field.indexOf(":")):field;
                 object=Ut.setField(fs,object,selectService.getSelect());
                 editText.setText(selectService.getStringSelect());
-                //Dialogue.neutreDialog(Ut.js(object),selectService.getSelect().size()+"",context).show();
             }
         });
 

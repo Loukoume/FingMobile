@@ -22,6 +22,8 @@ import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.content.ContextCompat;
 
 import com.credi.fing.R;
+import com.credi.fing.pojo.err.ApiErrorResponse;
+import com.credi.fing.pojo.err.ErrorUtils;
 import com.credi.fing.publics.service.DialogAction;
 import com.credi.fing.publics.service.impl.Ut;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -34,7 +36,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 public class Dialogue {
 
 
-    public static AlertDialog neutreDialog(String titre, String T, final Context context, DialogAction dialogInterface,Object object) {
+    public static AlertDialog neutreDialog(String titre, String T, final Context context, DialogAction dialogInterface, Object object) {
         // Création d'un boite de dialogue
         // if(titre.contains("java.net")||titre.contains("javax.net"))titre="Vérifier votre connexion internet et réessayer";
         AlertDialog dialog;
@@ -47,8 +49,8 @@ public class Dialogue {
         builder.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        if(dialogInterface!=null){
-                            dialogInterface.execut(object,context);
+                        if (dialogInterface != null) {
+                            dialogInterface.execut(object, context);
                         }
                         dialog.cancel();
                     }
@@ -57,7 +59,6 @@ public class Dialogue {
         dialog = builder.create();
         return dialog;
     }
-
 
 
     public static Dialog neutreDialogF(final String titre, String T, final Context context, final Activity activity) {
@@ -81,8 +82,7 @@ public class Dialogue {
     }
 
 
-
-    public static void showDialog(Context context, AlertDialog alertDialog){
+    public static void showDialog(Context context, AlertDialog alertDialog) {
         if (context instanceof Activity) {
             Activity activity = (Activity) context;
             if (!activity.isFinishing() && !activity.isDestroyed()) {
@@ -93,13 +93,13 @@ public class Dialogue {
     }
 
 
-    public enum Type { INFO, WARNING, ERROR, SUCCESS }
+    public enum Type {INFO, WARNING, ERROR, SUCCESS}
 
 
     // Détection simple réseau
     private static boolean looksLikeNetworkIssue(String t, String m) {
         String s = (t + " " + m).toLowerCase();
-        return s.contains("unable to resolve host") ||s.contains("java.net") || s.contains("javax.net") || s.contains("unknownhost") || s.contains("timeout");
+        return s.contains("unable to resolve host") || s.contains("java.net") || s.contains("javax.net") || s.contains("unknownhost") || s.contains("timeout");
     }
 
     // imports conseillés
@@ -121,7 +121,7 @@ public class Dialogue {
         if (looksLikeNetworkIssue(title == null ? "" : title, message)) {
             title = "Problème de connexion";
             message = "Veuillez vérifier votre connexion Internet et réessayer.";
-            type   = Type.WARNING;
+            type = Type.WARNING;
         }
 
         switch (type) {
@@ -150,10 +150,10 @@ public class Dialogue {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.dialog_alert, null, false);
 
-        ImageView ivIcon      = view.findViewById(R.id.ivIcon);
-        TextView tvTitle      = view.findViewById(R.id.tvTitle);
-        TextView tvMessage    = view.findViewById(R.id.tvMessage);
-        FrameLayout iconBg    = view.findViewById(R.id.flIconContainer);
+        ImageView ivIcon = view.findViewById(R.id.ivIcon);
+        TextView tvTitle = view.findViewById(R.id.tvTitle);
+        TextView tvMessage = view.findViewById(R.id.tvMessage);
+        FrameLayout iconBg = view.findViewById(R.id.flIconContainer);
 
         ivIcon.setImageResource(iconRes);
         ivIcon.setImageTintList(ColorStateList.valueOf(accent));
@@ -169,7 +169,9 @@ public class Dialogue {
                 new MaterialAlertDialogBuilder(new ContextThemeWrapper(context, R.style.AppAlertDialogTheme))
                         .setView(view)
                         .setCancelable(false)
-                        .setPositiveButton("OK", (d, w) -> { if (onOk != null) onOk.run(); });
+                        .setPositiveButton("OK", (d, w) -> {
+                            if (onOk != null) onOk.run();
+                        });
 
         if (type == Type.ERROR) {
             builder.setNegativeButton("Détails", (d, w) -> { /* ouvrir logs / copier erreur */ });
@@ -186,7 +188,7 @@ public class Dialogue {
             if (negative != null) negative.setTextColor(accent);
         });
 
-       // dialog.show();
+        // dialog.show();
         return dialog;
     }
 
@@ -195,9 +197,9 @@ public class Dialogue {
         return show(context, Type.INFO, T, titre, null);
     }
 
-    public static AlertDialog dialog(String message,int code, final Context context) {
-        DialogConfig dg=getDialogConfigFromCode(code);
-        return show(context, dg.type, dg.title,message, null);
+    public static AlertDialog dialog(String message, int code, final Context context) {
+        DialogConfig dg = getDialogConfigFromCode(code);
+        return show(context, dg.type, dg.title, message, null);
     }
 
     private static int adjustAlpha(@ColorInt int color, float factor) {
@@ -252,6 +254,34 @@ public class Dialogue {
                 } else {
                     return new DialogConfig(Type.INFO, "Information");
                 }
+        }
+    }
+
+    public static void showNetWork(Context context, String msg, int code) {
+        dialog(msg, code, context).show();
+    }
+
+    public static void erreurTechnique(Context context, String errorContent, int code) {
+        // Affiche le message d’erreur et le code HTTP
+
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            if (!activity.isFinishing() && !activity.isDestroyed()) {
+                String finalErrorContent = errorContent;
+                if (finalErrorContent.contains("{")) {
+                    try {
+                        ApiErrorResponse apiErrorResponse =
+                                new ApiErrorResponse().fromJs(finalErrorContent);
+                        finalErrorContent = ErrorUtils.buildErrorMessage(apiErrorResponse);
+                    } catch (Exception e) {
+
+                    }
+                }
+                String finalErrorContent1 = finalErrorContent;
+                activity.runOnUiThread(() -> {
+                    showNetWork(context, finalErrorContent1, code);
+                });
+            }
         }
     }
 }

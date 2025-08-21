@@ -82,6 +82,22 @@ public class Attribut implements Serializable {
         return this;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setColonne(String colonne) {
+        this.colonne = colonne;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setT(Class<?> t) {
+        this.t = t;
+    }
+
     public String getSubLabel() {
         return subLabel;
     }

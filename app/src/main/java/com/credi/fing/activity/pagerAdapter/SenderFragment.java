@@ -8,13 +8,11 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -22,50 +20,27 @@ import android.widget.LinearLayout;
 import com.credi.fing.R;
 import com.credi.fing.activity.Beneficiaire;
 import com.credi.fing.activity.TransferActivity;
-import com.credi.fing.activity.pagerBeneficiaireAdd.AddBeneciaireActivity;
 import com.credi.fing.enums.TypeTransFert;
 import com.credi.fing.pojo.AccountOption;
 import com.credi.fing.publics.service.impl.Attribut;
 import com.credi.fing.publics.service.impl.SelectService;
+import com.credi.fing.publics.service.impl.SingleInputService;
 import com.credi.fing.publics.service.impl.Ut;
-import com.credi.fing.publics.utils.S;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SenderFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SenderFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    public SenderFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SenderFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static SenderFragment newInstance(String param1, String param2) {
         SenderFragment fragment = new SenderFragment();
         Bundle args = new Bundle();
@@ -74,6 +49,21 @@ public class SenderFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+    // Références UI existantes
+    private TextInputLayout input, fieldNom, textFieldCpEmt;
+    private TextInputEditText nom, id, idCpEmt;
+
+    private TransferActivity activity;
+
+    private TextInputLayout inputBen, fieldNomBen;
+    private TextInputEditText nomBen, idBen;
+    private LinearLayout lbene;
+
+    // Attributs pour SingleInputService
+    private Attribut attributFrom;
+    private Attribut attributAmount;
+    private Attribut attributBen;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,121 +75,127 @@ public class SenderFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_sender, container, false);
     }
 
-    TextInputLayout input,fieldNom,textFieldCpEmt;
-    TextInputEditText nom,id,idCpEmt;
-    TransferActivity activity;
-    Attribut attribut;
-
-    TextInputLayout inputBen,fieldNomBen,textField;
-    TextInputEditText nomBen,idBen;
-    Attribut attributBen;
-    LinearLayout lbene;
-
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        input=view.findViewById(R.id.textField);
-        input.setHint("Numéro du compte");
-        fieldNom=view.findViewById(R.id.textFieldNom);
-        id=view.findViewById(R.id.id);
-        textFieldCpEmt=view.findViewById(R.id.textFieldCpEmt);
-        idCpEmt=view.findViewById(R.id.idCpEmt);
-        lbene=view.findViewById(R.id.lbene);
-        nom=view.findViewById(R.id.et_full_name);
-        attribut=new Attribut();
-        attribut.setSubLabel("clientName");
-        activity= (TransferActivity) view.getContext();
+    public void onViewCreated(@NonNull View root, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(root, savedInstanceState);
+        activity = (TransferActivity) requireActivity();
 
-        if(activity!=null&&activity.getTransferPayload()!=null){
-            id.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    /*String m[]=activity.getFromAccountOptions().stream().filter(o->o!=null).map(o->
-                            o.getAccountNo()
-                    ).collect(Collectors.toList()).toArray(new String[0]);
-                    PopupMenu pop= S.popupMenu(v,m);
-                    pop.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            AccountOption accountOption=activity.getFromAccountOptions().get(item.getItemId()-1);
-                            id.setText(accountOption.getAccountNo());
-                            nom.setText(accountOption.getClientName());
-                            activity.updateTransferPayload("fromOfficeId",accountOption.getOfficeId());
-                            activity.updateTransferPayload("fromClientId",accountOption.getClientId());
-                            activity.updateTransferPayload("fromAccountType",accountOption.getAccountType().getIdServeur());
-                            activity.updateTransferPayload("fromAccountId",accountOption.getAccountId());
-                            activity.setCurrentePage(1);
+        // ---- Bind des vues du layout fourni ----
+        input         = root.findViewById(R.id.textField);       // TIL compte émetteur
+        fieldNom      = root.findViewById(R.id.textFieldNom);    // TIL nom complet émetteur
+        id            = root.findViewById(R.id.id);              // ET compte émetteur
+        nom           = root.findViewById(R.id.et_full_name);    // ET nom complet émetteur (read-only)
 
-                            return false;
-                        }
-                    });*/
-                    showSelectDialogue(activity.getFromAccountOptions(), null, "accountNo", "accountNo", id, attribut);
-                }
-            });
-            nom.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    /*String m[]=activity.getFromAccountOptions().stream().filter(o->o!=null).map(o->
-                            o.getAccountNo()
-                    ).collect(Collectors.toList()).toArray(new String[0]);
-                    PopupMenu pop= S.popupMenu(v,m);
-                    pop.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            AccountOption accountOption=activity.getFromAccountOptions().get(item.getItemId()-1);
-                            id.setText(accountOption.getAccountNo());
-                            nom.setText(accountOption.getClientName());
-                            activity.updateTransferPayload("fromOfficeId",accountOption.getOfficeId());
-                            activity.updateTransferPayload("fromClientId",accountOption.getClientId());
-                            activity.updateTransferPayload("fromAccountType",accountOption.getAccountType().getIdServeur());
-                            activity.updateTransferPayload("fromAccountId",accountOption.getAccountId());
-                            activity.setCurrentePage(1);
+        textFieldCpEmt = root.findViewById(R.id.textFieldCpEmt); // TIL montant
+        idCpEmt        = root.findViewById(R.id.idCpEmt);        // ET montant
 
-                            return false;
-                        }
-                    });*/
-                    showSelectDialogue(activity.getFromAccountOptions(), null, "accountNo", "accountNo", id, attribut);
-                }
-            });
+        lbene       = root.findViewById(R.id.lbene);
+        inputBen    = lbene.findViewById(R.id.textField);        // TIL compte bénéficiaire (include)
+        fieldNomBen = root.findViewById(R.id.textFieldNom);      // TIL nom complet bénéficiaire
+        idBen       = lbene.findViewById(R.id.id);               // ET compte bénéficiaire (include)
+        nomBen      = root.findViewById(R.id.nom);               // ET nom complet bénéficiaire (read-only)
+
+        // ===========================================
+        // 1) Compte ÉMETTEUR (oneSelect) en injection
+        // ===========================================
+        attributFrom = new Attribut();
+        attributFrom.setName("Numéro du compte");
+        attributFrom.setType("oneSelect");
+        attributFrom.setLabel("accountNo");
+        attributFrom.setSubLabel("clientName");
+        if (activity.getFromAccountOptions() != null) {
+            attributFrom.setValues(new ArrayList<>(activity.getFromAccountOptions()));
         }
+        // Optionnel: activer la validation "requis" au blur (si dispo dans Attribut)
+        // attributFrom.setRequierd(true);
+
+        new SingleInputService<>(
+                requireContext(), Object.class, new Object(),
+                "fromAccountNo", attributFrom
+        ).withRoot(input)                         // on réutilise la TIL existante comme racine
+                .withIds(R.id.textField, R.id.id, R.id.ups, null)
+                .build();                                // UtilsInput s’attache et gère couleurs vide/rempli/focus/erreur
+
+        // Événements sélection (logique existante conservée)
+        if (activity.getTransferPayload() != null) {
+            id.setOnClickListener(v ->
+                    showSelectDialogue(activity.getFromAccountOptions(), null, "accountNo", "accountNo", id, attributFrom)
+            );
+            nom.setOnClickListener(v ->
+                    showSelectDialogue(activity.getFromAccountOptions(), null, "accountNo", "accountNo", id, attributFrom)
+            );
+        }
+
+        // ==============================
+        // 2) MONTANT (number) injection
+        // ==============================
+        attributAmount = new Attribut();
+        attributAmount.setName("Montant");
+        attributAmount.setType("number");
+        // attributAmount.setRequierd(true); // si tu veux l’erreur auto "Champs obligatoire" au blur
+
+        new SingleInputService<>(
+                requireContext(), Object.class, new Object(),
+                "transferAmount", attributAmount
+        ).withRoot(textFieldCpEmt)
+                .withIds(R.id.textFieldCpEmt, R.id.idCpEmt, null, null)
+                .build();
+
+        // Conserver la mise à jour du payload comme avant
         idCpEmt.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String value=s.toString();
-                if(activity!=null){
-                    if(!value.isEmpty()){
-                        textFieldCpEmt.setError(null);
-                        activity.updateTransferPayload("transferAmount",value);
-                    }else {
-                        activity.updateTransferPayload("transferAmount",null);
-                    }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override public void afterTextChanged(Editable s) {
+                String value = s == null ? "" : s.toString();
+                if (!value.isEmpty()) {
+                    textFieldCpEmt.setError(null); // efface l’erreur si tu en affiches une
+                    activity.updateTransferPayload("transferAmount", value);
+                } else {
+                    activity.updateTransferPayload("transferAmount", null);
                 }
             }
         });
 
-        traiterBeneficiaire(lbene);
+        // ===========================================
+        // 3) Compte BÉNÉFICIAIRE (oneSelect) injection
+        // ===========================================
+        attributBen = new Attribut();
+        attributBen.setName("Numéro du compte");
+        attributBen.setType("oneSelect");
+        attributBen.setLabel("accountNo");
+        attributBen.setSubLabel("clientName");
+        if (activity.getToAccountOptions() != null) {
+            attributBen.setValues(new ArrayList<>(activity.getToAccountOptions()));
+        }
+        // attributBen.setRequierd(true);
 
-        List<AccountOption> fromAccountOptions;
+        new SingleInputService<>(
+                requireContext(), Object.class, new Object(),
+                "toAccountNo", attributBen
+        ).withRoot(inputBen)
+                .withIds(R.id.textField, R.id.id, R.id.ups, null)
+                .build();
+
+        if (activity.getTransferPayload() != null) {
+            idBen.setOnClickListener(v ->
+                    showSelectDialogueBene(activity.getToAccountOptions(), null, "accountNo", "acountNo", idBen, attributBen)
+            );
+            nomBen.setOnClickListener(v ->
+                    showSelectDialogueBene(activity.getToAccountOptions(), null, "accountNo", "acountNo", idBen, attributBen)
+            );
+        }
     }
 
-    private void showSelectDialogue(final List<AccountOption> data, Object sec, String label, String field, TextInputEditText editText,
-                                    Attribut attribut) {
+    // =======================
+    // Sélections (inchangées)
+    // =======================
+
+    private void showSelectDialogue(final List<AccountOption> data, Object sec, String label, String field,
+                                    TextInputEditText editText, Attribut attribut) {
         activity.hidKey();
         View dialogView = Ut.getView(getContext(), R.layout.add_layout);
         LinearLayout lm = dialogView.findViewById(R.id.lmain);
@@ -209,78 +205,33 @@ public class SenderFragment extends Fragment {
 
         final AlertDialog alertDialog = builder.create();
 
-        List<Object> selection;
-        if (sec == null) selection = new ArrayList<>();
-        else selection = (List<Object>) sec;
+        List<Object> selection = (sec == null) ? new ArrayList<>() : (List<Object>) sec;
 
         SelectService selectService = new SelectService(getContext(), new ArrayList<>(data), label, attribut,
                 (d, v, k) -> {
                     d.cancel();
-                    // String fs=field.contains(":")?field.substring(0,field.indexOf(":")):field;
-                    AccountOption accountOption=data.get(Integer.parseInt(k + ""));;
-                    id.setText(accountOption.getAccountNo());
+                    AccountOption accountOption = data.get(Integer.parseInt(k + ""));
+                    id.setText(accountOption.getAccountNo());         // déclenche UtilsInput (état rempli)
                     nom.setText(accountOption.getClientName());
-                    activity.updateTransferPayload("fromOfficeId",accountOption.getOfficeId());
-                    activity.updateTransferPayload("fromClientId",accountOption.getClientId());
-                    activity.updateTransferPayload("fromAccountType",accountOption.getAccountType().getIdServeur());
-                    activity.updateTransferPayload("fromAccountId",accountOption.getAccountId());
-                   activity.setFromAccountOption(accountOption);
 
+                    activity.updateTransferPayload("fromOfficeId", accountOption.getOfficeId());
+                    activity.updateTransferPayload("fromClientId", accountOption.getClientId());
+                    activity.updateTransferPayload("fromAccountType", accountOption.getAccountType().getIdServeur());
+                    activity.updateTransferPayload("fromAccountId", accountOption.getAccountId());
+                    activity.setFromAccountOption(accountOption);
+                    activity.setCurrentePage(1);
                 })
                 .setTitle("Compte émetteur".toUpperCase())
                 .setMultiselect(false)
                 .setSelect(selection);
 
-        View view = selectService.view(alertDialog);
-
-        View btn1 = Ut.getView(getContext(), R.layout.outline_bouton);
-        MaterialButton mtbt1 = btn1.findViewById(R.id.outlinedButton);
-        mtbt1.setText("Valider la sélection");
-        lm.addView(view);
-        //  lm.addView(btn1);
-
+        View content = selectService.view(alertDialog);
+        lm.addView(content);
         alertDialog.show();
-        mtbt1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.cancel();
-                String fs = field.contains(":") ? field.substring(0, field.indexOf(":")) : field;
-                // object=Ut.setField(fs,object,selectService.getSelect());
-                editText.setText(selectService.getStringSelect());
-                //Dialogue.neutreDialog(Ut.js(object),selectService.getSelect().size()+"",context).show();
-            }
-        });
-
     }
 
-    private void traiterBeneficiaire(View view){
-        inputBen=view.findViewById(R.id.textField);
-        inputBen.setHint("Numéro du compte");
-        fieldNomBen=view.findViewById(R.id.textFieldNom);
-        idBen=view.findViewById(R.id.id);
-        nomBen=view.findViewById(R.id.nom);
-        attributBen=new Attribut();
-        attributBen.setSubLabel("clientName");
-
-        if(activity!=null&&activity.getTransferPayload()!=null){
-            // S.toast(getContext(),"input -v");
-            idBen.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showSelectDialogueBene(activity.getToAccountOptions(), null, "accountNo", "acountNo", idBen, attributBen);
-                }
-            });
-            nomBen.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showSelectDialogueBene(activity.getToAccountOptions(), null, "accountNo", "acountNo", idBen, attributBen);
-                }
-            });
-        }
-    }
-
-    private void showSelectDialogueBene(final List<AccountOption> data, Object sec, String label, String field, TextInputEditText editText,
-                                    Attribut attribut) {
+    private void showSelectDialogueBene(final List<AccountOption> data, Object sec, String label, String field,
+                                        TextInputEditText editText, Attribut attribut) {
         activity.hidKey();
         View dialogView = Ut.getView(getContext(), R.layout.add_layout);
         LinearLayout lm = dialogView.findViewById(R.id.lmain);
@@ -288,69 +239,46 @@ public class SenderFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(dialogView.getContext());
         builder.setView(dialogView);
 
-        if(activity.getTypeTransFert()== TypeTransFert.TIERS){
-            MaterialButton add=dialogView.findViewById(R.id.outlinedButton);
-            LinearLayout espace=dialogView.findViewById(R.id.espace);
-            LinearLayout ladd=dialogView.findViewById(R.id.add_bouton);
-            ladd.setVisibility(VISIBLE);
-            espace.setVisibility(VISIBLE);
-            add.setText("Plus");
-            add.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        if (activity.getTypeTransFert() == TypeTransFert.TIERS) {
+            MaterialButton add = dialogView.findViewById(R.id.outlinedButton);
+            LinearLayout espace = dialogView.findViewById(R.id.espace);
+            LinearLayout ladd = dialogView.findViewById(R.id.add_bouton);
+            if (ladd != null) ladd.setVisibility(VISIBLE);
+            if (espace != null) espace.setVisibility(VISIBLE);
+            if (add != null) {
+                add.setText("Plus");
+                add.setOnClickListener(v -> {
                     activity.startActivity(new Intent(getContext(), Beneficiaire.class)
-                            .putExtra("add","add")
-                            .putExtra("titre","Bénéficiaires"));
+                            .putExtra("add", "add")
+                            .putExtra("titre", "Bénéficiaires"));
                     activity.finish();
-                }
-            });
+                });
+            }
         }
 
         final AlertDialog alertDialog = builder.create();
 
-        List<Object> selection;
-        if (sec == null) selection = new ArrayList<>();
-        else selection = (List<Object>) sec;
+        List<Object> selection = (sec == null) ? new ArrayList<>() : (List<Object>) sec;
 
         SelectService selectService = new SelectService(getContext(), new ArrayList<>(data), label, attribut,
                 (d, v, k) -> {
                     d.cancel();
-                    // String fs=field.contains(":")?field.substring(0,field.indexOf(":")):field;
-                    AccountOption accountOption=data.get(Integer.parseInt(k + ""));;
-                    // AccountOption accountOption=activity.getToAccountOptions().get(item.getItemId()-1);
-                    idBen.setText(accountOption.getAccountNo());
+                    AccountOption accountOption = data.get(Integer.parseInt(k + ""));
+                    idBen.setText(accountOption.getAccountNo());       // déclenche UtilsInput (état rempli)
                     nomBen.setText(accountOption.getClientName());
-                    activity.updateTransferPayload("toOfficeId",accountOption.getOfficeId());
-                    activity.updateTransferPayload("toClientId",accountOption.getClientId());
-                    activity.updateTransferPayload("toAccountType",accountOption.getAccountType().getIdServeur());
-                    activity.updateTransferPayload("toAccountId",accountOption.getAccountId());
-                    activity.setToAccountOption(accountOption);
 
+                    activity.updateTransferPayload("toOfficeId", accountOption.getOfficeId());
+                    activity.updateTransferPayload("toClientId", accountOption.getClientId());
+                    activity.updateTransferPayload("toAccountType", accountOption.getAccountType().getIdServeur());
+                    activity.updateTransferPayload("toAccountId", accountOption.getAccountId());
+                    activity.setToAccountOption(accountOption);
                 })
                 .setTitle("Compte bénéficiaire".toUpperCase())
                 .setMultiselect(false)
                 .setSelect(selection);
 
-        View view = selectService.view(alertDialog);
-
-        View btn1 = Ut.getView(getContext(), R.layout.outline_bouton);
-        MaterialButton mtbt1 = btn1.findViewById(R.id.outlinedButton);
-        mtbt1.setText("Valider la sélection");
-        lm.addView(view);
-        //  lm.addView(btn1);
-
-
+        View content = selectService.view(alertDialog);
+        lm.addView(content);
         alertDialog.show();
-        mtbt1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.cancel();
-                String fs = field.contains(":") ? field.substring(0, field.indexOf(":")) : field;
-                // object=Ut.setField(fs,object,selectService.getSelect());
-                editText.setText(selectService.getStringSelect());
-                //Dialogue.neutreDialog(Ut.js(object),selectService.getSelect().size()+"",context).show();
-            }
-        });
-
     }
 }

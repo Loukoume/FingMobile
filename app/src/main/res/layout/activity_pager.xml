@@ -147,12 +147,12 @@
     </View>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_gravity="bottom"
+        android:layout_gravity="center"
         android:id="@+id/sheet"
-        android:elevation="@dimen/fab_margin"
-        android:layout_marginHorizontal="0dp"
+        android:layout_marginHorizontal="16dp"
         android:orientation="vertical"
-        android:background="@null"
+        android:elevation="@dimen/fab_margin"
+        android:background="@drawable/shap_edite_carre"
         android:layout_height="wrap_content">
 
     </LinearLayout>

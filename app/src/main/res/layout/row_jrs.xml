@@ -16,10 +16,9 @@
             android:id="@+id/icone"
             android:layout_marginVertical="8sp"
             android:layout_marginStart="4dp"
-            android:scaleType="fitXY"
             app:tint="@color/colorPrimary"
             android:src="@drawable/baseline_add_task_24"
-            android:layout_height="35dp">
+            android:layout_height="30dp">
 
         </ImageView>
         <LinearLayout

@@ -31,6 +31,7 @@ import com.credi.fing.activity.Inscription;
 import com.credi.fing.activity.NewTransfertActivity;
 import com.credi.fing.activity.PagerActivity;
 import com.credi.fing.activity.ProfileActivity;
+import com.credi.fing.activity.TransferAccordionActivity;
 import com.credi.fing.activity.TransferActivity;
 import com.credi.fing.activity.ViewQrCodeReadActivity;
 import com.credi.fing.binder.LoanAccountBinder;
@@ -138,41 +139,8 @@ public class MainActivity extends AppCompatActivity {
         boolean testPlayStor = Inscription.body == null || (Inscription.body.getPassword().equalsIgnoreCase("fingiciel") &&
                 Inscription.body.getUsername().equalsIgnoreCase("fingiciel"));
         if (Inscription.user != null) {
-           /* String js = MonFichier.lire(context, "client");
-            if (js.isEmpty() && testPlayStor) {
-                js = Json.client;
-            }
-            if (!js.isEmpty()) {
-                client = new Client().fromJs(js);
-                // System.out.println("=client=> "+js);
-                loanAccounts = (List<Object>) Ut.getValue(client, "loanAccounts");
-                savingsAccounts = (List<Object>) Ut.getValue(client, "savingsAccounts");
-                setComptesValues();
-            }
-            js = MonFichier.lire(context, "loanProductResponse");
-            if (js.isEmpty() && testPlayStor) {
-                js = Json.loanProductResponse;
-            }
-            if (!js.isEmpty()) {
-                //logLongIterative("=loanProductResponse_tag=>",js);
-                //System.out.println("=loanProductResponse=> "+js);
-                loanProductResponse = new LoanProductResponse().fromJs(js);
-            }
-            js = MonFichier.lire(context, "displayName");
-            if (js.isEmpty() && testPlayStor) {
-                js = Json.displayNam;
-            }
-            if (!js.isEmpty()) {
-                //logLongIterative("=displayName_tag=>",js);
-                //System.out.println("=displayName=> "+js);
-                Client cl = new Client().fromJs(js);
-                if (cl.getDisplayName() != null && !cl.getDisplayName().isEmpty()) {
-                    String sy = cl.getDisplayName().charAt(0) + "";
-                    symbole.setText(sy.toUpperCase());
-                    name.setText(cl.getDisplayName());
-                }
-            }*/
-           // if (!testPlayStor) {
+             traitementText(testPlayStor);
+            if (!testPlayStor) {
                 getClientAcount();
 
                 Ut.swip(gradien, (b, i) -> {
@@ -185,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                         getClientAcount();
                     }
                 });
-           // }
+            }
         } else {
             finish();
         }
@@ -229,17 +197,47 @@ public class MainActivity extends AppCompatActivity {
         navigationDrawer.view();
     }
 
+    private void traitementText(boolean testPlayStor) {
+        String js = MonFichier.lire(context, "client");
+        if (js.isEmpty() && testPlayStor) {
+            js = Json.client;
+        }
+        if (!js.isEmpty()) {
+            client = new Client().fromJs(js);
+            // System.out.println("=client=> "+js);
+            loanAccounts = (List<Object>) Ut.getValue(client, "loanAccounts");
+            savingsAccounts = (List<Object>) Ut.getValue(client, "savingsAccounts");
+            setComptesValues();
+        }
+        js = MonFichier.lire(context, "loanProductResponse");
+        if (js.isEmpty() && testPlayStor) {
+            js = Json.loanProductResponse;
+        }
+        if (!js.isEmpty()) {
+            //logLongIterative("=loanProductResponse_tag=>",js);
+            //System.out.println("=loanProductResponse=> "+js);
+            loanProductResponse = new LoanProductResponse().fromJs(js);
+        }
+        js = MonFichier.lire(context, "displayName");
+        if (js.isEmpty() && testPlayStor) {
+            js = Json.displayNam;
+        }
+        if (!js.isEmpty()) {
+            //logLongIterative("=displayName_tag=>",js);
+            //System.out.println("=displayName=> "+js);
+            Client cl = new Client().fromJs(js);
+            if (cl.getDisplayName() != null && !cl.getDisplayName().isEmpty()) {
+                String sy = cl.getDisplayName().charAt(0) + "";
+                symbole.setText(sy.toUpperCase());
+                name.setText(cl.getDisplayName());
+            }
+        }
+    }
+
     public static List<String> backColors = Arrays.asList("#EEEEEE", "#FFFFFF", "#EEEEEE", "#FFFFFF", "#E6E9FB");
 
     private static final int MAX_LOG_LENGTH = 4000;
 
-    public static void logLongIterative(String tag, String text) {
-        int length = text.length();
-        for (int i = 0; i < length; i += MAX_LOG_LENGTH) {
-            int end = Math.min(length, i + MAX_LOG_LENGTH);
-            Log.v(tag, text.substring(i, end));
-        }
-    }
 
     @Override
     protected void onRestart() {
@@ -265,54 +263,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void carousel() {
-        viewPager = findViewById(R.id.viewPager);
-        tabLayout = findViewById(R.id.tabLayout);
-
-        List<CarouselItem> items = new ArrayList<>();
-        items.add(new CarouselItem("Transfert", R.drawable.trf1));
-        items.add(new CarouselItem("Prêt ", R.drawable.dm_pret1));
-        items.add(new CarouselItem("Commencez", R.drawable.chg1));
-
-        adapter = new CarouselAdapter(items);
-        viewPager.setAdapter(adapter);
-
-        new TabLayoutMediator(tabLayout, viewPager,
-                (tab, position) -> {
-                    // Vous pouvez laisser vide si vous voulez juste des indicateurs sans texte
-                }).attach();
-
-        viewPager.setPageTransformer((page, position) -> {
-            float scale = 1 - Math.abs(position) * 0.2f;
-            page.setScaleX(scale);
-            page.setScaleY(scale);
-            page.setAlpha(0.3f + (scale - 0.8f) / 0.2f * 0.7f);
-        });
-
-        // Initialiser le Runnable pour le défilement automatique
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                if (currentPage == adapter.getItemCount()) {
-                    currentPage = 0;
-                }
-                viewPager.setCurrentItem(currentPage++, true);
-                handler.postDelayed(this, 3000); // Changer de page toutes les 3 secondes
-            }
-        };
-
-        // Démarrer le défilement automatique
-        handler.postDelayed(runnable, 3000);
-
-        // Ajouter un callback pour mettre à jour la page actuelle
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                currentPage = position;
-            }
-        });
-    }
 
     private void services() {
         List<Object> list = Arrays.asList(new CarouselItem("", R.drawable.transfert0), new CarouselItem("", R.drawable.pret)
@@ -454,7 +404,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    boolean isShowingEprgne = true, isShowingPret = true;
+    boolean  isShowingPret = true;
     String pret, epargne;
 
     private void closEyes() {
@@ -483,27 +433,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    private static CrudInterface crudInterface(String id, String url, Context context) {
-        CrudInterface crudInterface = new CrudInterface();
-        crudInterface.setOnDelete((o, i) -> {
-            String vals = Ut.getAllValues(o, "idServeur|" + id);
-            if (vals != null && !vals.isEmpty()) {
-                new HttpApi(context).data(url + "/delete", o, (ob, s) -> {
-                    ListActivity.update(i);
-                    return ob;
-                });
-            }
-        });
-        crudInterface.setOnSave((o, i) -> {
-            String vals = Ut.getAllValues(o, "idServeur|" + id);
-
-            if (vals != null && !vals.isEmpty()) {
-                ListActivity.update(i, o);
-            }
-        });
-        return crudInterface;
     }
 
     void getClient() {
@@ -911,7 +840,7 @@ public class MainActivity extends AppCompatActivity {
                 /*startActivity(new Intent(context, NewTransfertActivity.class)
                         .putExtra("type", "tiers"));
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);*/
-                startActivity(new Intent(context, TransferActivity.class)
+                startActivity(new Intent(context, TransferAccordionActivity.class)
                         .putExtra("type", "tiers"));
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
@@ -920,7 +849,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 close.performClick();
-                startActivity(new Intent(context, TransferActivity.class)
+                startActivity(new Intent(context, TransferAccordionActivity.class)
                         .putExtra("type", "interne"));
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }

@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/fab_margin"
-    tools:context=".activity.pagerAdapter.NoteFragment">
+    android:paddingBottom="@dimen/fab_margin">
     <ScrollView
          android:layout_width="match_parent"
         android:layout_marginBottom="50dp"
@@ -17,13 +16,26 @@
            android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:background="@color/colorPrimary"
+                android:layout_height="wrap_content">
+                <TextView
+                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:text="Informations du transferts"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
             <!-- Bloc Infos de l'Émetteur -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="12dp">
+                android:padding="@dimen/fab_margin">
                 <TextView
                     android:id="@+id/tv_label_emitter"
                     android:layout_width="wrap_content"
@@ -95,7 +107,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="12dp">
+                android:padding="@dimen/fab_margin">
 
                 <TextView
                     android:id="@+id/tv_label_beneficiary"
@@ -174,7 +186,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:orientation="vertical"
-                android:padding="12dp"
+                android:padding="@dimen/fab_margin"
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/tv_label_amount"
@@ -228,6 +240,21 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
+            <Button
+                android:id="@+id/btn_valider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Valider"
+                android:layout_marginHorizontal="@dimen/fab_margin"
+                android:layout_marginTop="24dp" />
+            <Button
+                android:id="@+id/btn_modifier"
+                android:layout_width="match_parent"
+                android:backgroundTint="@color/colorAccent"
+                android:layout_height="wrap_content"
+                android:text="Modifier"
+                android:layout_marginHorizontal="@dimen/fab_margin"
+                android:layout_marginTop="8dp" />
         </LinearLayout>
     </ScrollView>
 

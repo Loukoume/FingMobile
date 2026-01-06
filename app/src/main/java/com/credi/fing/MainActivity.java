@@ -139,8 +139,8 @@ public class MainActivity extends AppCompatActivity {
         boolean testPlayStor = Inscription.body == null || (Inscription.body.getPassword().equalsIgnoreCase("fingiciel") &&
                 Inscription.body.getUsername().equalsIgnoreCase("fingiciel"));
         if (Inscription.user != null) {
-             traitementText(testPlayStor);
-            if (!testPlayStor) {
+             //traitementText(testPlayStor);
+            //if (!testPlayStor) {
                 getClientAcount();
 
                 Ut.swip(gradien, (b, i) -> {
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                         getClientAcount();
                     }
                 });
-            }
+           // }
         } else {
             finish();
         }
@@ -845,6 +845,7 @@ public class MainActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
+
         tm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

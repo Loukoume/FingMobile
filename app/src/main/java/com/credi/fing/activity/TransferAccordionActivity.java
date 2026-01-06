@@ -1,5 +1,6 @@
 package com.credi.fing.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,6 +30,7 @@ import com.credi.fing.pojo.err.ApiErrorResponse;
 import com.credi.fing.pojo.err.ErrorUtils;
 import com.credi.fing.publics.service.ApiService;
 import com.credi.fing.publics.service.RetrofitClient;
+import com.credi.fing.publics.service.impl.Anim;
 import com.credi.fing.publics.service.impl.Attribut;
 import com.credi.fing.publics.service.impl.SelectService;
 import com.credi.fing.publics.service.impl.Ut;
@@ -52,9 +55,10 @@ import retrofit2.Response;
 public class TransferAccordionActivity extends AppCompatActivity {
 
     // UI Components
-    private LinearLayout mainContainer;
+    private LinearLayout mainContainer,confirme,infoNote;
     private View step1View, step2View, step3View, step4View;
     private MaterialButton btnFinal;
+    Button btn_valider,btn_modifier;
     private ProgressBar pbLoading;
     private Context context;
 
@@ -95,20 +99,35 @@ public class TransferAccordionActivity extends AppCompatActivity {
         getTemplate();
 
         // Initialiser le payload
-        transferPayload.setTransferDate(S.dateToString(new Date(), "dd MMMM yyyy"));
+        transferPayload.setTransferDate(S.dateToString(new Date(),
+                transferPayload.getDateFormat()));
     }
 
     private void initViews() {
         mainContainer = findViewById(R.id.main_container);
         btnFinal = findViewById(R.id.btn_validate_final);
+        btn_modifier = findViewById(R.id.btn_modifier);
+        btn_valider=findViewById(R.id.btn_valider);
         pbLoading = findViewById(R.id.pb_loading);
         tv_type=findViewById(R.id.tv_type);
         step1View = findViewById(R.id.step_emitter);
         step2View = findViewById(R.id.step_beneficiary);
         step3View = findViewById(R.id.step_amount);
         step4View = findViewById(R.id.step_note);
-
-        btnFinal.setOnClickListener(v -> submitTransfer());
+        confirme=findViewById(R.id.confirm);
+        infoNote=findViewById(R.id.info_transfert);
+        btnFinal.setOnClickListener(v -> {
+           infosTransfert(infoNote);
+        });
+        btn_valider.setOnClickListener(v -> {
+            submitTransfer();
+        } );
+        btn_modifier.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                infoNote.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void setupSteps() {
@@ -479,19 +498,36 @@ public class TransferAccordionActivity extends AppCompatActivity {
 
                     toAccountOptions = res.getToAccountOptions();
                 } else {
-                    S.toast(context, "Erreur chargement template");
+                    try {
+                        String error = response.errorBody() != null ? response.errorBody().string() : "Erreur inconnue";
+                        if(error.contains("{")){
+                            try {
+                                ApiErrorResponse apiErrorResponse= new ApiErrorResponse().fromJs(error);
+                                error= ErrorUtils.buildErrorMessage(apiErrorResponse);
+                            }catch (Exception e){}
+                        }
+                        Dialogue.neutreDialog(error, "Erreur", context).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<AccountOptionsResponse> call, Throwable t) {
                 pbLoading.setVisibility(View.GONE);
-                S.toast(context, "Erreur réseau");
+                Dialogue.neutreDialog(t.getMessage(), "Erreur Réseau", context).show();
             }
         });
     }
 
     private void submitTransfer() {
+        btn_valider.setEnabled(false);
+        transferPayload.setTransferDate(S.dateToString(new Date(),
+                transferPayload.getDateFormat(),transferPayload.getLocale()));
+        transferPayload.setTransferDescription(typeTransFert==TypeTransFert.TIERS?
+                "Transfert tièrce":"Transfert interne");
+
         pbLoading.setVisibility(View.VISIBLE);
         btnFinal.setEnabled(false);
 
@@ -508,10 +544,11 @@ public class TransferAccordionActivity extends AppCompatActivity {
             public void onResponse(Call<Object> call, Response<Object> response) {
                 pbLoading.setVisibility(View.GONE);
                 btnFinal.setEnabled(true);
+                btn_valider.setEnabled(true);
+                infoNote.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
                     MonFichier.ecrire(context,"transmis","ok");
-                    Dialogue.neutreDialog("Transfert réussi !", "Succès", context).show();
-                    // finish(); // Optionnel : fermer l'activité
+                    confirmCp(confirme);
                 } else {
                     try {
                         String error = response.errorBody() != null ? response.errorBody().string() : "Erreur inconnue";
@@ -532,6 +569,8 @@ public class TransferAccordionActivity extends AppCompatActivity {
             public void onFailure(Call<Object> call, Throwable t) {
                 pbLoading.setVisibility(View.GONE);
                 btnFinal.setEnabled(true);
+                btn_valider.setEnabled(true);
+                infoNote.setVisibility(View.GONE);
                 Dialogue.neutreDialog(t.getMessage(), "Erreur Réseau", context).show();
             }
         });
@@ -558,5 +597,193 @@ public class TransferAccordionActivity extends AppCompatActivity {
         // On garde le texte existant (ex: "2")
         tvNum.setBackgroundResource(R.drawable.circle_bg_blue);
         tvNum.setTextColor(getResources().getColor(android.R.color.white));
+    }
+
+    private TextView tvLabelEmitter;
+    private TextView tvLabelEmitterCompte;
+    private TextView tvValueEmitterAccount;
+    private TextView tvLabelEmitterName;
+    private TextView tvValueEmitterName;
+    private TextView tvLabelEmitterOffice;
+    private TextView tvValueEmitterOffice;
+
+    private TextView tvLabelBeneficiary;
+    private TextView tvLabelBeneficiaryCompte;
+    private TextView tvValueBeneficiaryAccount;
+    private TextView tvLabelBeneficiaryName;
+    private TextView tvValueBeneficiaryName;
+    private TextView tvLabelBeneficiaryOffice;
+    private TextView tvValueBeneficiaryOffice;
+
+    private TextView tvLabelAmount;
+    private TextView tvValueAmount;
+    private TextView tvLabelDate;
+    private TextView tvValueDate;
+    private TextView tvLabelDescription;
+    private TextView tvValueDescription;
+
+    void confirmCp(View view) {
+        // 1. Liaison des vues (Binding)
+        // Bloc Émetteur
+        tvLabelEmitter             = view.findViewById(R.id.tv_label_emitter);
+        tvLabelEmitterCompte       = view.findViewById(R.id.tv_label_emitter_compte);
+        tvValueEmitterAccount      = view.findViewById(R.id.tv_value_emitter_account);
+        tvLabelEmitterName         = view.findViewById(R.id.tv_label_emitter_name);
+        tvValueEmitterName         = view.findViewById(R.id.tv_value_emitter_name);
+        tvLabelEmitterOffice       = view.findViewById(R.id.tv_label_emitter_office);
+        tvValueEmitterOffice       = view.findViewById(R.id.tv_value_emitter_office);
+
+        // Bloc Bénéficiaire
+        tvLabelBeneficiary         = view.findViewById(R.id.tv_label_beneficiary);
+        tvLabelBeneficiaryCompte   = view.findViewById(R.id.tv_label_beneficiary_compte);
+        tvValueBeneficiaryAccount  = view.findViewById(R.id.tv_value_beneficiary_account);
+        tvLabelBeneficiaryName     = view.findViewById(R.id.tv_label_beneficiary_name);
+        tvValueBeneficiaryName     = view.findViewById(R.id.tv_value_beneficiary_name);
+        tvLabelBeneficiaryOffice   = view.findViewById(R.id.tv_label_beneficiary_office);
+        tvValueBeneficiaryOffice   = view.findViewById(R.id.tv_value_beneficiary_office);
+
+        // Détails (Montant, Date, Motif)
+        tvLabelAmount              = view.findViewById(R.id.tv_label_amount);
+        tvValueAmount              = view.findViewById(R.id.tv_value_amount);
+        tvLabelDate                = view.findViewById(R.id.tv_label_date);
+        tvValueDate                = view.findViewById(R.id.tv_value_date);
+        tvLabelDescription         = view.findViewById(R.id.tv_label_description);
+        tvValueDescription         = view.findViewById(R.id.tv_value_description);
+
+        Button btn_return = view.findViewById(R.id.btn_return);
+
+        // 2. Remplissage des données avec les variables locales de l'activité
+
+        // --- Remplissage Émetteur ---
+        if (selectedFromAccount != null) {
+            if (selectedFromAccount.getAccountNo() != null)
+                tvValueEmitterAccount.setText(selectedFromAccount.getAccountNo());
+
+            if (selectedFromAccount.getClientName() != null)
+                tvValueEmitterName.setText(selectedFromAccount.getClientName());
+
+            if (selectedFromAccount.getOfficeName() != null)
+                tvValueEmitterOffice.setText(selectedFromAccount.getOfficeName());
+        }
+
+        // --- Remplissage Bénéficiaire ---
+        if (selectedToAccount != null) {
+            if (selectedToAccount.getAccountNo() != null)
+                tvValueBeneficiaryAccount.setText(selectedToAccount.getAccountNo());
+
+            if (selectedToAccount.getClientName() != null)
+                tvValueBeneficiaryName.setText(selectedToAccount.getClientName());
+
+            if (selectedToAccount.getOfficeName() != null)
+                tvValueBeneficiaryOffice.setText(selectedToAccount.getOfficeName());
+        }
+
+        // --- Remplissage Détails (Montant, Date, Description) ---
+        if (transferPayload != null) {
+            // Montant
+            if (transferPayload.getTransferAmount() != null) {
+                // Utilisation de votre utilitaire de formatage
+                tvValueAmount.setText(Ut.formatMontant(transferPayload.getTransferAmount()));
+            }
+
+            // Date (On s'assure qu'elle est définie, sinon on met la date du jour)
+            /*if (transferPayload.getTransferDate() != null) {
+                tvValueDate.setText(transferPayload.getTransferDate());
+            } else {
+                tvValueDate.setText(S.dateToString(new Date(), "dd MMMM yyyy"));
+            }
+
+            // Description / Motif
+            if (transferPayload.getTransferDescription() != null) {
+                tvValueDescription.setText(transferPayload.getTransferDescription());
+            }*/
+        }
+
+        // 3. Gestion du bouton de retour
+        btn_return.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Termine l'activité pour revenir à l'écran précédent
+                finish();
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            }
+        });
+
+        // 4. Affichage de la vue de confirmation avec animation
+        confirme.setVisibility(View.VISIBLE);
+        confirme.startAnimation(Anim.getAnimeBH(context));
+    }
+
+
+    void infosTransfert(View view){
+        // Bloc Émetteur
+        tvLabelEmitter             = view.findViewById(R.id.tv_label_emitter);
+        tvLabelEmitterCompte       = view.findViewById(R.id.tv_label_emitter_compte);
+        tvValueEmitterAccount      = view.findViewById(R.id.tv_value_emitter_account);
+        tvLabelEmitterName         = view.findViewById(R.id.tv_label_emitter_name);
+        tvValueEmitterName         = view.findViewById(R.id.tv_value_emitter_name);
+        tvLabelEmitterOffice       = view.findViewById(R.id.tv_label_emitter_office);
+        tvValueEmitterOffice       = view.findViewById(R.id.tv_value_emitter_office);
+
+        // Bloc Bénéficiaire
+        tvLabelBeneficiary             = view.findViewById(R.id.tv_label_beneficiary);
+        tvLabelBeneficiaryCompte       = view.findViewById(R.id.tv_label_beneficiary_compte);
+        tvValueBeneficiaryAccount      = view.findViewById(R.id.tv_value_beneficiary_account);
+        tvLabelBeneficiaryName         = view.findViewById(R.id.tv_label_beneficiary_name);
+        tvValueBeneficiaryName         = view.findViewById(R.id.tv_value_beneficiary_name);
+        tvLabelBeneficiaryOffice       = view.findViewById(R.id.tv_label_beneficiary_office);
+        tvValueBeneficiaryOffice       = view.findViewById(R.id.tv_value_beneficiary_office);
+
+        // Détails additionnels
+        tvLabelAmount       = view.findViewById(R.id.tv_label_amount);
+        tvValueAmount       = view.findViewById(R.id.tv_value_amount);
+        tvLabelDate         = view.findViewById(R.id.tv_label_date);
+        tvValueDate         = view.findViewById(R.id.tv_value_date);
+        tvLabelDescription  = view.findViewById(R.id.tv_label_description);
+        tvValueDescription  = view.findViewById(R.id.tv_value_description);
+        traitement();
+        confirme.setVisibility(View.GONE);
+        infoNote.setVisibility(View.VISIBLE);
+        infoNote.startAnimation(Anim.getAnimeBH(context));
+    }
+    void traitement(){
+            TransferPayload payload = transferPayload;
+            if (payload != null) {
+                // 3. Remplissage des blocs Émetteur / Bénéficiaire
+                if (selectedFromAccount != null) {
+                    if (selectedFromAccount.getAccountNo() != null)
+                        tvValueEmitterAccount.setText(selectedFromAccount.getAccountNo());
+
+                    if (selectedFromAccount.getClientName() != null)
+                        tvValueEmitterName.setText(selectedFromAccount.getClientName());
+
+                    if (selectedFromAccount.getOfficeName() != null)
+                        tvValueEmitterOffice.setText(selectedFromAccount.getOfficeName());
+                }
+
+                // --- Remplissage Bénéficiaire ---
+                if (selectedToAccount != null) {
+                    if (selectedToAccount.getAccountNo() != null)
+                        tvValueBeneficiaryAccount.setText(selectedToAccount.getAccountNo());
+
+                    if (selectedToAccount.getClientName() != null)
+                        tvValueBeneficiaryName.setText(selectedToAccount.getClientName());
+
+                    if (selectedToAccount.getOfficeName() != null)
+                        tvValueBeneficiaryOffice.setText(selectedToAccount.getOfficeName());
+                }
+                // 4. Remplissage des détails additionnels
+                // Montant
+                if(payload.getTransferAmount()!=null)
+                    tvValueAmount.setText(
+                            Ut.formatMontant(payload.getTransferAmount())
+                    );
+                // Date
+                if (payload.getTransferDate() != null)
+                    tvValueDate.setText(payload.getTransferDate());
+                // Description
+                if (payload.getTransferDescription() != null)
+                    tvValueDescription.setText(payload.getTransferDescription());
+            }
     }
 }

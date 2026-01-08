@@ -157,18 +157,13 @@ public class Inscription extends AppCompatActivity {
         });
     }
 
-    //https://fingiciel.ngrok.io/fineract-provider/api/v1/clients/8/accounts?&tenantIdentifier=default
-    //https://fingiciel.ngrok.io/fineract-provider/api/v1/self/clients/1?&tenantIdentifier=default
-
-    //https://fingiciel.ngrok.io/fineract-provider/api/v1/self/clients/1/accounts?&tenantIdentifier=default
-//https://fingiciel.ngrok.io//fineract-provider/api/v1/self/authentication
-
     private void go(User user,String password){
         Inscription.user=user;
-        System.out.println(" user => "+Ut.js(user));
+        //System.out.println(" user => "+Ut.js(user));
         MonFichier.ecrire(context,"password",password);
         new LesConnectes().add(context, user);
         startActivity(new Intent(Inscription.this, MainActivity.class));
+       // startActivity(new Intent(context,TransferAccordionActivity.class));
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
         hide();
@@ -225,7 +220,7 @@ public class Inscription extends AppCompatActivity {
                             }
 
                             // Gestion de l’erreur
-                            Log.e("AuthRepo", "Erreur d'auth : " + throwable.getMessage());
+                           // Log.e("AuthRepo", "Erreur d'auth : " + throwable.getMessage());
                         }
                 );
 

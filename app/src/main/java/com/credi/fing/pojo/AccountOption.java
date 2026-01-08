@@ -8,7 +8,7 @@ public class AccountOption implements Serializable {
     private int accountId;
     private String accountNo;
     private AccountType accountType;
-    private int clientId;
+    private Long clientId;
     private String clientName;
     private int officeId;
     private String officeName;
@@ -37,11 +37,11 @@ public class AccountOption implements Serializable {
         this.accountType = accountType;
     }
 
-    public int getClientId() {
+    public Long getClientId() {
         return clientId;
     }
 
-    public void setClientId(int clientId) {
+    public void setClientId(Long clientId) {
         this.clientId = clientId;
     }
 

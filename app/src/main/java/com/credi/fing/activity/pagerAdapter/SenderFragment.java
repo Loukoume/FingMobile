@@ -2,7 +2,9 @@ package com.credi.fing.activity.pagerAdapter;
 
 import static android.view.View.VISIBLE;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,10 +13,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 
 import com.credi.fing.R;
@@ -26,6 +32,7 @@ import com.credi.fing.publics.service.impl.Attribut;
 import com.credi.fing.publics.service.impl.SelectService;
 import com.credi.fing.publics.service.impl.SingleInputService;
 import com.credi.fing.publics.service.impl.Ut;
+import com.credi.fing.publics.service.impl.UtilsInput;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -78,7 +85,33 @@ public class SenderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_sender, container, false);
     }
+    private void forceNumericKeyboard(TextInputEditText et) {
+        if (et == null) return;
 
+        // Clavier numérique avec décimales
+        et.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        // Autoriser à la fois "." et "," suivant la locale/clavier
+        et.setKeyListener(DigitsKeyListener.getInstance("0123456789.,"));
+
+        // Optionnels mais utiles
+        et.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        et.setFocusable(true);
+        et.setFocusableInTouchMode(true);
+        if (Build.VERSION.SDK_INT >= 21) {
+            et.setShowSoftInputOnFocus(true);
+        }
+
+        // Forcer l’ouverture du clavier quand le champ prend le focus
+        et.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                et.post(() -> {
+                    InputMethodManager imm = (InputMethodManager) requireContext()
+                            .getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) imm.showSoftInput(et, InputMethodManager.SHOW_IMPLICIT);
+                });
+            }
+        });
+    }
     @Override
     public void onViewCreated(@NonNull View root, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(root, savedInstanceState);
@@ -98,6 +131,30 @@ public class SenderFragment extends Fragment {
         fieldNomBen = root.findViewById(R.id.textFieldNom);      // TIL nom complet bénéficiaire
         idBen       = lbene.findViewById(R.id.id);               // ET compte bénéficiaire (include)
         nomBen      = root.findViewById(R.id.nom);               // ET nom complet bénéficiaire (read-only)
+
+        // Nom complet ÉMETTEUR (TIL: fieldNom, ET: et_full_name)
+
+        // Nom complet ÉMETTEUR (TIL: fieldNom, ET: et_full_name)
+        UtilsInput.setupMaterialInput(
+                root,
+                requireContext(),
+                /*required*/ false,
+                /*errorText*/ null,
+                /*initialValue*/ null,
+                R.id.fieldNom,
+                R.id.et_full_name
+        );
+
+// Nom complet BÉNÉFICIAIRE (TIL: textFieldNom, ET: nom)
+        UtilsInput.setupMaterialInput(
+                root,
+                requireContext(),
+                /*required*/ false,
+                /*errorText*/ null,
+                /*initialValue*/ null,
+                R.id.textFieldNom,
+                R.id.nom
+        );
 
         // ===========================================
         // 1) Compte ÉMETTEUR (oneSelect) en injection
@@ -138,12 +195,15 @@ public class SenderFragment extends Fragment {
         attributAmount.setType("number");
         // attributAmount.setRequierd(true); // si tu veux l’erreur auto "Champs obligatoire" au blur
 
-        new SingleInputService<>(
+       /* new SingleInputService<>(
                 requireContext(), Object.class, new Object(),
                 "transferAmount", attributAmount
         ).withRoot(textFieldCpEmt)
-                .withIds(R.id.textFieldCpEmt, R.id.idCpEmt, null, null)
-                .build();
+                .withIds(R.id.textFieldCpEmt,
+                         R.id.idCpEmt,
+                        null,
+                        null)
+                .build();*/
 
         // Conserver la mise à jour du payload comme avant
         idCpEmt.addTextChangedListener(new TextWatcher() {
@@ -188,6 +248,8 @@ public class SenderFragment extends Fragment {
                     showSelectDialogueBene(activity.getToAccountOptions(), null, "accountNo", "acountNo", idBen, attributBen)
             );
         }
+
+        forceNumericKeyboard(idCpEmt);
     }
 
     // =======================
@@ -219,7 +281,7 @@ public class SenderFragment extends Fragment {
                     activity.updateTransferPayload("fromAccountType", accountOption.getAccountType().getIdServeur());
                     activity.updateTransferPayload("fromAccountId", accountOption.getAccountId());
                     activity.setFromAccountOption(accountOption);
-                    activity.setCurrentePage(1);
+                    //activity.setCurrentePage(1);
                 })
                 .setTitle("Compte émetteur".toUpperCase())
                 .setMultiselect(false)
@@ -263,12 +325,22 @@ public class SenderFragment extends Fragment {
         SelectService selectService = new SelectService(getContext(), new ArrayList<>(data), label, attribut,
                 (d, v, k) -> {
                     d.cancel();
-                    AccountOption accountOption = data.get(Integer.parseInt(k + ""));
-                    idBen.setText(accountOption.getAccountNo());       // déclenche UtilsInput (état rempli)
-                    nomBen.setText(accountOption.getClientName());
+                    int index = Integer.parseInt(k + "");
+                    AccountOption accountOption = data.get(index);
 
-                    activity.updateTransferPayload("toOfficeId", accountOption.getOfficeId());
-                    activity.updateTransferPayload("toClientId", accountOption.getClientId());
+                    // ✅ appliquer sur le TextInputEditText passé en paramètre
+                    if (editText != null) {
+                        editText.setText(accountOption.getAccountNo()); // déclenche UtilsInput (état rempli)
+                    }
+
+                    // Mise à jour éventuelle du champ "nom" si présent dans le fragment
+                    if (nomBen != null) {
+                        nomBen.setText(accountOption.getClientName());
+                    }
+
+                    // Payload/app state (inchangé)
+                    activity.updateTransferPayload("toOfficeId",  accountOption.getOfficeId());
+                    activity.updateTransferPayload("toClientId",  accountOption.getClientId());
                     activity.updateTransferPayload("toAccountType", accountOption.getAccountType().getIdServeur());
                     activity.updateTransferPayload("toAccountId", accountOption.getAccountId());
                     activity.setToAccountOption(accountOption);
@@ -279,6 +351,8 @@ public class SenderFragment extends Fragment {
 
         View content = selectService.view(alertDialog);
         lm.addView(content);
+
         alertDialog.show();
     }
+
 }

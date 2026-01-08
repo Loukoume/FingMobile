@@ -94,9 +94,9 @@ public class EditeService<T> {
                 TextInputLayout view= (TextInputLayout) c.view;
                 RetourData<Object> v=getValues(EditeService.object,c.attribut.getField()==null?c.attribut.getColonne():c.attribut.getField());
 
-                System.out.println(c.attribut.getColonne()+" cvv "+v);
+                //System.out.println(c.attribut.getColonne()+" cvv "+v);
                 if(c.attribut.isRequierd()&&(v==null||v.getData()==null||v.getData().toString().isEmpty())){
-                    view.setError("Champs obligatoire");
+                    view.setError("Champ obligatoire");
                     ok=false;
                 }
             }

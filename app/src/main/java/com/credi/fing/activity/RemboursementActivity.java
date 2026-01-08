@@ -30,6 +30,7 @@ import com.credi.fing.publics.service.RetrofitClient;
 import com.credi.fing.publics.service.impl.Attribut;
 import com.credi.fing.publics.service.impl.SelectService;
 import com.credi.fing.publics.service.impl.Ut;
+import com.credi.fing.publics.service.impl.UtilsInput;
 import com.credi.fing.publics.utils.Dialogue;
 import com.credi.fing.publics.utils.MonFichier;
 import com.credi.fing.publics.utils.S;
@@ -85,6 +86,35 @@ public class RemboursementActivity extends AppCompatActivity {
             textField.setHint("Numéro du compte");
             vide=findViewById(R.id.vide);
             pb=findViewById(R.id.pb);
+            View root = findViewById(R.id.main);
+            UtilsInput.setupMaterialInput(
+                    root,
+                    context,
+                    /*required*/ false,
+                    /*errorText*/ null,
+                    /*initialValue*/ null,
+                    R.id.textFieldMontant,
+                    R.id.id_montant
+            );
+            UtilsInput.setupMaterialInput(
+                    root,
+                    context,
+                    /*required*/ false,
+                    /*errorText*/ null,
+                    /*initialValue*/ null,
+                    R.id.textInputLayout,
+                    R.id.textInputEditText
+            );
+            UtilsInput.setupMaterialInput(
+                    root,
+                    context,
+                    /*required*/ false,
+                    /*errorText*/ null,
+                    /*initialValue*/ null,
+                    R.id.textField,
+                    R.id.id
+            );
+
             textInputEditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {

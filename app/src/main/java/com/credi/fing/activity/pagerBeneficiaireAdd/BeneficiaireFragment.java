@@ -18,6 +18,7 @@ import com.credi.fing.R;
 import com.credi.fing.entity.AccountTypeOption;
 import com.credi.fing.pojo.AccountOption;
 import com.credi.fing.publics.service.impl.Attribut;
+import com.credi.fing.publics.service.impl.UtilsInput;
 import com.credi.fing.publics.utils.S;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -94,6 +95,43 @@ public class BeneficiaireFragment extends Fragment {
         idType=view.findViewById(R.id.idType);
         id=view.findViewById(R.id.id);
         input.setHint("Nom du bureau");
+
+        UtilsInput.setupMaterialInput(
+                view,
+                requireContext(),
+                /*required*/ false,
+                /*errorText*/ null,
+                /*initialValue*/ null,
+                R.id.textField,
+                R.id.id
+        );
+        UtilsInput.setupMaterialInput(
+                view,
+                requireContext(),
+                /*required*/ false,
+                /*errorText*/ null,
+                /*initialValue*/ null,
+                R.id.textFieldNom,
+                R.id.nom
+        );
+        UtilsInput.setupMaterialInput(
+                view,
+                requireContext(),
+                /*required*/ false,
+                /*errorText*/ null,
+                /*initialValue*/ null,
+                R.id.textFieldCompte,
+                R.id.cpte
+        );
+        UtilsInput.setupMaterialInput(
+                view,
+                requireContext(),
+                /*required*/ false,
+                /*errorText*/ null,
+                /*initialValue*/ null,
+                R.id.textFieldType,
+                R.id.idType
+        );
 
         AddBeneciaireActivity activity= (AddBeneciaireActivity) view.getContext();
 

@@ -20,7 +20,6 @@ public class ClientType implements Serializable {
         return this.idLocal;
     }
 
-
     public void setIdLocal(String idLocal) {
         this.idLocal = idLocal;
     }

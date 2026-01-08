@@ -54,7 +54,7 @@ import retrofit2.Response;
 
 public class AddBeneciaireActivity extends AppCompatActivity {
     private ViewPager2 viewPager;
-    TextView tx;
+    private TextView tx;
     private MaterialButton btnPrev, btnNext;
     private TransferPagerAdapter adapter;
     private TextView tvStepHeader;
@@ -329,16 +329,16 @@ public class AddBeneciaireActivity extends AppCompatActivity {
     private void putError(TextInputLayout nom,TextInputLayout id,TextInputLayout nomComp
             ,TextInputLayout type){
         if(beneficiary.getOfficeName()==null)
-            id.setError("Champ obligatoir");
+            id.setError("Champ obligatoire");
 
         if(beneficiary.getName()==null){
-            nom.setError("Champ obligatoir");
+            nom.setError("Champ obligatoire");
         }
         if(beneficiary.getAccountNumber()==null){
-            nomComp.setError("Champ obligatoir");
+            nomComp.setError("Champ obligatoire");
         }
         if(beneficiary.getAccountType()==null){
-            type.setError("Champ obligatoir");
+            type.setError("Champ obligatoire");
         }
     }
     List<AccountTypeOption> typeAcounts;

@@ -263,7 +263,7 @@ public class TransactionsActivity extends AppCompatActivity {
 
 
     }
-    private void setText(AdapterViewHolder h, Object o) {
+    private void setText2(AdapterViewHolder h, Object o) {
         Transaction t = (Transaction) o;
         View view = h.view;
 
@@ -306,6 +306,76 @@ public class TransactionsActivity extends AppCompatActivity {
         String label = (t.getTransfer() != null && t.getTransfer().getTransferDescription() != null)
                 ? t.getTransfer().getTransferDescription()
                 : type.getValue();
+        labelText.setText(label);
+
+        // 6) Date : [YYYY,M,D] → "dd/MM/yyyy"
+        List<Integer> d = t.getDate();
+        if (d != null && d.size() == 3) {
+            String dd = String.format("%02d", d.get(2));
+            String mm = String.format("%02d", d.get(1));
+            String yy = String.valueOf(d.get(0));
+            dateText.setText(dd + "/" + mm + "/" + yy);
+        } else {
+            dateText.setText("");
+        }
+
+        // 7) Solde courant
+        String formattedBalance = Ut.formatMontant(t.getRunningBalance());
+        balanceText.setText("Solde : " + formattedBalance + " XOF");
+        acountNumber.setText("N° cpt: "+t.getAccountNo());
+    }
+    private void setText(AdapterViewHolder h, Object o) {
+        Transaction t = (Transaction) o;
+        View view = h.view;
+
+        ImageView iconType     = view.findViewById(R.id.iconType);
+        View      statusStripe = view.findViewById(R.id.statusStripe);
+        TextView  dateText     = view.findViewById(R.id.dateText);
+        TextView  labelText    = view.findViewById(R.id.labelText);
+        TextView  montantText  = view.findViewById(R.id.montantText);
+        TextView  balanceText  = view.findViewById(R.id.balanceText);
+        TextView acountNumber = view.findViewById(R.id.acountNumber);
+        Context ctx = view.getContext();
+
+        // 1) Déterminer dépôt / retrait / intérêts
+        TransactionType type = t.getTransactionType();
+        boolean isDeposit  = type.isDeposit();
+        boolean isWithdraw = type.isWithdrawal();
+        boolean isInterest = type.isInterestPosting();
+
+        // 2) Couleur du stripe et du montant
+        int color = Ut.getColor(ctx,
+                isDeposit  ? R.color.green :
+                        isWithdraw ? R.color.red   :
+                                R.color.gray_dark);
+        statusStripe.setBackgroundColor(color);
+        montantText.setTextColor(color);
+
+        // 3) Icône en fonction du type
+        int iconRes = isDeposit  ? R.drawable.ic_deposit :
+                isWithdraw ? R.drawable.ic_withdraw :
+                        R.drawable.ic_interest;
+        iconType.setImageResource(iconRes);
+        iconType.setColorFilter(color);
+
+        // 4) Montant formaté avec signe
+        String sign = isDeposit ? "+ " : (isWithdraw ? "– " : "");
+        String formattedAmount = Ut.formatMontant(t.getAmount());
+        montantText.setText(sign + formattedAmount + " XOF");
+
+        // 5) Libellé : préférence transferDescription, sinon valeur du type
+        String label;
+        if (t.getTransfer() != null) {
+            if (isDeposit) {
+                label = "Transfert reçu";
+            } else if (isWithdraw) {
+                label = "Transfert envoyé";
+            } else {
+                label = type.getValue();
+            }
+        } else {
+            label = type.getValue();
+        }
         labelText.setText(label);
 
         // 6) Date : [YYYY,M,D] → "dd/MM/yyyy"

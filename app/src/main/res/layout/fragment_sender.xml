@@ -91,6 +91,7 @@
                             <com.google.android.material.textfield.TextInputLayout
                                 android:id="@+id/textField"
                                 android:layout_width="match_parent"
+                                app:hintTextColor="@color/colorAccent"
                                 app:boxBackgroundColor="@color/white"
                                 app:boxBackgroundMode="outline"
                                 app:boxCornerRadiusTopStart="7dp"

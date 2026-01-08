@@ -151,7 +151,7 @@ public class SingleInputService<T> {
         Object raw = getValue(object, fieldPath);
         boolean empty = (raw == null || String.valueOf(raw).trim().isEmpty());
         if (attribut.isRequierd() && empty) {
-            til.setError("Champs obligatoire");
+            til.setError("Champ obligatoire");
             return false;
         }
         til.setError(null);

@@ -13,6 +13,7 @@
             android:id="@+id/textField"
             android:layout_width="match_parent"
             app:boxBackgroundColor="@color/white"
+            app:hintTextColor="@color/colorAccent"
             app:boxBackgroundMode="outline"
             app:boxCornerRadiusTopStart="7dp"
             app:boxCornerRadiusTopEnd="7dp"

@@ -523,8 +523,10 @@ public class TransferAccordionActivity extends AppCompatActivity {
 
     private void submitTransfer() {
         btn_valider.setEnabled(false);
-        transferPayload.setTransferDate(S.dateToString(new Date(),
-                transferPayload.getDateFormat(),transferPayload.getLocale()));
+        transferPayload.setTransferDate(
+                S.dateToString(new Date(),
+                transferPayload.getDateFormat(),
+                        transferPayload.getLocale()));
         transferPayload.setTransferDescription(typeTransFert==TypeTransFert.TIERS?
                 "Transfert tièrce":"Transfert interne");
 

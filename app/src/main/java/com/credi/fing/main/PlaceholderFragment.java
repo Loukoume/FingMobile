@@ -42,6 +42,7 @@ import com.credi.fing.publics.service.impl.EditeObject;
 import com.credi.fing.publics.service.impl.ListActivity;
 import com.credi.fing.publics.service.impl.Ut;
 import com.credi.fing.publics.service.pojo.NavigateObject;
+import com.credi.fing.publics.utils.Dialogue;
 import com.credi.fing.publics.utils.S;
 
 import java.util.List;
@@ -200,8 +201,11 @@ public class PlaceholderFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     if(finalKi >0){
-                        startActivity(new Intent(context, RemboursementActivity.class)
-                                .putExtra("compte",Ut.js(object)));
+                        Dialogue.neutreDialog("Faire un remboursement",
+                                "Confirmation",context,(o,c)->{
+                                    startActivity(new Intent(context, RemboursementActivity.class)
+                                            .putExtra("compte",Ut.js(object)));
+                                },null).show();
                     }
                 }
             });

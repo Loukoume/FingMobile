@@ -38,6 +38,7 @@ import com.credi.fing.binder.LoanAccountBinder;
 import com.credi.fing.entity.Client;
 import com.credi.fing.entity.LoanType;
 import com.credi.fing.entity.SavingsAccount;
+import com.credi.fing.main.EditeDate;
 import com.credi.fing.pojo.LoanPojo;
 import com.credi.fing.pojo.LoanProductResponse;
 import com.credi.fing.pojo.err.ApiErrorResponse;
@@ -140,7 +141,8 @@ public class MainActivity extends AppCompatActivity {
                 Inscription.body.getUsername().equalsIgnoreCase("fingiciel"));
         if (Inscription.user != null) {
              //traitementText(testPlayStor);
-            //if (!testPlayStor) {
+           // if (!testPlayStor) {
+
                 getClientAcount();
 
                 Ut.swip(gradien, (b, i) -> {
@@ -153,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                         getClientAcount();
                     }
                 });
-           // }
+            //}
         } else {
             finish();
         }
@@ -263,8 +265,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    public static EditeDate editeDate;
     private void services() {
+        editeDate=null;
         List<Object> list = Arrays.asList(new CarouselItem("", R.drawable.transfert0), new CarouselItem("", R.drawable.pret)
                 , new CarouselItem("", R.drawable.compte), new CarouselItem("", R.drawable.beneficiaire));
         RecyclierViewCp recyclierViewCp = new RecyclierViewCp(this, R.layout.row_home, list, (h, o, i) -> {
@@ -374,7 +377,7 @@ public class MainActivity extends AppCompatActivity {
                     LoanAccountBinder pretBinder = new LoanAccountBinder();
                     EditeObject editeObject = pretBinder.editeObject(loanProductResponse, comptes);
                     editeObject.setObject(loanAccount);
-
+                    editeDate=new EditeDate();
                     startActivity(new Intent(context, AddActivity.class)
                             .putExtra("object", editeObject));
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -570,7 +573,7 @@ public class MainActivity extends AppCompatActivity {
                                 msg = "OK";
                                 break;
                         }
-                        System.out.println("Compte " + vac.getAccountNo() + " : " + msg);
+                       // System.out.println("Compte " + vac.getAccountNo() + " : " + msg);
                     }
                     setComptesValues();
                     getClient();

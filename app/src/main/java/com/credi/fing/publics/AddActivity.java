@@ -11,8 +11,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.credi.fing.MainActivity;
 import com.credi.fing.publics.service.ClickHandler;
 import com.credi.fing.publics.service.SendHttp;
+import com.credi.fing.publics.utils.S;
 import com.google.android.material.button.MaterialButton;
 import com.credi.fing.R;
 import com.credi.fing.publics.service.HttpApi;
@@ -23,6 +25,7 @@ import com.credi.fing.publics.service.impl.Ut;
 import com.credi.fing.publics.utils.Dialogue;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class AddActivity extends AppCompatActivity {
     LinearLayout linearLayout;
@@ -75,12 +78,24 @@ public class AddActivity extends AppCompatActivity {
             }
             //if(view!=null)
             linearLayout.addView(view);
+            if(MainActivity.editeDate!=null){
+                linearLayout.addView(MainActivity.editeDate.view(context));
+            }
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     boolean ok=ed.controle();
                     if(ok){
                         object=ed.getObject();
+                        if(MainActivity.editeDate!=null){
+                            Date date=MainActivity.editeDate.getDate();
+                            if(date!=null){
+                                String valeur=S.dateToString(date, "dd MMMM yyyy");
+                                object=Ut.setField("submittedOnDate",object,valeur);
+                                object=Ut.setField("expectedDisbursementDate",object,valeur);
+                             }
+                        }
+
                         if(sendHttp!=null){
                             sendHttp.send(object,AddActivity.this);
                         }else {

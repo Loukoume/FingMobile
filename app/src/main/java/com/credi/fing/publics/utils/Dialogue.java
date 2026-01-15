@@ -55,6 +55,12 @@ public class Dialogue {
                         dialog.cancel();
                     }
                 });
+        builder.setNegativeButton("Annuler",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
 
         dialog = builder.create();
         return dialog;
@@ -226,7 +232,8 @@ public class Dialogue {
             case 201:
                 return new DialogConfig(Type.SUCCESS, "Succès");
             case 400:
-                return new DialogConfig(Type.WARNING, "Requête invalide");
+                //return new DialogConfig(Type.WARNING, "Requête invalide");
+                return new DialogConfig(Type.WARNING, "Informations invalides");
             case 401:
                 return new DialogConfig(Type.WARNING, "Non autorisé");
             case 403:
